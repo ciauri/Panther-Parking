@@ -1,4 +1,3 @@
 [submodule "Submodules/Gloss"]
 	path = Submodules/Gloss
 	url = https://github.com/hkellaway/Gloss.git
-	ignore = all
