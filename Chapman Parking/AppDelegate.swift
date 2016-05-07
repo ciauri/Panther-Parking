@@ -17,6 +17,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+
+        if !defaults.boolForKey("initialized"){
+            DataManager.updateCounts(.All)
+            defaults.setBool(true, forKey: "initialized")
+            NSLog("Initializing Data")
+        }else{
+            DataManager.updateCounts(.Latest)
+            NSLog("Updating Counts")
+        }
+        
+//        DataManager.autoRefreshEnabled = true
+        
+        
+        
         return true
     }
 

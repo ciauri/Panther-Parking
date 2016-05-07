@@ -7,15 +7,97 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C0ED8B11CDDA2140087AEE6 /* NSDate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */; };
+		9C0ED8B41CDDA3540087AEE6 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B31CDDA3540087AEE6 /* Enums.swift */; };
+		9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */; };
 		9C33257A1CDB0EF200F49338 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325791CDB0EF200F49338 /* AppDelegate.swift */; };
 		9C33257C1CDB0EF200F49338 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33257B1CDB0EF200F49338 /* ViewController.swift */; };
 		9C33257F1CDB0EF200F49338 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C33257D1CDB0EF200F49338 /* Main.storyboard */; };
 		9C3325821CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */; };
 		9C3325841CDB0EF200F49338 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C3325831CDB0EF200F49338 /* Assets.xcassets */; };
 		9C3325871CDB0EF200F49338 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */; };
+		9C3325911CDB0F3D00F49338 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325901CDB0F3D00F49338 /* Constants.swift */; };
+		9C3325A51CDB112300F49338 /* Gloss.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C33259C1CDB111800F49338 /* Gloss.framework */; };
+		9C3325A61CDB112300F49338 /* Gloss.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9C33259C1CDB111800F49338 /* Gloss.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9C3325AB1CDB16A100F49338 /* WebAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AA1CDB16A100F49338 /* WebAPI.swift */; };
+		9C3325B21CDB18ED00F49338 /* Count+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AC1CDB18ED00F49338 /* Count+CoreDataProperties.swift */; };
+		9C3325B31CDB18ED00F49338 /* Count.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AD1CDB18ED00F49338 /* Count.swift */; };
+		9C3325B41CDB18ED00F49338 /* Level+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AE1CDB18ED00F49338 /* Level+CoreDataProperties.swift */; };
+		9C3325B51CDB18ED00F49338 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AF1CDB18ED00F49338 /* Level.swift */; };
+		9C3325B61CDB18ED00F49338 /* Structure+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325B01CDB18ED00F49338 /* Structure+CoreDataProperties.swift */; };
+		9C3325B71CDB18ED00F49338 /* Structure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325B11CDB18ED00F49338 /* Structure.swift */; };
+		9C3325BA1CDB1F8700F49338 /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325B81CDB1F8700F49338 /* Location+CoreDataProperties.swift */; };
+		9C3325BB1CDB1F8700F49338 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325B91CDB1F8700F49338 /* Location.swift */; };
+		9C3325BE1CDB252300F49338 /* JSONStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325BD1CDB252300F49338 /* JSONStructs.swift */; };
+		9C3325C01CDB2D9E00F49338 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325BF1CDB2D9E00F49338 /* DataManager.swift */; };
+		9C3325C21CDB342D00F49338 /* TotalCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */; };
+		9C3325C41CDB344300F49338 /* LevelCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */; };
+		9C3325C81CDB34F600F49338 /* ParkingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C71CDB34F500F49338 /* ParkingViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9C33259B1CDB111800F49338 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DC39BF611B8A7AD200088CE0;
+			remoteInfo = Gloss;
+		};
+		9C33259D1CDB111800F49338 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DCF3008A1BDCA3FF003FBF15;
+			remoteInfo = GlossMacOSX;
+		};
+		9C33259F1CDB111800F49338 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A04168E71C0DF69900269A6A;
+			remoteInfo = "Gloss tvOS";
+		};
+		9C3325A11CDB111800F49338 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DC683ADB1C2C615D0035EAC3;
+			remoteInfo = "Gloss watchOS";
+		};
+		9C3325A31CDB111800F49338 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2FA4CE9A1C947E3000EB8AB8;
+			remoteInfo = GlossTests;
+		};
+		9C3325A71CDB112300F49338 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DC39BF601B8A7AD200088CE0;
+			remoteInfo = Gloss;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9C3325A91CDB112300F49338 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9C3325A61CDB112300F49338 /* Gloss.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+.swift"; sourceTree = "<group>"; };
+		9C0ED8B31CDDA3540087AEE6 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericFetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
 		9C3325761CDB0EF200F49338 /* Chapman Parking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chapman Parking.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3325791CDB0EF200F49338 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9C33257B1CDB0EF200F49338 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -24,6 +106,22 @@
 		9C3325831CDB0EF200F49338 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9C3325861CDB0EF200F49338 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9C3325881CDB0EF200F49338 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9C3325901CDB0F3D00F49338 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		9C3325931CDB111800F49338 /* Gloss.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Gloss.xcodeproj; path = Submodules/Gloss/Gloss.xcodeproj; sourceTree = SOURCE_ROOT; };
+		9C3325AA1CDB16A100F49338 /* WebAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebAPI.swift; path = ../WebAPI.swift; sourceTree = "<group>"; };
+		9C3325AC1CDB18ED00F49338 /* Count+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Count+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		9C3325AD1CDB18ED00F49338 /* Count.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Count.swift; sourceTree = "<group>"; };
+		9C3325AE1CDB18ED00F49338 /* Level+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Level+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		9C3325AF1CDB18ED00F49338 /* Level.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
+		9C3325B01CDB18ED00F49338 /* Structure+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Structure+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		9C3325B11CDB18ED00F49338 /* Structure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Structure.swift; sourceTree = "<group>"; };
+		9C3325B81CDB1F8700F49338 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		9C3325B91CDB1F8700F49338 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		9C3325BD1CDB252300F49338 /* JSONStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONStructs.swift; sourceTree = "<group>"; };
+		9C3325BF1CDB2D9E00F49338 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TotalCountTableViewCell.swift; sourceTree = "<group>"; };
+		9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelCountTableViewCell.swift; sourceTree = "<group>"; };
+		9C3325C71CDB34F500F49338 /* ParkingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,12 +129,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C3325A51CDB112300F49338 /* Gloss.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C0ED8B21CDDA2370087AEE6 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		9C33256D1CDB0EF200F49338 = {
 			isa = PBXGroup;
 			children = (
@@ -56,15 +163,94 @@
 		9C3325781CDB0EF200F49338 /* Chapman Parking */ = {
 			isa = PBXGroup;
 			children = (
-				9C3325791CDB0EF200F49338 /* AppDelegate.swift */,
-				9C33257B1CDB0EF200F49338 /* ViewController.swift */,
+				9C0ED8B21CDDA2370087AEE6 /* Extensions */,
+				9C3325C51CDB344700F49338 /* Views */,
+				9C33258F1CDB0F0700F49338 /* Model */,
+				9C3325C61CDB344E00F49338 /* Controllers */,
 				9C33257D1CDB0EF200F49338 /* Main.storyboard */,
-				9C3325831CDB0EF200F49338 /* Assets.xcassets */,
-				9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */,
-				9C3325881CDB0EF200F49338 /* Info.plist */,
-				9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */,
+				9C33258E1CDB0EFE00F49338 /* Supporting Files */,
 			);
 			path = "Chapman Parking";
+			sourceTree = "<group>";
+		};
+		9C33258E1CDB0EFE00F49338 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9C3325AA1CDB16A100F49338 /* WebAPI.swift */,
+				9C3325831CDB0EF200F49338 /* Assets.xcassets */,
+				9C3325921CDB110D00F49338 /* Submodules */,
+				9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */,
+				9C3325881CDB0EF200F49338 /* Info.plist */,
+				9C3325791CDB0EF200F49338 /* AppDelegate.swift */,
+				9C3325901CDB0F3D00F49338 /* Constants.swift */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9C33258F1CDB0F0700F49338 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9C3325BC1CDB250C00F49338 /* CoreData */,
+				9C3325BD1CDB252300F49338 /* JSONStructs.swift */,
+				9C0ED8B31CDDA3540087AEE6 /* Enums.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		9C3325921CDB110D00F49338 /* Submodules */ = {
+			isa = PBXGroup;
+			children = (
+				9C3325931CDB111800F49338 /* Gloss.xcodeproj */,
+			);
+			name = Submodules;
+			sourceTree = "<group>";
+		};
+		9C3325941CDB111800F49338 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9C33259C1CDB111800F49338 /* Gloss.framework */,
+				9C33259E1CDB111800F49338 /* Gloss.framework */,
+				9C3325A01CDB111800F49338 /* Gloss.framework */,
+				9C3325A21CDB111800F49338 /* Gloss.framework */,
+				9C3325A41CDB111800F49338 /* GlossTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9C3325BC1CDB250C00F49338 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				9C3325AC1CDB18ED00F49338 /* Count+CoreDataProperties.swift */,
+				9C3325AD1CDB18ED00F49338 /* Count.swift */,
+				9C3325AE1CDB18ED00F49338 /* Level+CoreDataProperties.swift */,
+				9C3325AF1CDB18ED00F49338 /* Level.swift */,
+				9C3325B01CDB18ED00F49338 /* Structure+CoreDataProperties.swift */,
+				9C3325B11CDB18ED00F49338 /* Structure.swift */,
+				9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */,
+				9C3325B81CDB1F8700F49338 /* Location+CoreDataProperties.swift */,
+				9C3325B91CDB1F8700F49338 /* Location.swift */,
+				9C3325BF1CDB2D9E00F49338 /* DataManager.swift */,
+			);
+			name = CoreData;
+			sourceTree = "<group>";
+		};
+		9C3325C51CDB344700F49338 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */,
+				9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		9C3325C61CDB344E00F49338 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				9C33257B1CDB0EF200F49338 /* ViewController.swift */,
+				9C3325C71CDB34F500F49338 /* ParkingViewController.swift */,
+				9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,10 +263,12 @@
 				9C3325721CDB0EF200F49338 /* Sources */,
 				9C3325731CDB0EF200F49338 /* Frameworks */,
 				9C3325741CDB0EF200F49338 /* Resources */,
+				9C3325A91CDB112300F49338 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9C3325A81CDB112300F49338 /* PBXTargetDependency */,
 			);
 			name = "Chapman Parking";
 			productName = "Chapman Parking";
@@ -113,12 +301,56 @@
 			mainGroup = 9C33256D1CDB0EF200F49338;
 			productRefGroup = 9C3325771CDB0EF200F49338 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 9C3325941CDB111800F49338 /* Products */;
+					ProjectRef = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				9C3325751CDB0EF200F49338 /* Chapman Parking */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		9C33259C1CDB111800F49338 /* Gloss.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Gloss.framework;
+			remoteRef = 9C33259B1CDB111800F49338 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9C33259E1CDB111800F49338 /* Gloss.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Gloss.framework;
+			remoteRef = 9C33259D1CDB111800F49338 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9C3325A01CDB111800F49338 /* Gloss.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Gloss.framework;
+			remoteRef = 9C33259F1CDB111800F49338 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9C3325A21CDB111800F49338 /* Gloss.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Gloss.framework;
+			remoteRef = 9C3325A11CDB111800F49338 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9C3325A41CDB111800F49338 /* GlossTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GlossTests.xctest;
+			remoteRef = 9C3325A31CDB111800F49338 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9C3325741CDB0EF200F49338 /* Resources */ = {
@@ -138,13 +370,39 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C3325C41CDB344300F49338 /* LevelCountTableViewCell.swift in Sources */,
+				9C3325AB1CDB16A100F49338 /* WebAPI.swift in Sources */,
+				9C0ED8B41CDDA3540087AEE6 /* Enums.swift in Sources */,
+				9C3325C01CDB2D9E00F49338 /* DataManager.swift in Sources */,
+				9C3325B21CDB18ED00F49338 /* Count+CoreDataProperties.swift in Sources */,
 				9C33257C1CDB0EF200F49338 /* ViewController.swift in Sources */,
+				9C0ED8B11CDDA2140087AEE6 /* NSDate+.swift in Sources */,
+				9C3325B51CDB18ED00F49338 /* Level.swift in Sources */,
 				9C33257A1CDB0EF200F49338 /* AppDelegate.swift in Sources */,
+				9C3325B41CDB18ED00F49338 /* Level+CoreDataProperties.swift in Sources */,
+				9C3325BB1CDB1F8700F49338 /* Location.swift in Sources */,
+				9C3325C21CDB342D00F49338 /* TotalCountTableViewCell.swift in Sources */,
+				9C3325B31CDB18ED00F49338 /* Count.swift in Sources */,
+				9C3325B61CDB18ED00F49338 /* Structure+CoreDataProperties.swift in Sources */,
+				9C3325BA1CDB1F8700F49338 /* Location+CoreDataProperties.swift in Sources */,
+				9C3325BE1CDB252300F49338 /* JSONStructs.swift in Sources */,
+				9C3325B71CDB18ED00F49338 /* Structure.swift in Sources */,
 				9C3325821CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld in Sources */,
+				9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */,
+				9C3325911CDB0F3D00F49338 /* Constants.swift in Sources */,
+				9C3325C81CDB34F600F49338 /* ParkingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9C3325A81CDB112300F49338 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Gloss;
+			targetProxy = 9C3325A71CDB112300F49338 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		9C33257D1CDB0EF200F49338 /* Main.storyboard */ = {
@@ -255,6 +513,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stephenciauri.Chapman-Parking";
@@ -266,6 +525,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stephenciauri.Chapman-Parking";
@@ -292,6 +552,7 @@
 				9C33258D1CDB0EF200F49338 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
