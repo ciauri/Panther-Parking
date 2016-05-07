@@ -46,7 +46,7 @@ extension ParkingViewController: NSFetchedResultsControllerDelegate{
         let structureSort = NSSortDescriptor(key: "structure.name", ascending: true)
         let nameSort = NSSortDescriptor(key: "name", ascending: true)
         request.sortDescriptors = [structureSort, nameSort]
-        let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: DataManager.managedObjectContext, sectionNameKeyPath: "structure.name", cacheName: nil)
+        let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: DataManager.sharedInstance.managedObjectContext, sectionNameKeyPath: "structure.name", cacheName: nil)
         frcDelegate.tableView = parkingTableView
         frcDelegate.delegate = self
         controller.delegate = frcDelegate
@@ -54,7 +54,7 @@ extension ParkingViewController: NSFetchedResultsControllerDelegate{
     }
     
     private func fetchData(){
-        DataManager.managedObjectContext.performBlock({
+        DataManager.sharedInstance.managedObjectContext.performBlock({
             do{
                 try self.frc.performFetch()
                 self.parkingTableView.reloadData()
@@ -95,6 +95,16 @@ extension ParkingViewController: UITableViewDataSource, GenericFRCDelegate{
         let level = sectionResults.objects!.first as! Level
         
         return level.structure!.name
+    }
+    
+    func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        let sectionResults = frc.sections![section]
+        let level = sectionResults.objects!.first as! Level
+        let date = level.updatedAt
+        let formatter = NSDateFormatter()
+        formatter.timeStyle = .MediumStyle
+        formatter.dateStyle = .LongStyle
+        return "Updated "+formatter.stringFromDate(date)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {

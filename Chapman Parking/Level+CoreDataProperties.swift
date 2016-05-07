@@ -26,5 +26,13 @@ extension Level {
             return Int((arr.first as! Count).availableSpaces!)
         }
     }
+    
+    var updatedAt: NSDate{
+        get{
+            let sort = NSSortDescriptor(key: "updatedAt", ascending: false)
+            let arr: Array = (counts?.sortedArrayUsingDescriptors([sort]))!
+            return (arr.first as! Count).updatedAt!
+        }
+    }
 
 }

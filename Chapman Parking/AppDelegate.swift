@@ -21,11 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
 
         if !defaults.boolForKey("initialized"){
-            DataManager.updateCounts(.All)
+            DataManager.sharedInstance.updateCounts(.All)
             defaults.setBool(true, forKey: "initialized")
             NSLog("Initializing Data")
         }else{
-            DataManager.updateCounts(.Latest)
+            DataManager.sharedInstance.updateCounts(.Latest)
             NSLog("Updating Counts")
         }
         

@@ -10,46 +10,44 @@ import Foundation
 import CoreData
 
 class DataManager{
-    // MARK: - Core Data stack
+    static let sharedInstance = DataManager()
     
-    private static var refreshTimer: NSTimer = DataManager.initRefreshTimer()
-    static var autoRefreshEnabled: Bool = true{
+    var applicationDocumentsDirectory: NSURL
+    var managedObjectModel: NSManagedObjectModel
+    var persistentStoreCoordinator: NSPersistentStoreCoordinator
+    var managedObjectContext: NSManagedObjectContext
+    
+    var autoRefreshInterval: Double = 60
+    private weak var refreshTimer: NSTimer?
+    
+    var autoRefreshEnabled: Bool = true{
         didSet{
-            if autoRefreshEnabled{
-                refreshTimer = DataManager.initRefreshTimer()
-            }else{
-                refreshTimer.invalidate()
+            if autoRefreshEnabled && (refreshTimer == nil){
+                refreshTimer = NSTimer.scheduledTimerWithTimeInterval(self.autoRefreshInterval, target: self, selector: #selector(timerUpdateCounts), userInfo: nil, repeats: true)
+            }else if !autoRefreshEnabled{
+                refreshTimer?.invalidate()
             }
         }
     }
-    static var autoRefreshInterval: Double = 1
     
-    private class func initRefreshTimer() -> NSTimer{
-        return NSTimer.scheduledTimerWithTimeInterval(autoRefreshInterval, target: DataManager.self, selector: #selector(DataManager.timerUpdateCounts), userInfo: nil, repeats: true)
-
-    }
-    
-    private static var applicationDocumentsDirectory: NSURL = {
-        // The directory the application uses to store the Core Data store file. This code uses a directory named "com.stephenciauri.Chapman_Parking" in the application's documents Application Support directory.
-        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1]
-    }()
-    
-    static var managedObjectModel: NSManagedObjectModel = {
-        // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle.mainBundle().URLForResource("Chapman_Parking", withExtension: "momd")!
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
-    }()
-    
-    
-    static var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
-        // The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
-        // Create the coordinator and store
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+    private init(){
+        applicationDocumentsDirectory = {
+            // The directory the application uses to store the Core Data store file. This code uses a directory named "com.stephenciauri.Chapman_Parking" in the application's documents Application Support directory.
+            let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+            return urls[urls.count-1]
+        }()
+        
+        managedObjectModel = {
+            // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
+            let modelURL = NSBundle.mainBundle().URLForResource("Chapman_Parking", withExtension: "momd")!
+            return NSManagedObjectModel(contentsOfURL: modelURL)!
+        }()
+        
+        persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         let url = applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
-        var failureReason = "There was an error creating or loading the application's saved data."
+        let failureReason = "There was an error creating or loading the application's saved data."
         do {
-            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            try persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
         } catch {
             // Report any error we got.
             var dict = [String: AnyObject]()
@@ -63,42 +61,34 @@ class DataManager{
             NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
             abort()
         }
-        
-        return coordinator
-    }()
-    
-    static var managedObjectContext: NSManagedObjectContext = {
-        // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
+
         let coordinator = persistentStoreCoordinator
-        var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         managedObjectContext.undoManager = nil
         managedObjectContext.persistentStoreCoordinator = coordinator
-        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: {note in DataManager.contextDidSaveNotificationHandler(note)})
-        return managedObjectContext
-    }()
+        
+        refreshTimer = NSTimer.scheduledTimerWithTimeInterval(self.autoRefreshInterval, target: self, selector: #selector(timerUpdateCounts), userInfo: nil, repeats: true)
+
+        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: {note in self.contextDidSaveNotificationHandler(note)})
+
+    }
     
-    class func contextDidSaveNotificationHandler(notification: NSNotification){
+    
+    private func contextDidSaveNotificationHandler(notification: NSNotification){
         let sender = notification.object as! NSManagedObjectContext
         if sender !== managedObjectContext {
             managedObjectContext.performBlock {
                 NSLog("Merging")
                 self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
-                saveContext()
+                self.saveContext()
             }
         }
     }
     
     // Creates a new Core Data stack and returns a managed object context associated with a private queue.
-    private class func createPrivateQueueContext() throws -> NSManagedObjectContext {
-        
-        // Stack uses the same store and model, but a new persistent store coordinator and context.
+    private func createPrivateQueueContext() throws -> NSManagedObjectContext {
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
-        
-        /*
-         Attempting to add a persistent store may yield an error--pass it out of
-         the function for the caller to deal with.
-         */
         let storeURL = applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
         try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
         
@@ -107,16 +97,7 @@ class DataManager{
         context.performBlockAndWait() {
             
             context.persistentStoreCoordinator = coordinator
-            
-            // Avoid using default merge policy in multi-threading environment:
-            // when we delete (and save) a record in one context,
-            // and try to save edits on the same record in the other context before merging the changes,
-            // an exception will be thrown because Core Data by default uses NSErrorMergePolicy.
-            // Setting a reasonable mergePolicy is a good practice to avoid that kind of exception.
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            
-            // In OS X, a context provides an undo manager by default
-            // Disable it for performance benefit
             context.undoManager = nil
         }
         
@@ -125,7 +106,7 @@ class DataManager{
     
     // MARK: - Core Data Saving support
     
-    class func saveContext () {
+    private func saveContext () {
         if managedObjectContext.hasChanges {
             do {
                 try managedObjectContext.save()
@@ -140,16 +121,16 @@ class DataManager{
         }
     }
     
-
+    
     enum ParkingObject{
         case Structure
         case Level
     }
     
-
-
     
-    private class func parkingStructureForName(name: String, moc: NSManagedObjectContext) -> Structure?{
+    
+    
+    private func parkingStructureForName(name: String, moc: NSManagedObjectContext) -> Structure?{
         let request = NSFetchRequest(entityName: "Structure")
         request.predicate = NSPredicate(format: "name == %@", name)
         do{
@@ -159,7 +140,7 @@ class DataManager{
         }
     }
     
-    private class func levelInStructureWithName(structure: Structure, name: String, moc: NSManagedObjectContext) -> Level?{
+    private func levelInStructureWithName(structure: Structure, name: String, moc: NSManagedObjectContext) -> Level?{
         let request = NSFetchRequest(entityName: "Level")
         request.predicate = NSPredicate(format: "structure == %@ AND name == %@", structure, name)
         do{
@@ -169,23 +150,22 @@ class DataManager{
         }
     }
     
-
+    
     
     @objc
-    class func timerUpdateCounts(){
+    private func timerUpdateCounts(){
         updateCounts(.Latest)
     }
-
     
-
-    class func updateCounts(updateType: UpdateType){
-//        NSRunLoop.currentRunLoop().addTimer(refreshTimer, forMode: NSRunLoopCommonModes)
+    
+    
+    func updateCounts(updateType: UpdateType){
         WebAPI.generateReport(updateType, withBlock: {report in
-            let backgroundContext = try! createPrivateQueueContext()
+            let backgroundContext = try! self.createPrivateQueueContext()
             for structure in report.structures{
                 var s: Structure
                 
-                if let structure = parkingStructureForName(structure.name!, moc: backgroundContext){
+                if let structure = self.parkingStructureForName(structure.name!, moc: backgroundContext){
                     s = structure
                 }else{
                     s = NSEntityDescription.insertNewObjectForEntityForName("Structure", inManagedObjectContext: backgroundContext) as! Structure
@@ -193,13 +173,13 @@ class DataManager{
                     loc.lat = structure.lat
                     loc.long = structure.long
                 }
-
+                
                 s.name = structure.name
                 
                 for level in structure.levels{
                     var l: Level
                     
-                    if let level = levelInStructureWithName(s, name: level.name!, moc: backgroundContext){
+                    if let level = self.levelInStructureWithName(s, name: level.name!, moc: backgroundContext){
                         l = level
                     }else{
                         l = NSEntityDescription.insertNewObjectForEntityForName("Level", inManagedObjectContext: backgroundContext) as! Level
@@ -214,6 +194,7 @@ class DataManager{
                         c.availableSpaces = count.count
                         c.updatedAt = count.timestamp
                         c.level = l
+
                     }
                 }
                 
