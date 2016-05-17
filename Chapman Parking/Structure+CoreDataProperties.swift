@@ -21,7 +21,7 @@ extension Structure {
     
     var capacity: Int{
         var cap = 0
-        for level in levels! where level.name != "All Levels"{
+        for level in levels! where level.name == "All Levels"{
             let level = level as! Level
             cap += Int(level.capacity!)
         }
@@ -31,9 +31,9 @@ extension Structure {
     
     var currentCount: Int{
         var cap = 0
-        for level in levels! where level.name == "All Levels"{
+        for level in levels! where level.name != "All Levels"{
             let level = level as! Level
-            cap += Int(level.capacity!)
+            cap += Int(level.currentCount)
         }
         return cap
         
@@ -48,7 +48,12 @@ extension Structure: MKAnnotation{
     }
     
     var subtitle: String?{
-        return "\(currentCount/capacity)% full"
+        let formatter = NSNumberFormatter()
+        formatter.numberStyle = .PercentStyle
+        
+        NSLog("Count: \(currentCount) Cap: \(capacity)")
+        let percent = formatter.stringFromNumber(1-Double(currentCount)/Double(capacity))!
+        return "\(percent) full"
     }
     
     var coordinate: CLLocationCoordinate2D{

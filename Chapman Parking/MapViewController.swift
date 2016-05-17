@@ -14,6 +14,10 @@ class MapViewController: UIViewController {
 
     @IBOutlet var mapView: MKMapView!
     
+    lazy var frcDelegate = GenericFetchedResultsControllerDelegate()
+    lazy var frc: NSFetchedResultsController = self.initFetchedResultsController()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "list"), style: .Plain, target: self, action: #selector(flipToList))
@@ -37,20 +41,52 @@ class MapViewController: UIViewController {
     
     func addStructuresToMap(){
         let context = DataManager.sharedInstance.managedObjectContext
-        let request = NSFetchRequest(entityName: "Structure")
         
         context.performBlock({
             do{
-                let results = try context.executeFetchRequest(request)
+                try self.frc.performFetch()
                 
-                self.mapView.addAnnotations(results as! [Structure])
-
-            }
-            catch{
-                
+                for s in self.frc.fetchedObjects as! [Structure]{
+                    self.mapView.addAnnotation(s)
+                }
+            }catch{
+                NSLog("issues and tissues")
             }
         })
+//        let request = NSFetchRequest(entityName: "Structure")
+//        
+//        context.performBlock({
+//            do{
+//                let results = try context.executeFetchRequest(request)
+//                self.mapView.addAnnotations(results as! [Structure])
+//            }
+//            catch{
+//                
+//            }
+//        })
+//        
         
+    }
+    
+    private func initFetchedResultsController() -> NSFetchedResultsController{
+        let context = DataManager.sharedInstance.managedObjectContext
+        let request = NSFetchRequest(entityName: "Structure")
+        let sort = NSSortDescriptor(key: "name", ascending: false)
+        request.sortDescriptors = [sort]
+        let frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        frcDelegate.mapView = mapView
+        frc.delegate = frcDelegate
+        
+        
+//        context.performBlock({
+//            do{
+//                try frc.performFetch()
+//            }catch{
+//                NSLog("issues and tissues")
+//            }
+//        })
+        
+        return frc
         
     }
     

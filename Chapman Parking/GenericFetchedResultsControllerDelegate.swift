@@ -9,11 +9,13 @@
 import Foundation
 import CoreData
 import UIKit
+import MapKit
 
 class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControllerDelegate{
     
     var tableView: UITableView?
     var collectionView: UICollectionView?
+    var mapView: MKMapView?
     var delegate: GenericFRCDelegate?
     
     
@@ -41,15 +43,28 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type{
         case .Insert:
+            if let a = anObject as? MKAnnotation{
+                mapView?.addAnnotation(a)
+            }
             tableView?.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
         case .Delete:
             tableView?.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            if let a = anObject as? MKAnnotation{
+                mapView?.removeAnnotation(a)
+            }
         case .Update:
             if let indexPath = indexPath, cell = tableView?.cellForRowAtIndexPath(indexPath){
                 delegate?.configureCell(cell, atIndexPath: indexPath)
             }
+            if let a = anObject as? MKAnnotation{
+                mapView?.removeAnnotation(a)
+                mapView?.addAnnotation(a)
+            }
         case .Move:
-            
+            if let a = anObject as? MKAnnotation{
+                mapView?.removeAnnotation(a)
+                mapView?.addAnnotation(a)
+            }
 //            tableView?.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
 //            tableView?.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
             if let indexPath = indexPath, cell = tableView?.cellForRowAtIndexPath(indexPath){

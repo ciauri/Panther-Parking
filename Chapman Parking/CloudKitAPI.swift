@@ -20,6 +20,7 @@ class CloudKitAPI: ParkingAPI{
         publicDB = container.publicCloudDatabase
     }
 
+
     
     func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock: (CPReport -> Void)) {
         let query = CKQuery(recordType: "ParkingStructure", predicate: NSPredicate(value: true))
@@ -56,17 +57,18 @@ class CloudKitAPI: ParkingAPI{
                                     for record in results{
                                         dispatch_group_enter(levelGroup)
                                         
+                                        // Build Level
                                         let levelName = record.objectForKey("Name") as! String
                                         let levelCap = record.objectForKey("Capacity") as! Int
                                         let levelCount = record.objectForKey("CurrentCount") as! Int
                                         let ckID = record.recordID.recordName
-                                        
+
                                         var level = CKLevel(ckID: ckID, name: levelName, capacity: levelCap, counts: [], currentCount: levelCount)
                                         
+                                        // Build Query
                                         let ref = CKReference(record: record, action: CKReferenceAction.None)
                                         var predicate = NSPredicate(format: "Level == %@", ref)
                                         var resultLimit: Int?
-
                                         switch updateType{
                                         case .All:
                                             break
@@ -76,19 +78,18 @@ class CloudKitAPI: ParkingAPI{
                                         case .Latest:
                                             resultLimit = 1
                                         }
-                                        
                                         let spotQuery = CKQuery(recordType: "ParkingSpotCount", predicate: predicate)
                                         let chronoSort = NSSortDescriptor(key: "UpdatedAt", ascending: false)
                                         spotQuery.sortDescriptors = [chronoSort]
+                                        
+                                        // Build Operation
                                         let spotQueryOperation = CKQueryOperation(query: spotQuery)
                                         if let l = resultLimit{
                                             spotQueryOperation.resultsLimit = l
                                         }
 
-
-                                        
                                         var counts: [CKCount] = []
-                                        spotQueryOperation.recordFetchedBlock = {(record: CKRecord) in
+                                        let recordFetchedBlock = {(record: CKRecord) in
                                             let ckID = record.recordID.recordName
                                             let numSpaces = record.objectForKey("NumberOfSpaces") as! Int
                                             let timestamp = record.objectForKey("UpdatedAt") as! NSDate
@@ -97,17 +98,22 @@ class CloudKitAPI: ParkingAPI{
                                             counts.append(count)
                                         }
                                         
+                                        // Only fetches first 100 records per query. Must implement tail recursive function if I want to import entire history
+                                        spotQueryOperation.recordFetchedBlock = recordFetchedBlock
                                         spotQueryOperation.queryCompletionBlock = {(cursor: CKQueryCursor?, error: NSError?) in
                                             if let _ = error{
                                                 NSLog("op failed")
                                             }else{
                                                 // Stupid struct hack due to invariance
                                                 level.counts = counts.map({$0})
+                                                NSLog("New tallys: \(counts.count)")
                                                 levels.append(level)
                                                 dispatch_group_leave(levelGroup)
+   
                                             }
                                         }
                                         
+                                        // Adds operation to queue, and it'll get around to it. :]
                                         self.publicDB.addOperation(spotQueryOperation)
                                     }
                                     dispatch_group_notify(levelGroup, dispatch_get_main_queue(), {

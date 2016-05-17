@@ -48,6 +48,7 @@ class ChartViewController: UIViewController {
         
         
         var dataSets: [LineChartDataSet] = []
+        var dates = Set<NSDate>()
 //        var indices: [Int] = []
         var indices = Set<Double>()
 //        var indices = Set<Int>()
@@ -62,6 +63,7 @@ class ChartViewController: UIViewController {
                     for (index, count) in results.enumerate(){
 //                        indices.insert(index)
 //                        count.updatedAt.t
+                        dates.insert(count.updatedAt!)
                         indices.insert(count.updatedAt!.timeIntervalSinceReferenceDate)
 //                        indices.append(index)
                         yVals.append(ChartDataEntry(value: count.availableSpaces! as Double, xIndex: index))
@@ -78,11 +80,11 @@ class ChartViewController: UIViewController {
             
             NSLog("\(indices.count)")
             NSLog("\(dataSets.first?.yVals.count)")
-//            let dateArray = Array(indices)
-//            let timestamps = dateArray.sort({$0.compare($1) == NSComparisonResult.OrderedAscending})
-//            let stringStamps = timestamps.map({return formatter.stringFromDate($0)})
+            let dateArray = Array(dates)
+            let timestamps = dateArray.sort({$0.compare($1) == NSComparisonResult.OrderedAscending})
+            let stringStamps = timestamps.map({return formatter.stringFromDate($0)})
             
-            lineChart.data = LineChartData(xVals: Array(indices), dataSets: dataSets)
+            lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
    
         }
         
