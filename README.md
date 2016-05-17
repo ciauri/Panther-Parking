@@ -12,5 +12,5 @@
 - CloudKit
 - [Custom Python Backend](https://github.com/ciauri/stephenciauri.com/tree/master/app/mod_parking)
 - [iOS Charts](https://github.com/danielgindi/Charts)
-- [Gloss](https://github.com/hkellaway/Gloss] (0/10, would not recommend)
+- [Gloss](https://github.com/hkellaway/Gloss) (0/10, would not recommend)
 
