@@ -2,7 +2,7 @@
 //  Structure+CoreDataProperties.swift
 //  Chapman Parking
 //
-//  Created by Stephen Ciauri on 5/4/16.
+//  Created by Stephen Ciauri on 5/15/16.
 //  Copyright © 2016 Stephen Ciauri. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -11,6 +11,7 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 extension Structure {
 
@@ -19,15 +20,42 @@ extension Structure {
     @NSManaged var location: Location?
     
     var capacity: Int{
-        get{
-            var cap = 0
-            for level in levels! as NSSet{
-                let level = level as! Level
-                cap += Int(level.capacity!)
-            }
-            return cap
+        var cap = 0
+        for level in levels! where level.name != "All Levels"{
+            let level = level as! Level
+            cap += Int(level.capacity!)
         }
+        return cap
         
     }
+    
+    var currentCount: Int{
+        var cap = 0
+        for level in levels! where level.name == "All Levels"{
+            let level = level as! Level
+            cap += Int(level.capacity!)
+        }
+        return cap
+        
+    }
+    
 
+}
+
+extension Structure: MKAnnotation{
+    var title:String? {
+        return name
+    }
+    
+    var subtitle: String?{
+        return "\(currentCount/capacity)% full"
+    }
+    
+    var coordinate: CLLocationCoordinate2D{
+        if let location = location, lat = location.lat, long = location.long{
+            return CLLocationCoordinate2DMake(lat as Double, long as Double)
+        }else{
+            return CLLocationCoordinate2DMake(0, 0)
+        }
+    }
 }

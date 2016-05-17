@@ -9,46 +9,53 @@
 import Foundation
 import Gloss
 
-struct JSONReport: Decodable{
-    let structures: [JSONStructure]
+struct JSONReport: Decodable, CPReport{
+    let structures: [CPStructure]
     
     init?(json: JSON) {
-        structures = [JSONStructure].fromJSONArray(("structures" <~~ json)!)
+        structures = [JSONStructure].fromJSONArray(("structures" <~~ json)!).map({$0 as CPStructure})
     }
 }
 
-struct JSONStructure: Decodable{
+struct JSONStructure: Decodable, CPStructure{
     
     let name: String?
-    let levels: [JSONLevel]
+    let levels: [CPLevel]
     let lat: Double?
     let long: Double?
     
     
     init?(json: JSON) {
         name = "name" <~~ json
-        levels = [JSONLevel].fromJSONArray(("levels" <~~ json)!)
-        lat = "lat" <~~ json
-        long = "long" <~~ json
+        let levelsFromJSON = [JSONLevel].fromJSONArray(("levels" <~~ json)!)
+        levels = levelsFromJSON.map({$0 as CPLevel})
+        
+        // Gloss sucks
+        lat = Double(json["lat"] as! String)!
+        long = Double(json["long"] as! String)!
     }
     
 }
 
-struct JSONLevel: Decodable{
+struct JSONLevel: Decodable, CPLevel{
     
     let name: String?
     let capacity: Int?
-    let counts: [JSONCount]
+    let counts: [CPCount]
     
     init?(json: JSON) {
         name = "name" <~~ json
         capacity = "capacity" <~~ json
-        counts = [JSONCount].fromJSONArray(("counts" <~~ json)!)
+        let countsFromJSON = [JSONCount].fromJSONArray(("counts" <~~ json)!)
+        let cpcounts = countsFromJSON.map({$0 as CPCount})
+        counts = cpcounts
+
     }
+    
     
 }
 
-struct JSONCount: Decodable{
+struct JSONCount: Decodable, CPCount{
     let count: Int?
     let timestamp: NSDate?
     
@@ -56,4 +63,5 @@ struct JSONCount: Decodable{
         count = "count" <~~ json
         timestamp = NSDate.dateFromISOString(("timestamp" <~~ json)!)
     }
+    
 }

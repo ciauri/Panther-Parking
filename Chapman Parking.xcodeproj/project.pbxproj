@@ -10,8 +10,10 @@
 		9C0ED8B11CDDA2140087AEE6 /* NSDate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */; };
 		9C0ED8B41CDDA3540087AEE6 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B31CDDA3540087AEE6 /* Enums.swift */; };
 		9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */; };
+		9C2FDC931CE9A4CE00A61F0F /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C2FDC881CE9A4BD00A61F0F /* Charts.framework */; };
+		9C2FDC941CE9A4CE00A61F0F /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9C2FDC881CE9A4BD00A61F0F /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9C2FDC9C1CE9A91A00A61F0F /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2FDC9B1CE9A91A00A61F0F /* ChartViewController.swift */; };
 		9C33257A1CDB0EF200F49338 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325791CDB0EF200F49338 /* AppDelegate.swift */; };
-		9C33257C1CDB0EF200F49338 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33257B1CDB0EF200F49338 /* ViewController.swift */; };
 		9C33257F1CDB0EF200F49338 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C33257D1CDB0EF200F49338 /* Main.storyboard */; };
 		9C3325821CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */; };
 		9C3325841CDB0EF200F49338 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C3325831CDB0EF200F49338 /* Assets.xcassets */; };
@@ -33,9 +35,50 @@
 		9C3325C21CDB342D00F49338 /* TotalCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */; };
 		9C3325C41CDB344300F49338 /* LevelCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */; };
 		9C3325C81CDB34F600F49338 /* ParkingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C71CDB34F500F49338 /* ParkingViewController.swift */; };
+		9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C71169C1CE3118900C52F0E /* CloudKit.framework */; };
+		9CC114951CE984C30093215B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC114941CE984C30093215B /* MapViewController.swift */; };
+		9CC6E4441CE57BFC00A79AEF /* CKStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */; };
+		9CC6E44A1CE5ACC400A79AEF /* CloudKitAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */; };
+		9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */; };
+		9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9C2FDC871CE9A4BD00A61F0F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5BA8EC401A9D14DC00CE82E1;
+			remoteInfo = "Charts-iOS";
+		};
+		9C2FDC891CE9A4BD00A61F0F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A52C5C371BAC5CA400594CDD;
+			remoteInfo = "Charts-TV";
+		};
+		9C2FDC8B1CE9A4BD00A61F0F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 65B3F5BF1C7370BE000983D0;
+			remoteInfo = "Charts-OSX";
+		};
+		9C2FDC8D1CE9A4BD00A61F0F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06AEE7A21BDC3F8B009875AE;
+			remoteInfo = ChartsTests;
+		};
+		9C2FDC951CE9A4CE00A61F0F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5BA8EC3F1A9D14DC00CE82E1;
+			remoteInfo = "Charts-iOS";
+		};
 		9C33259B1CDB111800F49338 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
@@ -88,6 +131,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				9C3325A61CDB112300F49338 /* Gloss.framework in Embed Frameworks */,
+				9C2FDC941CE9A4CE00A61F0F /* Charts.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -98,9 +142,10 @@
 		9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+.swift"; sourceTree = "<group>"; };
 		9C0ED8B31CDDA3540087AEE6 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericFetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
+		9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = Submodules/Charts/Charts/Charts.xcodeproj; sourceTree = SOURCE_ROOT; };
+		9C2FDC9B1CE9A91A00A61F0F /* ChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		9C3325761CDB0EF200F49338 /* Chapman Parking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chapman Parking.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3325791CDB0EF200F49338 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		9C33257B1CDB0EF200F49338 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		9C33257E1CDB0EF200F49338 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chapman_Parking.xcdatamodel; sourceTree = "<group>"; };
 		9C3325831CDB0EF200F49338 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -122,6 +167,13 @@
 		9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TotalCountTableViewCell.swift; sourceTree = "<group>"; };
 		9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelCountTableViewCell.swift; sourceTree = "<group>"; };
 		9C3325C71CDB34F500F49338 /* ParkingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingViewController.swift; sourceTree = "<group>"; };
+		9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chapman Parking.entitlements"; sourceTree = "<group>"; };
+		9C71169C1CE3118900C52F0E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		9CC114941CE984C30093215B /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKStructs.swift; sourceTree = "<group>"; };
+		9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitAPI.swift; sourceTree = "<group>"; };
+		9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingAPI.swift; sourceTree = "<group>"; };
+		9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +181,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C2FDC931CE9A4CE00A61F0F /* Charts.framework in Frameworks */,
 				9C3325A51CDB112300F49338 /* Gloss.framework in Frameworks */,
+				9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,9 +198,21 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
+		9C2FDC811CE9A4BD00A61F0F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9C2FDC881CE9A4BD00A61F0F /* Charts.framework */,
+				9C2FDC8A1CE9A4BD00A61F0F /* Charts.framework */,
+				9C2FDC8C1CE9A4BD00A61F0F /* Charts.framework */,
+				9C2FDC8E1CE9A4BD00A61F0F /* ChartsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		9C33256D1CDB0EF200F49338 = {
 			isa = PBXGroup;
 			children = (
+				9C71169C1CE3118900C52F0E /* CloudKit.framework */,
 				9C3325781CDB0EF200F49338 /* Chapman Parking */,
 				9C3325771CDB0EF200F49338 /* Products */,
 			);
@@ -163,6 +229,7 @@
 		9C3325781CDB0EF200F49338 /* Chapman Parking */ = {
 			isa = PBXGroup;
 			children = (
+				9CC6E44B1CE5ACDC00A79AEF /* APIs */,
 				9C0ED8B21CDDA2370087AEE6 /* Extensions */,
 				9C3325C51CDB344700F49338 /* Views */,
 				9C33258F1CDB0F0700F49338 /* Model */,
@@ -176,7 +243,7 @@
 		9C33258E1CDB0EFE00F49338 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				9C3325AA1CDB16A100F49338 /* WebAPI.swift */,
+				9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */,
 				9C3325831CDB0EF200F49338 /* Assets.xcassets */,
 				9C3325921CDB110D00F49338 /* Submodules */,
 				9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */,
@@ -193,6 +260,8 @@
 				9C3325BC1CDB250C00F49338 /* CoreData */,
 				9C3325BD1CDB252300F49338 /* JSONStructs.swift */,
 				9C0ED8B31CDDA3540087AEE6 /* Enums.swift */,
+				9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */,
+				9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -200,6 +269,7 @@
 		9C3325921CDB110D00F49338 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */,
 				9C3325931CDB111800F49338 /* Gloss.xcodeproj */,
 			);
 			name = Submodules;
@@ -246,11 +316,22 @@
 		9C3325C61CDB344E00F49338 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				9C33257B1CDB0EF200F49338 /* ViewController.swift */,
+				9C2FDC9B1CE9A91A00A61F0F /* ChartViewController.swift */,
+				9CC114941CE984C30093215B /* MapViewController.swift */,
 				9C3325C71CDB34F500F49338 /* ParkingViewController.swift */,
 				9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		9CC6E44B1CE5ACDC00A79AEF /* APIs */ = {
+			isa = PBXGroup;
+			children = (
+				9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */,
+				9C3325AA1CDB16A100F49338 /* WebAPI.swift */,
+				9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */,
+			);
+			name = APIs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,6 +350,7 @@
 			);
 			dependencies = (
 				9C3325A81CDB112300F49338 /* PBXTargetDependency */,
+				9C2FDC961CE9A4CE00A61F0F /* PBXTargetDependency */,
 			);
 			name = "Chapman Parking";
 			productName = "Chapman Parking";
@@ -287,6 +369,12 @@
 				TargetAttributes = {
 					9C3325751CDB0EF200F49338 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = SV57A2C639;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -303,6 +391,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 9C2FDC811CE9A4BD00A61F0F /* Products */;
+					ProjectRef = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
+				},
+				{
 					ProductGroup = 9C3325941CDB111800F49338 /* Products */;
 					ProjectRef = 9C3325931CDB111800F49338 /* Gloss.xcodeproj */;
 				},
@@ -315,6 +407,34 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		9C2FDC881CE9A4BD00A61F0F /* Charts.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Charts.framework;
+			remoteRef = 9C2FDC871CE9A4BD00A61F0F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9C2FDC8A1CE9A4BD00A61F0F /* Charts.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Charts.framework;
+			remoteRef = 9C2FDC891CE9A4BD00A61F0F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9C2FDC8C1CE9A4BD00A61F0F /* Charts.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Charts.framework;
+			remoteRef = 9C2FDC8B1CE9A4BD00A61F0F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9C2FDC8E1CE9A4BD00A61F0F /* ChartsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ChartsTests.xctest;
+			remoteRef = 9C2FDC8D1CE9A4BD00A61F0F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		9C33259C1CDB111800F49338 /* Gloss.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -370,21 +490,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */,
 				9C3325C41CDB344300F49338 /* LevelCountTableViewCell.swift in Sources */,
 				9C3325AB1CDB16A100F49338 /* WebAPI.swift in Sources */,
 				9C0ED8B41CDDA3540087AEE6 /* Enums.swift in Sources */,
 				9C3325C01CDB2D9E00F49338 /* DataManager.swift in Sources */,
+				9CC6E44A1CE5ACC400A79AEF /* CloudKitAPI.swift in Sources */,
 				9C3325B21CDB18ED00F49338 /* Count+CoreDataProperties.swift in Sources */,
-				9C33257C1CDB0EF200F49338 /* ViewController.swift in Sources */,
 				9C0ED8B11CDDA2140087AEE6 /* NSDate+.swift in Sources */,
 				9C3325B51CDB18ED00F49338 /* Level.swift in Sources */,
 				9C33257A1CDB0EF200F49338 /* AppDelegate.swift in Sources */,
 				9C3325B41CDB18ED00F49338 /* Level+CoreDataProperties.swift in Sources */,
+				9CC6E4441CE57BFC00A79AEF /* CKStructs.swift in Sources */,
 				9C3325BB1CDB1F8700F49338 /* Location.swift in Sources */,
 				9C3325C21CDB342D00F49338 /* TotalCountTableViewCell.swift in Sources */,
 				9C3325B31CDB18ED00F49338 /* Count.swift in Sources */,
 				9C3325B61CDB18ED00F49338 /* Structure+CoreDataProperties.swift in Sources */,
 				9C3325BA1CDB1F8700F49338 /* Location+CoreDataProperties.swift in Sources */,
+				9C2FDC9C1CE9A91A00A61F0F /* ChartViewController.swift in Sources */,
+				9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */,
+				9CC114951CE984C30093215B /* MapViewController.swift in Sources */,
 				9C3325BE1CDB252300F49338 /* JSONStructs.swift in Sources */,
 				9C3325B71CDB18ED00F49338 /* Structure.swift in Sources */,
 				9C3325821CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld in Sources */,
@@ -397,6 +522,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9C2FDC961CE9A4CE00A61F0F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Charts-iOS";
+			targetProxy = 9C2FDC951CE9A4CE00A61F0F /* PBXContainerItemProxy */;
+		};
 		9C3325A81CDB112300F49338 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Gloss;
@@ -513,6 +643,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -525,6 +656,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -11,14 +11,11 @@ import CoreData
 
 class DataManager{
     static let sharedInstance = DataManager()
-    
-    var applicationDocumentsDirectory: NSURL
-    var managedObjectModel: NSManagedObjectModel
-    var persistentStoreCoordinator: NSPersistentStoreCoordinator
-    var managedObjectContext: NSManagedObjectContext
+    var api: ParkingAPI!
+
     
     var autoRefreshInterval: Double = 60
-    private weak var refreshTimer: NSTimer?
+//    private weak var refreshTimer: NSTimer?
     
     var autoRefreshEnabled: Bool = true{
         didSet{
@@ -30,24 +27,25 @@ class DataManager{
         }
     }
     
-    private init(){
-        applicationDocumentsDirectory = {
-            // The directory the application uses to store the Core Data store file. This code uses a directory named "com.stephenciauri.Chapman_Parking" in the application's documents Application Support directory.
-            let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-            return urls[urls.count-1]
-        }()
+    lazy var refreshTimer: NSTimer? = {
+        let timer = NSTimer.scheduledTimerWithTimeInterval(self.autoRefreshInterval, target: self, selector: #selector(timerUpdateCounts), userInfo: nil, repeats: true)
         
-        managedObjectModel = {
-            // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-            let modelURL = NSBundle.mainBundle().URLForResource("Chapman_Parking", withExtension: "momd")!
-            return NSManagedObjectModel(contentsOfURL: modelURL)!
-        }()
-        
-        persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
-        let url = applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
+        return timer
+    }()
+    
+    lazy var managedObjectModel: NSManagedObjectModel = {
+    // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
+    let modelURL = NSBundle.mainBundle().URLForResource("Chapman_Parking", withExtension: "momd")!
+    return NSManagedObjectModel(contentsOfURL: modelURL)!
+    }()
+    
+    lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
+        let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
+        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
         let failureReason = "There was an error creating or loading the application's saved data."
         do {
             try persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            return persistentStoreCoordinator
         } catch {
             // Report any error we got.
             var dict = [String: AnyObject]()
@@ -61,42 +59,46 @@ class DataManager{
             NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
             abort()
         }
+    }()
 
-        let coordinator = persistentStoreCoordinator
-        managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+    
+    lazy var applicationDocumentsDirectory: NSURL = {
+        // The directory the application uses to store the Core Data store file. This code uses a directory named "com.stephenciauri.Chapman_Parking" in the application's documents Application Support directory.
+        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        return urls[urls.count-1]
+    }()
+    
+    lazy var managedObjectContext: NSManagedObjectContext = {
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         managedObjectContext.undoManager = nil
-        managedObjectContext.persistentStoreCoordinator = coordinator
-        
-        refreshTimer = NSTimer.scheduledTimerWithTimeInterval(self.autoRefreshInterval, target: self, selector: #selector(timerUpdateCounts), userInfo: nil, repeats: true)
-
+        managedObjectContext.persistentStoreCoordinator = self.persistentStoreCoordinator
         NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: {note in self.contextDidSaveNotificationHandler(note)})
 
-    }
+        return managedObjectContext
+    }()
     
     
     private func contextDidSaveNotificationHandler(notification: NSNotification){
         let sender = notification.object as! NSManagedObjectContext
         if sender !== managedObjectContext {
             managedObjectContext.performBlock {
+//                print(self.managedObjectContext.hasChanges)
                 NSLog("Merging")
                 self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
-                self.saveContext()
+//                print(self.managedObjectContext.hasChanges)
+//                try! self.managedObjectContext.save()
             }
         }
     }
     
     // Creates a new Core Data stack and returns a managed object context associated with a private queue.
-    private func createPrivateQueueContext() throws -> NSManagedObjectContext {
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
-        let storeURL = applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
-        try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
-        
+    func createPrivateQueueContext() throws -> NSManagedObjectContext {
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         
         context.performBlockAndWait() {
             
-            context.persistentStoreCoordinator = coordinator
+            context.persistentStoreCoordinator = self.persistentStoreCoordinator
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             context.undoManager = nil
         }
@@ -107,6 +109,7 @@ class DataManager{
     // MARK: - Core Data Saving support
     
     private func saveContext () {
+        
         if managedObjectContext.hasChanges {
             do {
                 try managedObjectContext.save()
@@ -154,14 +157,30 @@ class DataManager{
     
     @objc
     private func timerUpdateCounts(){
-        updateCounts(.Latest)
+        updateCounts(.SinceLast)
     }
     
     
     
     func updateCounts(updateType: UpdateType){
-        WebAPI.generateReport(updateType, withBlock: {report in
-            let backgroundContext = try! self.createPrivateQueueContext()
+        let backgroundContext = try! createPrivateQueueContext()
+        var sinceDate: NSDate? = nil
+        
+        if updateType == .SinceLast{
+            let request = NSFetchRequest(entityName: "Count")
+            request.fetchLimit = 1
+            let dateSort = NSSortDescriptor(key: "updatedAt", ascending: false)
+            request.sortDescriptors = [dateSort]
+            
+            backgroundContext.performBlockAndWait({
+                sinceDate = (try! backgroundContext.executeFetchRequest(request).first as! Count).updatedAt
+                NSLog("Getting counts since \(sinceDate)")
+            })
+        }
+        
+        api.generateReport(updateType, sinceDate: sinceDate, withBlock: {report in
+            
+            
             for structure in report.structures{
                 var s: Structure
                 
@@ -172,6 +191,10 @@ class DataManager{
                     let loc = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: backgroundContext) as! Location
                     loc.lat = structure.lat
                     loc.long = structure.long
+                    
+                    s.location = loc
+                    loc.structure = s
+                    NSLog("New Structure")
                 }
                 
                 s.name = structure.name
@@ -184,22 +207,40 @@ class DataManager{
                     }else{
                         l = NSEntityDescription.insertNewObjectForEntityForName("Level", inManagedObjectContext: backgroundContext) as! Level
                         l.structure = s
+                        NSLog("New Level")
                     }
                     
                     l.name = level.name
                     l.capacity = level.capacity
                     
                     for count in level.counts{
+                        
                         let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: backgroundContext) as! Count
                         c.availableSpaces = count.count
+                        //                        print("Before: \(s.name!) \(l.name!): \(c.availableSpaces) vs \(l.currentCount). Total Count: \(l.counts?.count)")
                         c.updatedAt = count.timestamp
                         c.level = l
-
+                        
+//                        if count.count != l.currentCount{
+//                            let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: backgroundContext) as! Count
+//                            c.availableSpaces = count.count
+//                            //                        print("Before: \(s.name!) \(l.name!): \(c.availableSpaces) vs \(l.currentCount). Total Count: \(l.counts?.count)")
+//                            c.updatedAt = count.timestamp
+//                            c.level = l
+//                            //                            print("After: \(s.name!) \(l.name!): \(c.availableSpaces!) vs \(l.currentCount). Total Count: \(l.counts!.count)")
+//                            
+//                            
+//                        }
+                        
+  
                     }
+//                    l.willChangeValueForKey("counts")
+//                    l.didChangeValueForKey("counts")
+                    
                 }
-                
             }
             try! backgroundContext.save()
+//            backgroundContext.reset()
         })
         
     }

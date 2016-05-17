@@ -23,7 +23,11 @@ extension Level {
         get{
             let sort = NSSortDescriptor(key: "updatedAt", ascending: false)
             let arr: Array = (counts?.sortedArrayUsingDescriptors([sort]))!
-            return Int((arr.first as! Count).availableSpaces!)
+            if let count = (arr.first as? Count)?.availableSpaces{
+                return Int(count)
+            }else{
+                return 0
+            }
         }
     }
     

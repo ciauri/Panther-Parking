@@ -15,13 +15,13 @@ public extension NSDate {
         dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
         
-        return dateFormatter.stringFromDate(date).stringByAppendingString("Z")
+        return dateFormatter.stringFromDate(date)
     }
     
     public class func dateFromISOString(string: String) -> NSDate {
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         
         return dateFormatter.dateFromString(string)!

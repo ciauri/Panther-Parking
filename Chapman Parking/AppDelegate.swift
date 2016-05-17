@@ -19,15 +19,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         let defaults = NSUserDefaults.standardUserDefaults()
+        let api: ParkingAPI = CloudKitAPI.sharedInstance
+        DataManager.sharedInstance.api = api
 
         if !defaults.boolForKey("initialized"){
             DataManager.sharedInstance.updateCounts(.All)
             defaults.setBool(true, forKey: "initialized")
             NSLog("Initializing Data")
         }else{
-            DataManager.sharedInstance.updateCounts(.Latest)
-            NSLog("Updating Counts")
+            DataManager.sharedInstance.updateCounts(UpdateType.SinceLast)
+            DataManager.sharedInstance.autoRefreshEnabled = true
+            NSLog("Catching up")
         }
+        
+//        WebAPI.sharedInstance.refresh()
         
 //        DataManager.autoRefreshEnabled = true
         
@@ -48,10 +53,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        if NSUserDefaults.standardUserDefaults().boolForKey("initialized"){
+            DataManager.sharedInstance.updateCounts(UpdateType.SinceLast)
+            NSLog("Catching up")
+        }
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        
     }
 
     func applicationWillTerminate(application: UIApplication) {

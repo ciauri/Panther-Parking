@@ -21,6 +21,7 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView?.beginUpdates()
+        NSLog("Updating")
     }
     
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
@@ -48,9 +49,13 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
                 delegate?.configureCell(cell, atIndexPath: indexPath)
             }
         case .Move:
-            //            tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
-            tableView?.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            tableView?.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            
+//            tableView?.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+//            tableView?.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            if let indexPath = indexPath, cell = tableView?.cellForRowAtIndexPath(indexPath){
+                delegate?.configureCell(cell, atIndexPath: indexPath)
+                tableView?.moveRowAtIndexPath(indexPath, toIndexPath: newIndexPath!)
+            }
         }
     }
     
