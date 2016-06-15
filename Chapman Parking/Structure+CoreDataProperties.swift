@@ -30,12 +30,13 @@ extension Structure {
     }
     
     var currentCount: Int{
-        var cap = 0
+        var count = 0
         for level in levels! where level.name != "All Levels"{
             let level = level as! Level
-            cap += Int(level.currentCount)
+            count += Int(level.currentCount!)
         }
-        return cap
+        
+        return count
         
     }
     

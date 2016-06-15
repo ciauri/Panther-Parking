@@ -42,6 +42,7 @@ struct JSONLevel: Decodable, CPLevel{
     let name: String?
     let capacity: Int?
     let counts: [CPCount]
+    let currentCount: Int
     
     init?(json: JSON) {
         name = "name" <~~ json
@@ -49,6 +50,7 @@ struct JSONLevel: Decodable, CPLevel{
         let countsFromJSON = [JSONCount].fromJSONArray(("counts" <~~ json)!)
         let cpcounts = countsFromJSON.map({$0 as CPCount})
         counts = cpcounts
+        currentCount = 0
 
     }
     

@@ -13,7 +13,7 @@ class ParkingViewController: UIViewController {
     @IBOutlet var parkingTableView: UITableView!
     
     lazy var frc: NSFetchedResultsController = self.initFRC()
-    lazy var frcDelegate = GenericFetchedResultsControllerDelegate()
+    weak var frcDelegate = GenericFetchedResultsControllerDelegate()
     
     var structure: Structure?
 
@@ -73,8 +73,8 @@ extension ParkingViewController: NSFetchedResultsControllerDelegate{
             request.predicate = NSPredicate(format: "structure = %@", s)
         }
         let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: DataManager.sharedInstance.managedObjectContext, sectionNameKeyPath: "structure.name", cacheName: nil)
-        frcDelegate.tableView = parkingTableView
-        frcDelegate.delegate = self
+        frcDelegate?.tableView = parkingTableView
+        frcDelegate?.delegate = self
         controller.delegate = frcDelegate
         return controller
     }
@@ -100,7 +100,7 @@ extension ParkingViewController: UITableViewDataSource, GenericFRCDelegate{
         if level.name == "All Levels"{
             let cell = cell as! TotalCountTableViewCell
             cell.nameLabel?.text = level.name
-            let percent = Float(Int(level.capacity!) - level.currentCount) / Float(level.capacity!)
+            let percent = Float(Int(level.capacity!) - Int(level.currentCount!)) / Float(level.capacity!)
             let formatter = NSNumberFormatter()
             formatter.numberStyle = .PercentStyle
             cell.countLabel?.text = formatter.stringFromNumber(percent)
@@ -108,8 +108,8 @@ extension ParkingViewController: UITableViewDataSource, GenericFRCDelegate{
         }else{
             let cell = cell as! LevelCountTableViewCell
             cell.nameLabel?.text = level.name
-            cell.countLabel?.text = "\(level.currentCount)"
-            cell.progressBar?.progress = Float(Int(level.capacity!) - level.currentCount) / Float(level.capacity!)
+            cell.countLabel?.text = "\(level.currentCount!)"
+            cell.progressBar?.progress = Float(Int(level.capacity!) - Int(level.currentCount!)) / Float(level.capacity!)
         }
         
         
@@ -126,7 +126,7 @@ extension ParkingViewController: UITableViewDataSource, GenericFRCDelegate{
     func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         let sectionResults = frc.sections![section]
         let level = sectionResults.objects!.first as! Level
-        let date = level.updatedAt
+        let date = level.updatedAt ?? NSDate()
         let formatter = NSDateFormatter()
         formatter.timeStyle = .MediumStyle
         formatter.dateStyle = .LongStyle

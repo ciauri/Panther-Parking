@@ -27,6 +27,7 @@ protocol CPLevel{
     var name: String? {get}
     var capacity: Int? {get}
     var counts: [CPCount] {get}
+    var currentCount: Int {get}
 }
 
 protocol CPCount{

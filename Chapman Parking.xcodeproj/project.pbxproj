@@ -147,7 +147,7 @@
 		9C3325761CDB0EF200F49338 /* Chapman Parking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chapman Parking.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3325791CDB0EF200F49338 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9C33257E1CDB0EF200F49338 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chapman_Parking.xcdatamodel; sourceTree = "<group>"; };
+		9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */ = {isa = PBXFileReference; explicitFileType = wrapper.xcdatamodeld; path = Chapman_Parking.xcdatamodel; sourceTree = "<group>"; };
 		9C3325831CDB0EF200F49338 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9C3325861CDB0EF200F49338 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9C3325881CDB0EF200F49338 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -169,6 +169,7 @@
 		9C3325C71CDB34F500F49338 /* ParkingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingViewController.swift; sourceTree = "<group>"; };
 		9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chapman Parking.entitlements"; sourceTree = "<group>"; };
 		9C71169C1CE3118900C52F0E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 2.xcdatamodel"; sourceTree = "<group>"; };
 		9CC114941CE984C30093215B /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKStructs.swift; sourceTree = "<group>"; };
 		9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitAPI.swift; sourceTree = "<group>"; };
@@ -692,9 +693,10 @@
 		9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */,
 				9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */,
 			);
-			currentVersion = 9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */;
+			currentVersion = 9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */;
 			path = Chapman_Parking.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

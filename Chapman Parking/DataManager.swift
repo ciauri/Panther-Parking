@@ -44,7 +44,7 @@ class DataManager{
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
         let failureReason = "There was an error creating or loading the application's saved data."
         do {
-            try persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            try persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: [NSInferMappingModelAutomaticallyOption: true, NSMigratePersistentStoresAutomaticallyOption: true])
             return persistentStoreCoordinator
         } catch {
             // Report any error we got.
@@ -213,27 +213,26 @@ class DataManager{
                     l.name = level.name
                     l.capacity = level.capacity
                     
+                    l.currentCount = level.currentCount
+                    
+                    var latestCount: CPCount? = nil
+                    
                     for count in level.counts{
                         
+                        if latestCount == nil || latestCount?.timestamp?.compare(count.timestamp!) == NSComparisonResult.OrderedAscending{
+                            latestCount = count
+                        }
+                    
                         let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: backgroundContext) as! Count
                         c.availableSpaces = count.count
                         //                        print("Before: \(s.name!) \(l.name!): \(c.availableSpaces) vs \(l.currentCount). Total Count: \(l.counts?.count)")
                         c.updatedAt = count.timestamp
                         c.level = l
-                        
-//                        if count.count != l.currentCount{
-//                            let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: backgroundContext) as! Count
-//                            c.availableSpaces = count.count
-//                            //                        print("Before: \(s.name!) \(l.name!): \(c.availableSpaces) vs \(l.currentCount). Total Count: \(l.counts?.count)")
-//                            c.updatedAt = count.timestamp
-//                            c.level = l
-//                            //                            print("After: \(s.name!) \(l.name!): \(c.availableSpaces!) vs \(l.currentCount). Total Count: \(l.counts!.count)")
-//                            
-//                            
-//                        }
-                        
-  
                     }
+                    if let c = latestCount{
+                        l.updatedAt = c.timestamp
+                    }
+                    
 //                    l.willChangeValueForKey("counts")
 //                    l.didChangeValueForKey("counts")
                     

@@ -53,18 +53,7 @@ class MapViewController: UIViewController {
                 NSLog("issues and tissues")
             }
         })
-//        let request = NSFetchRequest(entityName: "Structure")
-//        
-//        context.performBlock({
-//            do{
-//                let results = try context.executeFetchRequest(request)
-//                self.mapView.addAnnotations(results as! [Structure])
-//            }
-//            catch{
-//                
-//            }
-//        })
-//        
+ 
         
     }
     
@@ -76,15 +65,7 @@ class MapViewController: UIViewController {
         let frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         frcDelegate.mapView = mapView
         frc.delegate = frcDelegate
-        
-        
-//        context.performBlock({
-//            do{
-//                try frc.performFetch()
-//            }catch{
-//                NSLog("issues and tissues")
-//            }
-//        })
+
         
         return frc
         

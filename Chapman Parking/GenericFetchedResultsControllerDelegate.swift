@@ -16,7 +16,7 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     var tableView: UITableView?
     var collectionView: UICollectionView?
     var mapView: MKMapView?
-    var delegate: GenericFRCDelegate?
+    weak var delegate: GenericFRCDelegate?
     
     
     
@@ -79,11 +79,12 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         tableView?.endUpdates()
+        NSLog("updated")
     }
     
     
 }
 
-protocol GenericFRCDelegate{
+protocol GenericFRCDelegate: class{
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath)
 }
