@@ -105,12 +105,15 @@ extension ParkingViewController: UITableViewDataSource, GenericFRCDelegate{
             formatter.numberStyle = .PercentStyle
             cell.countLabel?.text = formatter.stringFromNumber(percent)
             cell.progressBar?.progress = percent
+            cell.updateProgressBarColor()
         }else{
             let cell = cell as! LevelCountTableViewCell
             cell.nameLabel?.text = level.name
             cell.countLabel?.text = "\(level.currentCount!)"
             cell.progressBar?.progress = Float(Int(level.capacity!) - Int(level.currentCount!)) / Float(level.capacity!)
+            cell.updateProgressBarColor()
         }
+        
         
         
         

@@ -160,7 +160,38 @@ class DataManager{
         updateCounts(.SinceLast)
     }
     
+    func mostRecentCount(fromDate date: NSDate, onLevel level: Level, usingContext context: NSManagedObjectContext) -> Count? {
+        let request = NSFetchRequest(entityName: "Count")
+        request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
+        request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt <= %@)", level, date)
+        request.fetchLimit = 1
+        do{
+            return try (context.executeFetchRequest(request) as? [Count])?.first
+        } catch {
+            NSLog("error")
+            return nil
+        }
+    }
     
+    /// Fetches `Count` objects with UIMOC, returns chronologicall sorted list
+    func countsOn(level: Level, since date: NSDate) -> [Count] {
+        let context = DataManager.sharedInstance.managedObjectContext
+        let request = NSFetchRequest(entityName: "Count")
+        let chronoSort = NSSortDescriptor(key: "updatedAt", ascending: true)
+        request.sortDescriptors = [chronoSort]
+        request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt >= %@)", level, date)
+        
+        var counts: [Count] = []
+        context.performBlockAndWait({
+            do{
+                counts = try context.executeFetchRequest(request) as! [Count]
+            } catch {
+                NSLog("error with fetch")
+            }
+        })
+        
+        return counts
+    }
     
     func updateCounts(updateType: UpdateType){
         let backgroundContext = try! createPrivateQueueContext()

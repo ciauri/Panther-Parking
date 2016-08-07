@@ -75,7 +75,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Wcd-PL-Nfr">
-                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="summaryCell" id="L4B-Ar-ErN" customClass="TotalCountTableViewCell" customModule="Chapman_Parking" customModuleProvider="target">
@@ -200,9 +200,15 @@
                         <constraints>
                             <constraint firstItem="D64-eK-ubJ" firstAttribute="top" secondItem="Wcd-PL-Nfr" secondAttribute="bottom" id="9uc-so-qVR"/>
                             <constraint firstItem="Wcd-PL-Nfr" firstAttribute="top" secondItem="Zne-H3-UFu" secondAttribute="bottom" constant="-44" id="HAu-dj-YQr"/>
+                            <constraint firstItem="Wcd-PL-Nfr" firstAttribute="top" secondItem="c7D-Fh-VBd" secondAttribute="topMargin" id="Srb-BV-IaD"/>
                             <constraint firstItem="Wcd-PL-Nfr" firstAttribute="leading" secondItem="c7D-Fh-VBd" secondAttribute="leadingMargin" constant="-20" id="zVq-Cm-W88"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Wcd-PL-Nfr" secondAttribute="trailing" constant="-20" id="zWi-pP-mER"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="HAu-dj-YQr"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Summary" id="RJj-Hu-eAO"/>
                     <connections>

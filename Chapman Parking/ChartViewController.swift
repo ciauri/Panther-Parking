@@ -17,10 +17,12 @@ class ChartViewController: UIViewController {
     @IBOutlet var scaleSelector: UISegmentedControl!
     
     var structure: Structure!
+    var colors = ChartColorTemplates.vordiplom() + ChartColorTemplates.colorful()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initChart(withResolution: 60)
+        initChart(withResolution: 60, numberOfDays: 1)
 
         // Do any additional setup after loading the view.
     }
@@ -32,14 +34,78 @@ class ChartViewController: UIViewController {
     }
     
     
-    func initChart(withResolution minuteResolution: Int){
-        let context = DataManager.sharedInstance.managedObjectContext
-        let request = NSFetchRequest(entityName: "Count")
+    
+    
+    /// Maps the results array onto a continuous array of tuples containing `date` and `count`
+    /// - Note:
+    ///     Results array dates are modified to have the `second` DateComponent set to 0. This allows for a better
+    ///       and more efficient hit rate of date comparisons. Timeline should have the same quality. Use `dateFromTime`
+    ///       on input timeline.
+    /// - Parameters:
+    ///     - results: List of count objects
+    ///     - fromLevel: The `Level` object the results belong to
+    ///     - intoTimeline: Continuous array of NSDates that the results should be mapped onto
+    /// - Complexity:
+    ///     O(nlogn)...
+    private func integrateAndSort(results: [Count], fromLevel level: Level, intoTimeline timeline: [NSDate]) -> [(date: NSDate, count: Int)] {
+        var plotDict: [NSDate:Int] = [:]
+        
+        // Normalize time to have 00 seconds for easier matching
+        results.forEach({$0.updatedAt = $0.updatedAt?.dateFromTime(nil, minute: nil, second: 0)})
+        
+        // Map plotDict to the desired timeline with default value used for filling in the blanks
+        timeline.forEach({plotDict[$0] = -1})
+        
+        // Map results onto timeline
+        results.forEach({plotDict[$0.updatedAt!] = Int($0.availableSpaces!)})
+        
+        // Make sortable
+        let flattenedPlot = plotDict.map({(date: $0.0, count: $0.1)})
+        
+        // Sort
+        var sortedPlot = flattenedPlot.sort({$0.0.date.compare($0.1.date) == .OrderedAscending})
+        
+        // Fill holes with data from previous point. If no previous point exists, fetch older data
+        for (index, element) in sortedPlot.enumerate() where element.count == -1 {
+            if index != 0 {
+                sortedPlot[index] = (element.date, sortedPlot[index-1].count)
+            } else {
+                // Will execute a maximum of once per dataSet
+                let context = DataManager.sharedInstance.managedObjectContext
+                let count = DataManager.sharedInstance.mostRecentCount(fromDate: element.date, onLevel: level, usingContext: context)
+                sortedPlot[index] = (element.date, Int(count?.availableSpaces! ?? 0))
+            }
+        }
+        return sortedPlot
+    }
+    
+    private func dataSetFor(level: Level, withdata data: [(date: NSDate, count: Int)], andResolutionInMinutes resolution: Int) -> LineChartDataSet {
+        var yVals: [ChartDataEntry] = []
+        
+        for (index, element) in data.enumerate() {
+            if index % resolution == 0 {
+                yVals.append(ChartDataEntry(value: Double(element.count), xIndex: index))
+            }
+        }
+        
+        let set = LineChartDataSet(yVals: yVals, label: level.name)
+        if resolution >= 60 {
+            set.mode = .CubicBezier
+        }
+        set.lineWidth = 3
+        set.drawCirclesEnabled = false
+        set.colors = [colors.removeFirst()]
+        
+        return set
+    }
+    
+    
+    func initChart(withResolution minuteResolution: Int, numberOfDays days: Int){
+        let daysWorthOfSeconds = 86400
+        
         let today = NSDate().dateFromTime(nil, minute: nil, second: 0)!
-        let yesterday = NSDate().dateByAddingTimeInterval(-86400).dateFromTime(nil, minute: nil, second: 0)!
-        let chronoSort = NSSortDescriptor(key: "updatedAt", ascending: true)
-        request.sortDescriptors = [chronoSort]
-        var colors = ChartColorTemplates.colorful() + ChartColorTemplates.vordiplom()
+        let yesterday = NSDate().dateByAddingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(nil, minute: nil, second: 0)!
+        
         
         let formatter = NSDateFormatter()
         formatter.dateStyle = .ShortStyle
@@ -47,69 +113,37 @@ class ChartViewController: UIViewController {
         
      
         var dataSets: [LineChartDataSet] = []
-        var timeIntervals = self.datesInRange(yesterday, endDate: today, withInterval: 60)
+        var timeIntervals = NSDate.datesInRange(yesterday, endDate: today, withInterval: 60)
         timeIntervals.sortInPlace({$0.compare($1) == .OrderedAscending})
         for level in structure.levels!{
-            let l = level as! Level
-            request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt >= %@)", l, yesterday)
-            context.performBlockAndWait({
-                do{
-                    let results = try context.executeFetchRequest(request) as! [Count]
-                    var plotDict: [NSDate:Int] = [:]
-                    
-                    // Normalize time to have 00 seconds for easier matching
-                    results.forEach({$0.updatedAt = $0.updatedAt?.dateFromTime(nil, minute: nil, second: 0)})
-                    
-                    timeIntervals.forEach({plotDict[$0] = -1})
-                    results.forEach({plotDict[$0.updatedAt!] = Int($0.availableSpaces!)})
-                    
-                    let flattenedPlot = plotDict.map({(date: $0.0, count: $0.1)})
-                    var sortedPlot = flattenedPlot.sort({$0.0.date.compare($0.1.date) == .OrderedAscending})
-                    
-                    for (index, element) in sortedPlot.enumerate() where element.count == -1 {
-                        if index != 0 {
-                            sortedPlot[index] = (element.date, sortedPlot[index-1].count)
-                        } else {
-                            let count = self.fetchMostRecentCount(fromDate: element.date, onLevel: l, usingContext: context)
-                            sortedPlot[index] = (element.date, Int(count?.availableSpaces! ?? 0))
-                        }
-                        
-                    }
-                    
-                    var yVals: [ChartDataEntry] = []
-                    
-                    for (index, element) in sortedPlot.enumerate() {
-                        if index % minuteResolution == 0 {
-                            yVals.append(ChartDataEntry(value: Double(element.count), xIndex: index))
-                        }
-                    }
-
-                    NSLog("\(yVals.count)")
-                    let set = LineChartDataSet(yVals: yVals, label: l.name)
-                    if minuteResolution >= 60 {
-                        set.mode = .CubicBezier
-                    }
-                    set.lineWidth = 3
-                    set.drawCirclesEnabled = false
-                    set.colors = [colors.removeFirst()]
-                    dataSets.append(set)
-                    
-                }catch{
-                    NSLog("fetch fail ruhroh")
-                }
-            })
             
+            guard let level = level as? Level
+                else {return}
             
-   
+            let results = DataManager.sharedInstance.countsOn(level, since: yesterday)
+            let sortedPlot = integrateAndSort(results, fromLevel: level, intoTimeline: timeIntervals)
+            let set = dataSetFor(level, withdata: sortedPlot, andResolutionInMinutes: minuteResolution)
+            
+            dataSets.append(set)
         }
+        
+        dataSets.sortInPlace({(set1, set2) in
+            set1.label < set2.label
+        })
         
         let stringStamps = timeIntervals.map({return formatter.stringFromDate($0)})
         lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
+        lineChart.legend.horizontalAlignment = .Center
+        lineChart.legend.verticalAlignment = .Top
+        lineChart.legend.orientation = .Horizontal
+//        lineChart.legend.drawInside = true
+        lineChart.legend
         lineChart.animate(yAxisDuration: 2, easingOption: .EaseOutElastic)
         
     }
     
     
+    /*
     private func countThatMatches(date: NSDate, withCounts counts: [Count]) -> Count? {
         let calendar = NSCalendar.currentCalendar()
         for count in counts {
@@ -119,39 +153,12 @@ class ChartViewController: UIViewController {
         }
         return nil
     }
+    */
     
-    private func fetchMostRecentCount(fromDate date: NSDate, onLevel level: Level, usingContext context: NSManagedObjectContext) -> Count? {
-        let request = NSFetchRequest(entityName: "Count")
-        request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
-        request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt <= %@)", level, date)
-        request.fetchLimit = 1
-        do{
-            return try (context.executeFetchRequest(request) as? [Count])?.first
-        } catch {
-            NSLog("error")
-            return nil
-        }
-    }
+
     
-    func firstDayOfWeekWithDate(date: NSDate)->NSDate{
-        var beginningOfWeek: NSDate?
-        let calendar = NSCalendar.currentCalendar()
-        calendar.rangeOfUnit(.WeekOfYear, startDate: &beginningOfWeek, interval: nil, forDate: date)
-        
-        return beginningOfWeek!
-    }
-    
-    func datesInRange(startDate: NSDate, endDate:NSDate, withInterval seconds: Double) -> [NSDate]{
-        var secondsBetween = endDate.timeIntervalSinceDate(startDate)
-        var dates: [NSDate] = []
-        
-        while(secondsBetween > 0){
-            dates.append(startDate.dateByAddingTimeInterval(secondsBetween))
-            secondsBetween -= seconds
-        }
-        
-        return dates
-    }
+
+
     
 
     /*
