@@ -23,6 +23,8 @@ class MapViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "list"), style: .Plain, target: self, action: #selector(flipToList))
         mapView.setRegion(Constants.Locations.defaultRegion, animated: false)
         addStructuresToMap()
+        mapView.scrollEnabled = false
+        mapView.zoomEnabled = false
         
 
         // Do any additional setup after loading the view.
