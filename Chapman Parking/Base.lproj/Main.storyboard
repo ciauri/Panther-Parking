@@ -19,8 +19,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wNc-I9-yWl" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="0.0" y="144" width="600" height="456"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="12" y="144" width="576" height="456"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8sE-0q-q7w">
                                 <rect key="frame" x="20" y="72" width="560" height="29"/>
@@ -41,12 +41,12 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="trailing" secondItem="e4x-4u-15i" secondAttribute="trailingMargin" id="76E-yz-fYY"/>
-                            <constraint firstItem="wNc-I9-yWl" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" constant="-20" id="9L5-KN-L9X"/>
+                            <constraint firstItem="wNc-I9-yWl" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" constant="-8" id="9L5-KN-L9X"/>
                             <constraint firstItem="7Jg-Fs-3Ld" firstAttribute="top" secondItem="wNc-I9-yWl" secondAttribute="bottom" id="I10-86-EMB"/>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="top" secondItem="8sE-0q-q7w" secondAttribute="bottom" constant="8" id="SLR-1r-bW4"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="trailing" secondItem="e4x-4u-15i" secondAttribute="trailingMargin" id="VhD-a7-FW4"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" id="XgV-OS-bOv"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="wNc-I9-yWl" secondAttribute="trailing" constant="-20" id="Ypg-o2-Gdl"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="wNc-I9-yWl" secondAttribute="trailing" constant="-8" id="Ypg-o2-Gdl"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="top" secondItem="HLd-W7-qa3" secondAttribute="bottom" constant="8" id="f6M-KV-3fg"/>
                             <constraint firstItem="wNc-I9-yWl" firstAttribute="top" secondItem="A6l-NF-IH3" secondAttribute="bottom" constant="8" id="gsZ-ig-uKj"/>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" id="rb8-cR-Epp"/>

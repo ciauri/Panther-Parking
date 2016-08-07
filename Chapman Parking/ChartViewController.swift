@@ -20,10 +20,11 @@ class ChartViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initChart()
+        initChart(withResolution: 60)
 
         // Do any additional setup after loading the view.
     }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -31,63 +32,63 @@ class ChartViewController: UIViewController {
     }
     
     
-    func initChart(){
+    func initChart(withResolution minuteResolution: Int){
         let context = DataManager.sharedInstance.managedObjectContext
         let request = NSFetchRequest(entityName: "Count")
-        let today = NSDate()
-        let yesterday = NSDate().dateByAddingTimeInterval(-86400)
-//        let dateArray = hourlyDatesInRange(yesterday, endDate: today)
+        let today = NSDate().dateFromTime(nil, minute: nil, second: 0)!
+        let yesterday = NSDate().dateByAddingTimeInterval(-86400).dateFromTime(nil, minute: nil, second: 0)!
         let chronoSort = NSSortDescriptor(key: "updatedAt", ascending: true)
         request.sortDescriptors = [chronoSort]
         var colors = ChartColorTemplates.colorful() + ChartColorTemplates.vordiplom()
-//        var colors = Constants.Colors.chartColors
         
         let formatter = NSDateFormatter()
         formatter.dateStyle = .ShortStyle
-        formatter.timeStyle = .MediumStyle
+        formatter.timeStyle = .ShortStyle
         
-//        let calendar = NSCalendar.currentCalendar()
-        
-        
-        
+     
         var dataSets: [LineChartDataSet] = []
-//        var dates = Set<NSDate>()
-//        var indices: [Int] = []
-//        var indices = Set<Double>()
-//        var indices = Set<Int>()
+        var timeIntervals = self.datesInRange(yesterday, endDate: today, withInterval: 60)
+        timeIntervals.sortInPlace({$0.compare($1) == .OrderedAscending})
         for level in structure.levels!{
             let l = level as! Level
             request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt >= %@)", l, yesterday)
             context.performBlockAndWait({
                 do{
                     let results = try context.executeFetchRequest(request) as! [Count]
+                    var plotDict: [NSDate:Int] = [:]
                     
-                    let oneMinuteIntervals = self.datesInRange(yesterday, endDate: today, withInterval: 60)
-                    var yVals: [ChartDataEntry] = []
-
+                    // Normalize time to have 00 seconds for easier matching
+                    results.forEach({$0.updatedAt = $0.updatedAt?.dateFromTime(nil, minute: nil, second: 0)})
                     
-                    var lastCount: Int?
-                    for (index, date) in oneMinuteIntervals.enumerate() {
-                        var countToAdd: Int
-                        if let match = self.countThatMatches(date, withCounts: results) {
-                            countToAdd = Int(match.availableSpaces!)
+                    timeIntervals.forEach({plotDict[$0] = -1})
+                    results.forEach({plotDict[$0.updatedAt!] = Int($0.availableSpaces!)})
+                    
+                    let flattenedPlot = plotDict.map({(date: $0.0, count: $0.1)})
+                    var sortedPlot = flattenedPlot.sort({$0.0.date.compare($0.1.date) == .OrderedAscending})
+                    
+                    for (index, element) in sortedPlot.enumerate() where element.count == -1 {
+                        if index != 0 {
+                            sortedPlot[index] = (element.date, sortedPlot[index-1].count)
                         } else {
-                            if let count = lastCount {
-                                countToAdd = count
-                            } else if let count = self.fetchMostRecentCount(fromDate: date, onLevel: l, usingContext: context){
-                                countToAdd = Int(count.availableSpaces!)
-                            } else {
-                                countToAdd = 0
-                            }
-                            
+                            let count = self.fetchMostRecentCount(fromDate: element.date, onLevel: l, usingContext: context)
+                            sortedPlot[index] = (element.date, Int(count?.availableSpaces! ?? 0))
                         }
-                        lastCount = countToAdd
-                        yVals.append(ChartDataEntry(value: Double(countToAdd), xIndex: index))
                         
+                    }
+                    
+                    var yVals: [ChartDataEntry] = []
+                    
+                    for (index, element) in sortedPlot.enumerate() {
+                        if index % minuteResolution == 0 {
+                            yVals.append(ChartDataEntry(value: Double(element.count), xIndex: index))
+                        }
                     }
 
                     NSLog("\(yVals.count)")
                     let set = LineChartDataSet(yVals: yVals, label: l.name)
+                    if minuteResolution >= 60 {
+                        set.mode = .CubicBezier
+                    }
                     set.lineWidth = 3
                     set.drawCirclesEnabled = false
                     set.colors = [colors.removeFirst()]
@@ -98,18 +99,16 @@ class ChartViewController: UIViewController {
                 }
             })
             
-//            NSLog("\(indices.count)")
-//            NSLog("\(dataSets.first?.yVals.count)")
-//            let dateArray = Array(dates)
-//            let timestamps = dateArray.sort({$0.compare($1) == NSComparisonResult.OrderedAscending})
-//            let stringStamps = timestamps.map({return formatter.stringFromDate($0)})
-            let xvals = Array(0...1439)
             
-            lineChart.data = LineChartData(xVals: xvals, dataSets: dataSets)
    
         }
         
+        let stringStamps = timeIntervals.map({return formatter.stringFromDate($0)})
+        lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
+        lineChart.animate(yAxisDuration: 2, easingOption: .EaseOutElastic)
+        
     }
+    
     
     private func countThatMatches(date: NSDate, withCounts counts: [Count]) -> Count? {
         let calendar = NSCalendar.currentCalendar()

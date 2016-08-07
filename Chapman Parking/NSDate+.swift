@@ -26,4 +26,11 @@ public extension NSDate {
         
         return dateFormatter.dateFromString(string)!
     }
+    
+    func dateFromTime(hour: Int?, minute: Int?, second: Int?) -> NSDate? {
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Hour,.Minute,.Second], fromDate: self)
+        
+        return calendar.dateBySettingHour(hour ?? components.hour, minute: minute ?? components.minute, second: second ?? components.second, ofDate: self, options: .MatchFirst)
+    }
 }
