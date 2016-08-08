@@ -16,13 +16,13 @@ import MapKit
 extension Structure {
 
     @NSManaged var name: String?
-    @NSManaged var levels: NSSet?
+    @NSManaged var levels: Set<Level>?
     @NSManaged var location: Location?
     
     var capacity: Int{
         var cap = 0
         for level in levels! where level.name == "All Levels"{
-            let level = level as! Level
+            let level = level
             cap += Int(level.capacity!)
         }
         return cap
@@ -32,7 +32,7 @@ extension Structure {
     var currentCount: Int{
         var count = 0
         for level in levels! where level.name != "All Levels"{
-            let level = level as! Level
+            let level = level
             count += Int(level.currentCount!)
         }
         

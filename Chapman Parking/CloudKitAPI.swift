@@ -8,6 +8,7 @@
 
 import Foundation
 import CloudKit
+import UIKit
 
 class CloudKitAPI: ParkingAPI{
     static let sharedInstance = CloudKitAPI() as ParkingAPI
@@ -15,10 +16,11 @@ class CloudKitAPI: ParkingAPI{
     var container: CKContainer
     var publicDB: CKDatabase
     
+    var presenting: Bool = false
+    
     init(){
         container = CKContainer.defaultContainer()
         publicDB = container.publicCloudDatabase
-        container.accountStatusWithCompletionHandler(loginHandler)
     }
     
     private func loginHandler(status: CKAccountStatus, error: NSError?){
@@ -31,12 +33,28 @@ class CloudKitAPI: ParkingAPI{
             NSLog("logged in")
         case .CouldNotDetermine:
             NSLog("cant determine")
+            fallthrough
         case .NoAccount:
             NSLog("no account")
+            fallthrough
         case .Restricted:
             NSLog("ur a kid lol")
+            fallthrough
+        default:
+            if !presenting {
+                presenting = true
+                let alertController = UIAlertController(title: "iCloud Required", message: "Please login to your iCloud account to continue", preferredStyle: .Alert)
+                let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (_) -> Void in
+                    UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
+                }
+                let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+                alertController.addAction(settingsAction)
+                alertController.addAction(cancelAction)
+                dispatch_async(dispatch_get_main_queue(), {
+                    UIApplication.sharedApplication().delegate?.window!?.rootViewController?.presentViewController(alertController, animated: true, completion: {_ in self.presenting = false})
+                })
+            }
         }
-        
     }
 
     
@@ -78,6 +96,8 @@ class CloudKitAPI: ParkingAPI{
 
     
     func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock: (CPReport -> Void)) {
+        container.accountStatusWithCompletionHandler(loginHandler)
+
         let query = CKQuery(recordType: "ParkingStructure", predicate: NSPredicate(value: true))
         publicDB.performQuery(query, inZoneWithID: nil, completionHandler: {results, error in
             if error != nil{

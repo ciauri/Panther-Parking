@@ -37,7 +37,7 @@ public extension NSDate {
             secondsBetween -= seconds
         }
         
-        return dates
+        return dates.reverse()
     }
     
     /// Returns the localized first day of the week of the desired date

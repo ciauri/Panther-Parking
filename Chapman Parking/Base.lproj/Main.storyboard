@@ -29,6 +29,9 @@
                                     <segment title="Level 1"/>
                                     <segment title="Level 2"/>
                                 </segments>
+                                <connections>
+                                    <action selector="levelSelected:" destination="NEW-LK-LrN" eventType="valueChanged" id="eMR-4q-XmD"/>
+                                </connections>
                             </segmentedControl>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="A6l-NF-IH3">
                                 <rect key="frame" x="20" y="108" width="560" height="29"/>
@@ -36,6 +39,9 @@
                                     <segment title="Day"/>
                                     <segment title="Week"/>
                                 </segments>
+                                <connections>
+                                    <action selector="timeFrameSelected:" destination="NEW-LK-LrN" eventType="valueChanged" id="Fkd-VO-Ji3"/>
+                                </connections>
                             </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -74,7 +80,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Wcd-PL-Nfr">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Wcd-PL-Nfr">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>

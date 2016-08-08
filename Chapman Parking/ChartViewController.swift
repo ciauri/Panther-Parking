@@ -17,12 +17,27 @@ class ChartViewController: UIViewController {
     @IBOutlet var scaleSelector: UISegmentedControl!
     
     var structure: Structure!
+    var levels: [Level]!
     var colors = ChartColorTemplates.vordiplom() + ChartColorTemplates.colorful()
+    
+    var resolution: Int = 60
+    var numberOfDays: Int = 1
+    var selectedLevels: [Level]!
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initChart(withResolution: 60, numberOfDays: 1)
+        navigationItem.title = structure.name
+        addLevelsToLevelSelector()
+        levelSelector.selectedSegmentIndex = 0
+        
+        if let levels = structure.levels {
+            self.levels = Array(levels)
+            self.levels.sortInPlace({$0.0.name < $0.1.name})
+            selectedLevels = self.levels
+            initChart(selectedLevels, withResolution: resolution, numberOfDays: numberOfDays)
+        }
+        
 
         // Do any additional setup after loading the view.
     }
@@ -31,6 +46,44 @@ class ChartViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func timeFrameSelected(selector: UISegmentedControl) {
+        if selector.selectedSegmentIndex == 0 {
+            numberOfDays = 1
+        } else {
+            numberOfDays = 7
+        }
+        initChart(selectedLevels, withResolution: resolution, numberOfDays: numberOfDays)
+    }
+    
+    @IBAction func levelSelected(selector: UISegmentedControl) {
+        NSLog("\(selector.selectedSegmentIndex)")
+        if selector.selectedSegmentIndex == 0 {
+            selectedLevels = levels
+        } else {
+            selectedLevels = [levels[selector.selectedSegmentIndex]]
+        }
+        initChart(selectedLevels, withResolution: resolution, numberOfDays: numberOfDays)
+    }
+    
+    private func replenishColors() {
+        colors = ChartColorTemplates.vordiplom() + ChartColorTemplates.colorful()
+    }
+    
+    private func addLevelsToLevelSelector() {
+        levelSelector.removeAllSegments()
+        guard let levels = structure.levels else {return}
+        var levelNames = levels.map({$0.name!})
+        levelNames.sortInPlace()
+        
+        for (index, name) in levelNames.enumerate() {
+            if index == 0 {
+                levelSelector.insertSegmentWithTitle("All", atIndex: index, animated: true)
+            } else {
+                levelSelector.insertSegmentWithTitle(name, atIndex: index, animated: true)
+            }
+        }
     }
     
     
@@ -100,30 +153,26 @@ class ChartViewController: UIViewController {
     }
     
     
-    func initChart(withResolution minuteResolution: Int, numberOfDays days: Int){
+    func initChart(levels: [Level], withResolution minuteResolution: Int, numberOfDays days: Int){
+        replenishColors()
         let daysWorthOfSeconds = 86400
-        
-        let today = NSDate().dateFromTime(nil, minute: nil, second: 0)!
-        let yesterday = NSDate().dateByAddingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(nil, minute: nil, second: 0)!
-        
+        let days = days-1
+        let today = NSDate()
+        let yesterday = NSDate().dateByAddingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(0, minute: 0, second: 0)!
         
         let formatter = NSDateFormatter()
         formatter.dateStyle = .ShortStyle
         formatter.timeStyle = .ShortStyle
-        
      
         var dataSets: [LineChartDataSet] = []
-        var timeIntervals = NSDate.datesInRange(yesterday, endDate: today, withInterval: 60)
-        timeIntervals.sortInPlace({$0.compare($1) == .OrderedAscending})
-        for level in structure.levels!{
-            
-            guard let level = level as? Level
-                else {return}
-            
+        let timeIntervals = NSDate.datesInRange(yesterday, endDate: today, withInterval: 60)
+
+        for level in levels{
             let results = DataManager.sharedInstance.countsOn(level, since: yesterday)
             let sortedPlot = integrateAndSort(results, fromLevel: level, intoTimeline: timeIntervals)
             let set = dataSetFor(level, withdata: sortedPlot, andResolutionInMinutes: minuteResolution)
-            
+            set.valueFormatter?.zeroSymbol = ""
+            set.valueFormatter?.maximumSignificantDigits = 3
             dataSets.append(set)
         }
         
@@ -131,15 +180,19 @@ class ChartViewController: UIViewController {
             set1.label < set2.label
         })
         
-        let stringStamps = timeIntervals.map({return formatter.stringFromDate($0)})
-        lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
+        let stringStamps = timeIntervals.map({return formatter.stringFromDate($0).stringByReplacingOccurrencesOfString(",", withString: "\n")})
+        lineChart.rightAxis.enabled = false
+        lineChart.leftAxis.granularity = 1
+//        lineChart.leftAxis.axisMaxValue = dataSets[0].yMax * 1.1
+        lineChart.leftAxis.axisMinValue = 0
         lineChart.legend.horizontalAlignment = .Center
         lineChart.legend.verticalAlignment = .Top
         lineChart.legend.orientation = .Horizontal
-//        lineChart.legend.drawInside = true
-        lineChart.legend
+        lineChart.xAxis.avoidFirstLastClippingEnabled = true
         lineChart.animate(yAxisDuration: 2, easingOption: .EaseOutElastic)
-        
+        lineChart.descriptionText = ""
+        lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
+
     }
     
     
