@@ -193,7 +193,7 @@ class DataManager{
         return counts
     }
     
-    func updateCounts(updateType: UpdateType){
+    func updateCounts(updateType: UpdateType, withCompletion completion: (Bool -> ())? = nil){
         let backgroundContext = try! createPrivateQueueContext()
         var sinceDate: NSDate? = nil
         
@@ -204,7 +204,13 @@ class DataManager{
             request.sortDescriptors = [dateSort]
             
             backgroundContext.performBlockAndWait({
-                sinceDate = (try! backgroundContext.executeFetchRequest(request).first as! Count).updatedAt
+                guard let sinceDate = try? (backgroundContext.executeFetchRequest(request).first as? Count)?.updatedAt
+                    else {
+                        NSLog("No counts")
+                        completion?(false)
+                        return
+                }
+//                sinceDate = (try! backgroundContext.executeFetchRequest(request).first as! Count).updatedAt
                 NSLog("Getting counts since \(sinceDate)")
             })
         }
@@ -270,6 +276,7 @@ class DataManager{
                 }
             }
             try! backgroundContext.save()
+            completion?(true)
 //            backgroundContext.reset()
         })
         

@@ -19,7 +19,8 @@ class CloudKitAPI: ParkingAPI{
     var presenting: Bool = false
     
     init(){
-        container = CKContainer.defaultContainer()
+        container = CKContainer(identifier: "iCloud.com.stephenciauri.Chapman-Parking")
+//        container = CKContainer.defaultContainer()
         publicDB = container.publicCloudDatabase
     }
     
@@ -91,12 +92,117 @@ class CloudKitAPI: ParkingAPI{
         let timestamp = record.objectForKey("UpdatedAt") as! NSDate
         return CKCount(ckID: ckID, count: numSpaces, timestamp: timestamp)
     }
+    
+    private func fetchParkingStructures(completion: ([CKStructure]?, NSError?) -> ()) {
+        let query = CKQuery(recordType: "ParkingStructure", predicate: NSPredicate(value: true))
+        publicDB.performQuery(query,
+                              inZoneWithID: nil,
+                              completionHandler: {self.parseParkingStructures($0, error: $1, completion: completion)})
+    }
+    
+    private func parseParkingStructures(records: [CKRecord]?, error: NSError?, completion: ([CKStructure]?, NSError?) -> ()) {
+        guard let records = records
+            else {
+                NSLog("Error fetching structures")
+                completion(nil,error)
+                return
+        }
+        var structures: [CKStructure] = []
+        for record in records {
+            guard let
+                name = record.objectForKey("Name") as? String,
+                location = record.objectForKey("Location") as? CLLocation
+                else{
+                    NSLog("Cant parse structure. Model issue")
+                    return
+            }
+            
+            let lat = location.coordinate.latitude,
+                long = location.coordinate.longitude,
+                ckID = record.recordID.recordName
+            
+            let newStructure = CKStructure(ckID: ckID, name: name, levels: [], lat: lat, long: long)
+            structures.append(newStructure)
+        }
+        
+        completion(structures, nil)
+        
+    }
+    
+    private func fetchLevels(inout fromStructure structure:CKStructure, withCompletion completion: ([CKLevel]?, NSError?) -> ()) {
+        let id = CKRecordID(recordName: structure.ckID)
+        let ref = CKReference(recordID: id, action: .None)
+        let levelQuery = CKQuery(recordType: "ParkingLevel", predicate: NSPredicate(format: "Structure == %@", ref))
+        
+        publicDB.performQuery(levelQuery,
+                              inZoneWithID: nil,
+                              completionHandler: {
+                                self.parseLevels($0,
+                                    error: $1,
+                                    completion: completion)
+        })
+    }
+    
+    private func parseLevels(records: [CKRecord]?, error: NSError?, completion: ([CKLevel]?, NSError?) -> ()) {
+        guard let records = records
+            else {
+                NSLog("Error fetching levels")
+                completion(nil,error)
+                return
+        }
+        
+        var levels: [CKLevel] = []
+        for level in records {
+            guard let
+                levelName = level.objectForKey("Name") as? String,
+                levelCap = level.objectForKey("Capacity") as? Int,
+                levelCount = level.objectForKey("CurrentCount") as? Int
+                else{
+                    NSLog("Error parsing levels. Model issue")
+                    return
+            }
+            
+            let ckID = level.recordID.recordName
+            let newLevel = CKLevel(ckID: ckID, name: levelName, capacity: levelCap, counts: [], currentCount: levelCount)
+            levels.append(newLevel)
+        }
+        completion(levels, nil)
+    }
+    
+    private func fetchCounts(inout fromLevel level: CKLevel, withCompletion completion: ([CKCount]?, NSError?) -> ()) {
+        
+    }
 
 
 
     
     func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock: (CPReport -> Void)) {
         container.accountStatusWithCompletionHandler(loginHandler)
+        
+//        fetchParkingStructures({ results, error in
+//            guard let results = results
+//                else{
+//                    NSLog("\(error!)")
+//                    return
+//            }
+//            
+//            var structures = results
+//            for index in 0..<structures.count {
+//                self.fetchLevels(fromStructure: &structures[index],
+//                    withCompletion: { results, error in
+//                        guard let results = results
+//                            else{
+//                                NSLog("\(error!)")
+//                                return
+//                        }
+//                        
+//                        var levels = results
+//                    
+//                })
+//            }
+//
+//        })
+        
 
         let query = CKQuery(recordType: "ParkingStructure", predicate: NSPredicate(value: true))
         publicDB.performQuery(query, inZoneWithID: nil, completionHandler: {results, error in

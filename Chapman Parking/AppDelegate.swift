@@ -23,11 +23,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DataManager.sharedInstance.api = api
 
         if !defaults.boolForKey("initialized"){
-            DataManager.sharedInstance.updateCounts(.All)
-            defaults.setBool(true, forKey: "initialized")
+            DataManager.sharedInstance.updateCounts(.All) { success in
+                if success {
+                    defaults.setBool(true, forKey: "initialized")
+                } else {
+                    NSLog("error updating counts")
+                }
+            }
             NSLog("Initializing Data")
         }else{
-            DataManager.sharedInstance.updateCounts(UpdateType.SinceLast)
+            DataManager.sharedInstance.updateCounts(UpdateType.SinceLast, withCompletion: nil)
             DataManager.sharedInstance.autoRefreshEnabled = true
             NSLog("Catching up")
         }
