@@ -97,16 +97,19 @@ class CloudKitAPI: ParkingAPI{
         let query = CKQuery(recordType: "ParkingStructure", predicate: NSPredicate(value: true))
         publicDB.performQuery(query,
                               inZoneWithID: nil,
-                              completionHandler: {self.parseParkingStructures($0, error: $1, completion: completion)})
+                              completionHandler: { records, error in
+                                if let e = error {
+                                    completion(nil, e)
+                                    return
+                                } else if let records = records {
+                                    completion(self.parseParkingStructures(records), nil)
+                                } else {
+                                    completion(nil, nil)
+                                }
+        })
     }
     
-    private func parseParkingStructures(records: [CKRecord]?, error: NSError?, completion: ([CKStructure]?, NSError?) -> ()) {
-        guard let records = records
-            else {
-                NSLog("Error fetching structures")
-                completion(nil,error)
-                return
-        }
+    private func parseParkingStructures(records: [CKRecord]) -> [CKStructure] {
         var structures: [CKStructure] = []
         for record in records {
             guard let
@@ -114,9 +117,8 @@ class CloudKitAPI: ParkingAPI{
                 location = record.objectForKey("Location") as? CLLocation
                 else{
                     NSLog("Cant parse structure. Model issue")
-                    return
+                    return []
             }
-            
             let lat = location.coordinate.latitude,
                 long = location.coordinate.longitude,
                 ckID = record.recordID.recordName
@@ -124,9 +126,7 @@ class CloudKitAPI: ParkingAPI{
             let newStructure = CKStructure(ckID: ckID, name: name, levels: [], lat: lat, long: long)
             structures.append(newStructure)
         }
-        
-        completion(structures, nil)
-        
+        return structures
     }
     
     private func fetchLevels(inout fromStructure structure:CKStructure, withCompletion completion: ([CKLevel]?, NSError?) -> ()) {
@@ -136,21 +136,19 @@ class CloudKitAPI: ParkingAPI{
         
         publicDB.performQuery(levelQuery,
                               inZoneWithID: nil,
-                              completionHandler: {
-                                self.parseLevels($0,
-                                    error: $1,
-                                    completion: completion)
+                              completionHandler: { records, error in
+                                if let e = error {
+                                    completion(nil, e)
+                                    return
+                                } else if let records = records {
+                                    completion(self.parseLevels(records), nil)
+                                } else {
+                                    completion(nil, nil)
+                                }
         })
     }
     
-    private func parseLevels(records: [CKRecord]?, error: NSError?, completion: ([CKLevel]?, NSError?) -> ()) {
-        guard let records = records
-            else {
-                NSLog("Error fetching levels")
-                completion(nil,error)
-                return
-        }
-        
+    private func parseLevels(records: [CKRecord]) -> [CKLevel] {
         var levels: [CKLevel] = []
         for level in records {
             guard let
@@ -159,18 +157,44 @@ class CloudKitAPI: ParkingAPI{
                 levelCount = level.objectForKey("CurrentCount") as? Int
                 else{
                     NSLog("Error parsing levels. Model issue")
-                    return
+                    return []
             }
             
             let ckID = level.recordID.recordName
             let newLevel = CKLevel(ckID: ckID, name: levelName, capacity: levelCap, counts: [], currentCount: levelCount)
             levels.append(newLevel)
         }
-        completion(levels, nil)
+        return levels
     }
     
-    private func fetchCounts(inout fromLevel level: CKLevel, withCompletion completion: ([CKCount]?, NSError?) -> ()) {
+    private func fetchCounts(inout from level: CKLevel, starting startDate: NSDate?, ending endDate: NSDate?, completion: ([CKCount]?, NSError?) -> ()) {
+        // Build Query
+        let id = CKRecordID(recordName: level.ckID)
+        let ref = CKReference(recordID: id, action: .None)
+        var predicate = NSPredicate(format: "Level == %@", ref)
+        var resultLimit: Int?
+        let spotQuery = CKQuery(recordType: "ParkingSpotCount", predicate: predicate)
+        let chronoSort = NSSortDescriptor(key: "UpdatedAt", ascending: false)
+        spotQuery.sortDescriptors = [chronoSort]
+
+
         
+    }
+    
+    private func fetchLatestCounts(from level: CKLevel, completion: ([CKCount]?, NSError?) -> ()) {
+        let id = CKRecordID(recordName: level.ckID)
+        let ref = CKReference(recordID: id, action: .None)
+        let predicate = NSPredicate(format: "Level == %@", ref)
+        let spotQuery = CKQuery(recordType: "ParkingSpotCount", predicate: predicate)
+        let chronoSort = NSSortDescriptor(key: "UpdatedAt", ascending: false)
+        spotQuery.sortDescriptors = [chronoSort]
+        // Build Operation
+        let spotQueryOperation = CKQueryOperation(query: spotQuery)
+        spotQueryOperation.resultsLimit = 1
+        spotQueryOperation.qualityOfService = .UserInitiated
+        self.executeQueryOperation(spotQueryOperation,
+                                   completion: {completion($0,nil)})
+
     }
 
 
