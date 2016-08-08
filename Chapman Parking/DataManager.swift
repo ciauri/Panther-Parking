@@ -204,13 +204,13 @@ class DataManager{
             request.sortDescriptors = [dateSort]
             
             backgroundContext.performBlockAndWait({
-                guard let sinceDate = try? (backgroundContext.executeFetchRequest(request).first as? Count)?.updatedAt
+                guard let date = try? (backgroundContext.executeFetchRequest(request).first as? Count)?.updatedAt
                     else {
                         NSLog("No counts")
                         completion?(false)
                         return
                 }
-//                sinceDate = (try! backgroundContext.executeFetchRequest(request).first as! Count).updatedAt
+                sinceDate = date
                 NSLog("Getting counts since \(sinceDate)")
             })
         }
