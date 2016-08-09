@@ -129,7 +129,7 @@ class CloudKitAPI: ParkingAPI{
         return structures
     }
     
-    private func fetchLevels(inout fromStructure structure:CKStructure, withCompletion completion: ([CKLevel]?, NSError?) -> ()) {
+    private func fetchLevels(from structure:CKStructure, withCompletion completion: ([CKLevel]?, NSError?) -> ()) {
         let id = CKRecordID(recordName: structure.ckID)
         let ref = CKReference(recordID: id, action: .None)
         let levelQuery = CKQuery(recordType: "ParkingLevel", predicate: NSPredicate(format: "Structure == %@", ref))
@@ -167,7 +167,7 @@ class CloudKitAPI: ParkingAPI{
         return levels
     }
     
-    private func fetchCounts(inout from level: CKLevel, starting startDate: NSDate?, ending endDate: NSDate?, completion: ([CKCount]?, NSError?) -> ()) {
+    private func fetchCounts(from level: CKLevel, starting startDate: NSDate?, ending endDate: NSDate?, completion: ([CKCount]?, NSError?) -> ()) {
         // Build Query
         let id = CKRecordID(recordName: level.ckID)
         let ref = CKReference(recordID: id, action: .None)
@@ -181,7 +181,7 @@ class CloudKitAPI: ParkingAPI{
         
     }
     
-    private func fetchLatestCounts(from level: CKLevel, completion: ([CKCount]?, NSError?) -> ()) {
+    private func fetchLatestCount(from level: CKLevel, completion: (CKCount?, NSError?) -> ()) {
         let id = CKRecordID(recordName: level.ckID)
         let ref = CKReference(recordID: id, action: .None)
         let predicate = NSPredicate(format: "Level == %@", ref)
@@ -192,40 +192,54 @@ class CloudKitAPI: ParkingAPI{
         let spotQueryOperation = CKQueryOperation(query: spotQuery)
         spotQueryOperation.resultsLimit = 1
         spotQueryOperation.qualityOfService = .UserInitiated
-        self.executeQueryOperation(spotQueryOperation,
-                                   completion: {completion($0,nil)})
+        spotQueryOperation.recordFetchedBlock = { record in
+            completion(self.processCount(withRecord: record), nil)
+        }
+        spotQueryOperation.queryCompletionBlock = { cursor, error in
+            if let error = error {
+                print("\(error)")
+            }
+        }
+        
+        publicDB.addOperation(spotQueryOperation)
+        
+//        self.executeQueryOperation(spotQueryOperation,
+//                                   completion: {completion($0,nil)})
 
     }
-
-
-
     
     func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock: (CPReport -> Void)) {
         container.accountStatusWithCompletionHandler(loginHandler)
         
-//        fetchParkingStructures({ results, error in
-//            guard let results = results
-//                else{
-//                    NSLog("\(error!)")
-//                    return
-//            }
-//            
-//            var structures = results
-//            for index in 0..<structures.count {
-//                self.fetchLevels(fromStructure: &structures[index],
-//                    withCompletion: { results, error in
-//                        guard let results = results
-//                            else{
-//                                NSLog("\(error!)")
-//                                return
-//                        }
-//                        
-//                        var levels = results
-//                    
-//                })
-//            }
-//
-//        })
+        /**
+        fetchParkingStructures({ structures, error in
+            guard let structures = structures
+                else{
+                    NSLog("Error fetching structures")
+                    return
+            }
+            structures.forEach({
+                self.fetchLevels(from: $0,
+                    withCompletion: { levels, error in
+                    guard let levels = levels
+                        else{
+                            NSLog("Error fetching levels")
+                            return
+                    }
+                    levels.forEach({
+                        self.fetchLatestCount(from: $0,
+                            completion: { counts, error in
+                                print("\(counts)")
+                                NSLog("yey counts")
+                        })
+                    })
+                    
+                })
+            })
+            
+        })
+        */
+
         
 
         let query = CKQuery(recordType: "ParkingStructure", predicate: NSPredicate(value: true))
