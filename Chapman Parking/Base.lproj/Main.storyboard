@@ -9,7 +9,7 @@
         <!--Chart View Controller-->
         <scene sceneID="uYQ-WX-9xk">
             <objects>
-                <viewController id="NEW-LK-LrN" customClass="ChartViewController" customModule="Chapman_Parking" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="NEW-LK-LrN" customClass="ChartViewController" customModule="PantherParking" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HLd-W7-qa3"/>
                         <viewControllerLayoutGuide type="bottom" id="7Jg-Fs-3Ld"/>
@@ -89,7 +89,7 @@
         <!--Summary-->
         <scene sceneID="I2Z-xn-2NH">
             <objects>
-                <viewController id="Yz3-GM-qfZ" customClass="ParkingViewController" customModule="Chapman_Parking" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Yz3-GM-qfZ" customClass="ParkingViewController" customModule="PantherParking" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zne-H3-UFu"/>
                         <viewControllerLayoutGuide type="bottom" id="D64-eK-ubJ"/>
@@ -102,7 +102,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="summaryCell" id="L4B-Ar-ErN" customClass="TotalCountTableViewCell" customModule="Chapman_Parking" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="summaryCell" id="L4B-Ar-ErN" customClass="TotalCountTableViewCell" customModule="PantherParking" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="113.5" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="L4B-Ar-ErN" id="29x-Rg-uGX">
@@ -159,7 +159,7 @@
                                             <outlet property="progressBar" destination="xmQ-cw-i23" id="AM9-Yo-mrT"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="levelCell" id="qsE-Oa-ilY" customClass="LevelCountTableViewCell" customModule="Chapman_Parking" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="levelCell" id="qsE-Oa-ilY" customClass="LevelCountTableViewCell" customModule="PantherParking" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="157.5" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qsE-Oa-ilY" id="0qe-zK-ZcC">
@@ -247,7 +247,7 @@
         <!--Parking Structures-->
         <scene sceneID="Itc-on-A1l">
             <objects>
-                <viewController id="7YX-Br-xvV" customClass="MapViewController" customModule="Chapman_Parking" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="7YX-Br-xvV" customClass="MapViewController" customModule="PantherParking" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="eoa-t9-ua4"/>
                         <viewControllerLayoutGuide type="bottom" id="isw-fS-ZXg"/>
@@ -321,39 +321,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FFq-kZ-GMm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="532" y="368"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="pMH-a7-qkl">
-            <objects>
-                <viewController id="eJ5-Gu-BEc" customClass="ViewController" customModule="Chapman_Parking" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="wco-mp-RDb"/>
-                        <viewControllerLayoutGuide type="bottom" id="eOH-rV-e9O"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="182-oD-GfQ">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3nU-dT-xuD" userLabel="chart" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="3nU-dT-xuD" firstAttribute="centerY" secondItem="182-oD-GfQ" secondAttribute="centerY" id="0vB-9q-r1u"/>
-                            <constraint firstItem="3nU-dT-xuD" firstAttribute="height" secondItem="182-oD-GfQ" secondAttribute="height" id="EYo-6l-ugB"/>
-                            <constraint firstItem="3nU-dT-xuD" firstAttribute="width" secondItem="182-oD-GfQ" secondAttribute="width" id="Vh2-xw-grP"/>
-                            <constraint firstItem="3nU-dT-xuD" firstAttribute="centerX" secondItem="182-oD-GfQ" secondAttribute="centerX" id="iCl-rd-tSt"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="chart" destination="3nU-dT-xuD" id="Tmk-cv-ojE"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DVv-op-OuR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1384" y="661"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

@@ -148,7 +148,7 @@
 		9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericFetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
 		9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = Submodules/Charts/Charts/Charts.xcodeproj; sourceTree = SOURCE_ROOT; };
 		9C2FDC9B1CE9A91A00A61F0F /* ChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
-		9C3325761CDB0EF200F49338 /* Chapman Parking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chapman Parking.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C3325761CDB0EF200F49338 /* PantherParking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PantherParking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3325791CDB0EF200F49338 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9C33257E1CDB0EF200F49338 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */ = {isa = PBXFileReference; explicitFileType = wrapper.xcdatamodeld; path = Chapman_Parking.xcdatamodel; sourceTree = "<group>"; };
@@ -227,7 +227,7 @@
 		9C3325771CDB0EF200F49338 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9C3325761CDB0EF200F49338 /* Chapman Parking.app */,
+				9C3325761CDB0EF200F49338 /* PantherParking.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -344,9 +344,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9C3325751CDB0EF200F49338 /* Chapman Parking */ = {
+		9C3325751CDB0EF200F49338 /* PantherParking */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9C33258B1CDB0EF200F49338 /* Build configuration list for PBXNativeTarget "Chapman Parking" */;
+			buildConfigurationList = 9C33258B1CDB0EF200F49338 /* Build configuration list for PBXNativeTarget "PantherParking" */;
 			buildPhases = (
 				9C3325721CDB0EF200F49338 /* Sources */,
 				9C3325731CDB0EF200F49338 /* Frameworks */,
@@ -359,9 +359,9 @@
 				9C3325A81CDB112300F49338 /* PBXTargetDependency */,
 				9C2FDC961CE9A4CE00A61F0F /* PBXTargetDependency */,
 			);
-			name = "Chapman Parking";
+			name = PantherParking;
 			productName = "Chapman Parking";
-			productReference = 9C3325761CDB0EF200F49338 /* Chapman Parking.app */;
+			productReference = 9C3325761CDB0EF200F49338 /* PantherParking.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -385,7 +385,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9C3325711CDB0EF200F49338 /* Build configuration list for PBXProject "Chapman Parking" */;
+			buildConfigurationList = 9C3325711CDB0EF200F49338 /* Build configuration list for PBXProject "PantherParking" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -408,7 +408,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				9C3325751CDB0EF200F49338 /* Chapman Parking */,
+				9C3325751CDB0EF200F49338 /* PantherParking */,
 			);
 		};
 /* End PBXProject section */
@@ -657,7 +657,7 @@
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PantherParking;
 			};
 			name = Debug;
 		};
@@ -670,14 +670,14 @@
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PantherParking;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9C3325711CDB0EF200F49338 /* Build configuration list for PBXProject "Chapman Parking" */ = {
+		9C3325711CDB0EF200F49338 /* Build configuration list for PBXProject "PantherParking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9C3325891CDB0EF200F49338 /* Debug */,
@@ -686,7 +686,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9C33258B1CDB0EF200F49338 /* Build configuration list for PBXNativeTarget "Chapman Parking" */ = {
+		9C33258B1CDB0EF200F49338 /* Build configuration list for PBXNativeTarget "PantherParking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9C33258C1CDB0EF200F49338 /* Debug */,
