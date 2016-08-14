@@ -61,10 +61,10 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
                 mapView?.addAnnotation(a)
             }
         case .Move:
-            if let a = anObject as? MKAnnotation{
-                mapView?.removeAnnotation(a)
-                mapView?.addAnnotation(a)
-            }
+//            if let a = anObject as? MKAnnotation{
+//                mapView?.removeAnnotation(a)
+//                mapView?.addAnnotation(a)
+//            }
 //            tableView?.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
 //            tableView?.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
             if let indexPath = indexPath, cell = tableView?.cellForRowAtIndexPath(indexPath){

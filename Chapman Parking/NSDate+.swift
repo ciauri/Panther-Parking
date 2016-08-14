@@ -27,17 +27,17 @@ public extension NSDate {
         return dateFormatter.dateFromString(string)!
     }
     
-    /// Returns a reverse choronological list of NSDates within the desired range with interval in seconds
+    /// Returns a choronological list of NSDates within the desired range with interval in seconds
     class func datesInRange(startDate: NSDate, endDate:NSDate, withInterval seconds: Double) -> [NSDate]{
         var secondsBetween = endDate.timeIntervalSinceDate(startDate)
         var dates: [NSDate] = []
         
         while(secondsBetween > 0){
-            dates.append(startDate.dateByAddingTimeInterval(secondsBetween))
+            dates.insert(startDate.dateByAddingTimeInterval(secondsBetween), atIndex: 0)
             secondsBetween -= seconds
         }
         
-        return dates.reverse()
+        return dates
     }
     
     /// Returns the localized first day of the week of the desired date

@@ -104,7 +104,7 @@ class ChartViewController: UIViewController {
                 completion: {_ in
                     completedCalls += 1
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.progress.progress = Float(completedCalls/self.selectedLevels.count)
+                        self.progress.setProgress(Float(completedCalls)/Float(self.selectedLevels.count), animated: true)
                     })
                     if completedCalls == self.selectedLevels.count {
                         dispatch_async(dispatch_get_main_queue(), {
@@ -216,7 +216,6 @@ class ChartViewController: UIViewController {
             }
             set.mode = .Linear
             set.fill = ChartFill(color: set.colors.first!)
-//            set.fill = ChartFill(color: set.colors.first!)
             set.drawFilledEnabled = true
             set.valueFormatter?.zeroSymbol = ""
             set.valueFormatter?.maximumSignificantDigits = 3
@@ -235,7 +234,6 @@ class ChartViewController: UIViewController {
         lineChart.legend.verticalAlignment = .Top
         lineChart.legend.orientation = .Horizontal
         lineChart.xAxis.avoidFirstLastClippingEnabled = true
-//        lineChart.animate(yAxisDuration: 2, easingOption: .EaseOutElastic)
         lineChart.descriptionText = ""
         lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
     }

@@ -13,7 +13,7 @@ class LevelCountTableViewCell: UITableViewCell {
     @IBOutlet var progressBar: UIProgressView!
     
     var progressColor: UIColor {
-        return UIColor(hue: 0.3 - CGFloat(progressBar.progress/3), saturation: 1, brightness: 1, alpha: 1)
+        return UIColor.temperatureColor(fromPercentCompletion: progressBar.progress)
     }
     
     func updateProgressBarColor() {

@@ -96,7 +96,7 @@ extension MapViewController: MKMapViewDelegate{
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? Structure{
-            var view: MKAnnotationView
+            var view: MKPinAnnotationView
             let reuseId = "pin"
             
             if let reusedView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView{
@@ -106,6 +106,7 @@ extension MapViewController: MKMapViewDelegate{
                 view = MKPinAnnotationView(annotation: annotation, reuseIdentifier:reuseId)
                 view.canShowCallout = true
                 view.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+                view.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
                 
                 //Only works in iOS 8+
                 /*
