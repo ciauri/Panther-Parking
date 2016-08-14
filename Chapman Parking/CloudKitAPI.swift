@@ -24,6 +24,8 @@ class CloudKitAPI: ParkingAPI{
         publicDB = container.publicCloudDatabase
     }
     
+    
+    /// Use this later when we want to make writes to CloudKit
     private func loginHandler(status: CKAccountStatus, error: NSError?){
         guard error == nil else{
             NSLog("error getting account status?")
@@ -42,19 +44,7 @@ class CloudKitAPI: ParkingAPI{
             NSLog("ur a kid lol")
             fallthrough
         default:
-            if !presenting {
-                presenting = true
-                let alertController = UIAlertController(title: "iCloud Required", message: "Please login to your iCloud account to continue", preferredStyle: .Alert)
-                let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (_) -> Void in
-                    UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
-                }
-                let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
-                alertController.addAction(settingsAction)
-                alertController.addAction(cancelAction)
-                dispatch_async(dispatch_get_main_queue(), {
-                    UIApplication.sharedApplication().delegate?.window!?.rootViewController?.presentViewController(alertController, animated: true, completion: {_ in self.presenting = false})
-                })
-            }
+            displayDevelopmentCloudKitAlert()
         }
     }
 
@@ -216,34 +206,57 @@ class CloudKitAPI: ParkingAPI{
 
         
     }
+    
+    private func displayDevelopmentCloudKitAlert() {
+        if !presenting {
+            presenting = true
+            let alertController = UIAlertController(title: "iCloud Required for Development Device", message: "Please login to your iCloud account to continue. If you are not on a development build and you believe you are reaching this screen in error, please email thecatalyticmind@gmail.com with details.", preferredStyle: .Alert)
+            let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (_) -> Void in
+                UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+            alertController.addAction(settingsAction)
+            alertController.addAction(cancelAction)
+            dispatch_async(dispatch_get_main_queue(), {
+                UIApplication.sharedApplication().delegate?.window!?.rootViewController?.presentViewController(alertController, animated: true, completion: {_ in self.presenting = false})
+            })
+        }
+    }
 
     
     
     
-    func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock: (CPReport -> Void)) {
-        container.accountStatusWithCompletionHandler(loginHandler)
-        
+    func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock completion: (CPReport? -> Void)) {
+//        container.accountStatusWithCompletionHandler(loginHandler)
         
         fetchParkingStructures({ structures, error in
             guard let structures = structures
                 else{
                     NSLog("Error fetching structures")
+                    self.displayDevelopmentCloudKitAlert()
+                    completion(nil)
                     return
             }
-            withBlock(CKReport(structures: structures.map{$0}))
+            completion(CKReport(structures: structures.map{$0}))
             structures.forEach({ structure in
+                
+                
                 self.fetchLevels(fromStructureWithUUID: structure.uuid,
                     withCompletion: { levels, error in
                         guard let levels = levels
                             else{
                                 NSLog("Error fetching levels")
+                                self.displayDevelopmentCloudKitAlert()
+                                completion(nil)
                                 return
                         }
                         
                         var structure = structure
                         structure.levels = levels.map{$0}
-                        withBlock(CKReport(structures: [structure]))
+                        completion(CKReport(structures: [structure]))
                         levels.forEach({ level in
+                            
+                            
                             self.fetchCounts(fromLevelWithUUID: level.uuid,
                                 starting: sinceDate,
                                 ending: nil,
@@ -251,13 +264,15 @@ class CloudKitAPI: ParkingAPI{
                                     guard let counts = counts
                                         else{
                                             NSLog("Error fetching counts")
+                                            self.displayDevelopmentCloudKitAlert()
+                                            completion(nil)
                                             return
                                     }
                                     
                                     var level = level
                                     level.counts = counts.map{$0}
                                     structure.levels = [level]
-                                    withBlock(CKReport(structures: [structure]))
+                                    completion(CKReport(structures: [structure]))
                             })
                             
                         })

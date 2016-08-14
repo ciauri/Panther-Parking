@@ -349,18 +349,25 @@ class DataManager{
             request.sortDescriptors = [dateSort]
             
             backgroundContext.performBlockAndWait({
-                guard let date = try? (backgroundContext.executeFetchRequest(request).first as? Count)?.updatedAt
-                    else {
-                        NSLog("No counts")
-                        completion?(false)
-                        return
+                if let date = try? (backgroundContext.executeFetchRequest(request).first as? Count)?.updatedAt {
+                    sinceDate = date
+                    NSLog("Getting counts since \(sinceDate)")
+                } else {
+                    NSLog("Attempted to catch up without any data. Getting most recent instead.")
                 }
-                sinceDate = date
-                NSLog("Getting counts since \(sinceDate)")
+                
+                
             })
         }
         
         api.generateReport(updateType, sinceDate: sinceDate, withBlock: {report in
+            
+            guard let report = report
+                else{
+                    NSLog("Report generation failed")
+                    completion?(false)
+                    return
+            }
             
             backgroundContext.performBlock({
                 for structure in report.structures{
