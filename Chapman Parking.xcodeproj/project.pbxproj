@@ -291,16 +291,16 @@
 		9C3325BC1CDB250C00F49338 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */,
+				9C3325BF1CDB2D9E00F49338 /* DataManager.swift */,
 				9C3325AC1CDB18ED00F49338 /* Count+CoreDataProperties.swift */,
 				9C3325AD1CDB18ED00F49338 /* Count.swift */,
 				9C3325AE1CDB18ED00F49338 /* Level+CoreDataProperties.swift */,
 				9C3325AF1CDB18ED00F49338 /* Level.swift */,
 				9C3325B01CDB18ED00F49338 /* Structure+CoreDataProperties.swift */,
 				9C3325B11CDB18ED00F49338 /* Structure.swift */,
-				9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */,
 				9C3325B81CDB1F8700F49338 /* Location+CoreDataProperties.swift */,
 				9C3325B91CDB1F8700F49338 /* Location.swift */,
-				9C3325BF1CDB2D9E00F49338 /* DataManager.swift */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";

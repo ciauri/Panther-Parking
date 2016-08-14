@@ -16,6 +16,7 @@ import MapKit
 extension Structure {
 
     @NSManaged var name: String?
+    @NSManaged var uuid: String?
     @NSManaged var levels: Set<Level>?
     @NSManaged var location: Location?
     

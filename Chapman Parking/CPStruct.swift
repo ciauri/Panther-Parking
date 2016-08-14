@@ -17,6 +17,7 @@ protocol CPReport{
 }
 
 protocol CPStructure{
+    var uuid: String {get}
     var name: String? {get}
     var levels: [CPLevel] {get}
     var lat: Double? {get}
@@ -24,6 +25,7 @@ protocol CPStructure{
 }
 
 protocol CPLevel{
+    var uuid: String {get}
     var name: String? {get}
     var capacity: Int? {get}
     var counts: [CPCount] {get}
@@ -31,6 +33,7 @@ protocol CPLevel{
 }
 
 protocol CPCount{
+    var uuid: String {get}
     var count: Int? {get}
     var timestamp: NSDate? {get}
 }

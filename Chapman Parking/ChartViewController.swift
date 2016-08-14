@@ -15,14 +15,29 @@ class ChartViewController: UIViewController {
     @IBOutlet var lineChart: LineChartView!
     @IBOutlet var levelSelector: UISegmentedControl!
     @IBOutlet var scaleSelector: UISegmentedControl!
+    @IBOutlet var spinner: UIActivityIndicatorView!
+    @IBOutlet var progress: UIProgressView!
     
     var structure: Structure!
     var levels: [Level]!
-    var colors = ChartColorTemplates.vordiplom() + ChartColorTemplates.colorful()
+    
+    
+    let daysWorthOfSeconds = 86400
+    lazy var today: NSDate = NSDate()
+    lazy var formatter: NSDateFormatter = {
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .ShortStyle
+        formatter.timeStyle = .ShortStyle
+        return formatter
+    }()
     
     var resolution: Int = 60
     var numberOfDays: Int = 1
     var selectedLevels: [Level]!
+    
+//    let today = NSDate()
+//    let yesterday = NSDate().dateByAddingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(0, minute: 0, second: 0)!
+    
 
 
     override func viewDidLoad() {
@@ -35,7 +50,11 @@ class ChartViewController: UIViewController {
             self.levels = Array(levels)
             self.levels.sortInPlace({$0.0.name < $0.1.name})
             selectedLevels = self.levels
-            initChart(selectedLevels, withResolution: resolution, numberOfDays: numberOfDays)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.updateLevels()
+                self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
+            })
+
         }
         
 
@@ -54,7 +73,10 @@ class ChartViewController: UIViewController {
         } else {
             numberOfDays = 7
         }
-        initChart(selectedLevels, withResolution: resolution, numberOfDays: numberOfDays)
+        dispatch_async(dispatch_get_main_queue(), {
+            self.updateLevels()
+            self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
+        })
     }
     
     @IBAction func levelSelected(selector: UISegmentedControl) {
@@ -64,11 +86,36 @@ class ChartViewController: UIViewController {
         } else {
             selectedLevels = [levels[selector.selectedSegmentIndex]]
         }
-        initChart(selectedLevels, withResolution: resolution, numberOfDays: numberOfDays)
+        dispatch_async(dispatch_get_main_queue(), {
+            self.updateLevels()
+            self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
+        })
     }
     
-    private func replenishColors() {
-        colors = ChartColorTemplates.vordiplom() + ChartColorTemplates.colorful()
+    private func updateLevels(){
+        let pastDate = today.dateByAddingTimeInterval(-Double(daysWorthOfSeconds*(numberOfDays-1))).dateFromTime(0, minute: 0, second: 0)!
+        var completedCalls = 0
+        spinner.startAnimating()
+        progress.progress = 0
+        selectedLevels.forEach({
+            DataManager.sharedInstance.update($0,
+                startDate: pastDate,
+                endDate: today,
+                completion: {_ in
+                    completedCalls += 1
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.progress.progress = Float(completedCalls/self.selectedLevels.count)
+                    })
+                    if completedCalls == self.selectedLevels.count {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.spinner.stopAnimating()
+                            self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
+                        })
+                        
+                    }
+                    
+            })
+        })
     }
     
     private func addLevelsToLevelSelector() {
@@ -108,7 +155,6 @@ class ChartViewController: UIViewController {
         
         // Map plotDict to the desired timeline with default value used for filling in the blanks
         timeline.forEach({plotDict[$0] = -1})
-        
         // Map results onto timeline
         results.forEach({plotDict[$0.updatedAt!] = Int($0.availableSpaces!)})
         
@@ -124,7 +170,7 @@ class ChartViewController: UIViewController {
                 sortedPlot[index] = (element.date, sortedPlot[index-1].count)
             } else {
                 // Will execute a maximum of once per dataSet
-                let context = DataManager.sharedInstance.managedObjectContext
+                let context = try! DataManager.sharedInstance.createPrivateQueueContext()
                 let count = DataManager.sharedInstance.mostRecentCount(fromDate: element.date, onLevel: level, usingContext: context)
                 sortedPlot[index] = (element.date, Int(count?.availableSpaces! ?? 0))
             }
@@ -142,35 +188,36 @@ class ChartViewController: UIViewController {
         }
         
         let set = LineChartDataSet(yVals: yVals, label: level.name)
-        if resolution >= 60 {
-            set.mode = .CubicBezier
-        }
+
         set.lineWidth = 3
         set.drawCirclesEnabled = false
-        set.colors = [colors.removeFirst()]
         
         return set
     }
     
     
     func initChart(levels: [Level], withResolution minuteResolution: Int, numberOfDays days: Int){
-        replenishColors()
-        let daysWorthOfSeconds = 86400
+        var colors =  ChartColorTemplates.colorful() + ChartColorTemplates.vordiplom()
         let days = days-1
-        let today = NSDate()
-        let yesterday = NSDate().dateByAddingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(0, minute: 0, second: 0)!
-        
-        let formatter = NSDateFormatter()
-        formatter.dateStyle = .ShortStyle
-        formatter.timeStyle = .ShortStyle
-     
+        let pastDate = today.dateByAddingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(0, minute: 0, second: 0)!
+
         var dataSets: [LineChartDataSet] = []
-        let timeIntervals = NSDate.datesInRange(yesterday, endDate: today, withInterval: 60)
+        let timeIntervals = NSDate.datesInRange(pastDate, endDate: today, withInterval: 60)
 
         for level in levels{
-            let results = DataManager.sharedInstance.countsOn(level, since: yesterday)
+            let results = DataManager.sharedInstance.countsOn(level, since: pastDate)
             let sortedPlot = integrateAndSort(results, fromLevel: level, intoTimeline: timeIntervals)
             let set = dataSetFor(level, withdata: sortedPlot, andResolutionInMinutes: minuteResolution)
+            
+            if selectedLevels.count == 1 {
+                set.colors = [colors[levelSelector.selectedSegmentIndex]]
+            } else {
+                set.colors = [colors.removeFirst()]
+            }
+            set.mode = .Linear
+            set.fill = ChartFill(color: set.colors.first!)
+//            set.fill = ChartFill(color: set.colors.first!)
+            set.drawFilledEnabled = true
             set.valueFormatter?.zeroSymbol = ""
             set.valueFormatter?.maximumSignificantDigits = 3
             dataSets.append(set)
@@ -183,16 +230,14 @@ class ChartViewController: UIViewController {
         let stringStamps = timeIntervals.map({return formatter.stringFromDate($0).stringByReplacingOccurrencesOfString(",", withString: "\n")})
         lineChart.rightAxis.enabled = false
         lineChart.leftAxis.granularity = 1
-//        lineChart.leftAxis.axisMaxValue = dataSets[0].yMax * 1.1
         lineChart.leftAxis.axisMinValue = 0
         lineChart.legend.horizontalAlignment = .Center
         lineChart.legend.verticalAlignment = .Top
         lineChart.legend.orientation = .Horizontal
         lineChart.xAxis.avoidFirstLastClippingEnabled = true
-        lineChart.animate(yAxisDuration: 2, easingOption: .EaseOutElastic)
+//        lineChart.animate(yAxisDuration: 2, easingOption: .EaseOutElastic)
         lineChart.descriptionText = ""
         lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
-
     }
     
     

@@ -15,6 +15,7 @@ import CoreData
 extension Level {
 
     @NSManaged var name: String?
+    @NSManaged var uuid: String?
     @NSManaged var capacity: NSNumber?
     @NSManaged var currentCount: NSNumber?
     @NSManaged var structure: Structure?

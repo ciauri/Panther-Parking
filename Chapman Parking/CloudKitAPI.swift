@@ -90,7 +90,7 @@ class CloudKitAPI: ParkingAPI{
         let ckID = record.recordID.recordName
         let numSpaces = record.objectForKey("NumberOfSpaces") as! Int
         let timestamp = record.objectForKey("UpdatedAt") as! NSDate
-        return CKCount(ckID: ckID, count: numSpaces, timestamp: timestamp)
+        return CKCount(uuid: ckID, count: numSpaces, timestamp: timestamp)
     }
     
     private func fetchParkingStructures(completion: ([CKStructure]?, NSError?) -> ()) {
@@ -123,14 +123,15 @@ class CloudKitAPI: ParkingAPI{
                 long = location.coordinate.longitude,
                 ckID = record.recordID.recordName
             
-            let newStructure = CKStructure(ckID: ckID, name: name, levels: [], lat: lat, long: long)
+            let newStructure = CKStructure(uuid: ckID, name: name, levels: [], lat: lat, long: long)
             structures.append(newStructure)
         }
         return structures
     }
     
-    private func fetchLevels(from structure:CKStructure, withCompletion completion: ([CKLevel]?, NSError?) -> ()) {
-        let id = CKRecordID(recordName: structure.ckID)
+    
+    private func fetchLevels(fromStructureWithUUID uuid: String, withCompletion completion: ([CKLevel]?, NSError?) -> ()) {
+        let id = CKRecordID(recordName: uuid)
         let ref = CKReference(recordID: id, action: .None)
         let levelQuery = CKQuery(recordType: "ParkingLevel", predicate: NSPredicate(format: "Structure == %@", ref))
         
@@ -161,86 +162,113 @@ class CloudKitAPI: ParkingAPI{
             }
             
             let ckID = level.recordID.recordName
-            let newLevel = CKLevel(ckID: ckID, name: levelName, capacity: levelCap, counts: [], currentCount: levelCount)
+            let newLevel = CKLevel(uuid: ckID, name: levelName, capacity: levelCap, counts: [], currentCount: levelCount)
             levels.append(newLevel)
         }
         return levels
     }
     
-    private func fetchCounts(from level: CKLevel, starting startDate: NSDate?, ending endDate: NSDate?, completion: ([CKCount]?, NSError?) -> ()) {
-        // Build Query
-        let id = CKRecordID(recordName: level.ckID)
-        let ref = CKReference(recordID: id, action: .None)
-        var predicate = NSPredicate(format: "Level == %@", ref)
+    /// If no dates are provided, only the most recent counts are fetched
+    func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: NSDate? = nil, ending endDate: NSDate? = nil, completion: ([CKCount]?, NSError?) -> ()) {
+
         var resultLimit: Int?
-        let spotQuery = CKQuery(recordType: "ParkingSpotCount", predicate: predicate)
-        let chronoSort = NSSortDescriptor(key: "UpdatedAt", ascending: false)
-        spotQuery.sortDescriptors = [chronoSort]
+        var datePredicates: [NSPredicate] = []
+        if startDate == nil && endDate == nil {
+            resultLimit = 1
+        } else {
+            if let startDate = startDate {
+                datePredicates.append(NSPredicate(format: "UpdatedAt > %@", startDate))
+            }
+            if let endDate = endDate {
+                datePredicates.append(NSPredicate(format: "UpdatedAt < %@", endDate))
 
-
-        
-    }
-    
-    private func fetchLatestCount(from level: CKLevel, completion: (CKCount?, NSError?) -> ()) {
-        let id = CKRecordID(recordName: level.ckID)
-        let ref = CKReference(recordID: id, action: .None)
-        let predicate = NSPredicate(format: "Level == %@", ref)
-        let spotQuery = CKQuery(recordType: "ParkingSpotCount", predicate: predicate)
-        let chronoSort = NSSortDescriptor(key: "UpdatedAt", ascending: false)
-        spotQuery.sortDescriptors = [chronoSort]
-        // Build Operation
-        let spotQueryOperation = CKQueryOperation(query: spotQuery)
-        spotQueryOperation.resultsLimit = 1
-        spotQueryOperation.qualityOfService = .UserInitiated
-        spotQueryOperation.recordFetchedBlock = { record in
-            completion(self.processCount(withRecord: record), nil)
-        }
-        spotQueryOperation.queryCompletionBlock = { cursor, error in
-            if let error = error {
-                print("\(error)")
             }
         }
+        let id = CKRecordID(recordName: uuid)
+        let ref = CKReference(recordID: id, action: .None)
+        let levelPredicate = NSPredicate(format: "Level == %@", ref)
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: datePredicates + [levelPredicate])
+        let spotQuery = CKQuery(recordType: "ParkingSpotCount", predicate: predicate)
+        let chronoSort = NSSortDescriptor(key: "UpdatedAt", ascending: false)
+        spotQuery.sortDescriptors = [chronoSort]
+        let spotQueryOperation = CKQueryOperation(query: spotQuery)
         
-        publicDB.addOperation(spotQueryOperation)
-        
-//        self.executeQueryOperation(spotQueryOperation,
-//                                   completion: {completion($0,nil)})
+        // If there is a result limit, handle the results and query directly
+        if let resultLimit = resultLimit {
+            spotQueryOperation.resultsLimit = resultLimit
+            spotQueryOperation.qualityOfService = .UserInitiated
+            spotQueryOperation.recordFetchedBlock = { record in
+                completion([self.processCount(withRecord: record)], nil)
+            }
+            spotQueryOperation.queryCompletionBlock = { cursor, error in
+                if let error = error {
+                    print("\(error)")
+                }
+            }
+            publicDB.addOperation(spotQueryOperation)
+        } else {
+            self.executeQueryOperation(spotQueryOperation, completion: { counts in
+                completion(counts, nil)
+            })
+            
+        }
 
+
+        
     }
+
+    
+    
     
     func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock: (CPReport -> Void)) {
         container.accountStatusWithCompletionHandler(loginHandler)
         
-        /**
+        
         fetchParkingStructures({ structures, error in
             guard let structures = structures
                 else{
                     NSLog("Error fetching structures")
                     return
             }
-            structures.forEach({
-                self.fetchLevels(from: $0,
+            withBlock(CKReport(structures: structures.map{$0}))
+            structures.forEach({ structure in
+                self.fetchLevels(fromStructureWithUUID: structure.uuid,
                     withCompletion: { levels, error in
-                    guard let levels = levels
-                        else{
-                            NSLog("Error fetching levels")
-                            return
-                    }
-                    levels.forEach({
-                        self.fetchLatestCount(from: $0,
-                            completion: { counts, error in
-                                print("\(counts)")
-                                NSLog("yey counts")
+                        guard let levels = levels
+                            else{
+                                NSLog("Error fetching levels")
+                                return
+                        }
+                        
+                        var structure = structure
+                        structure.levels = levels.map{$0}
+                        withBlock(CKReport(structures: [structure]))
+                        levels.forEach({ level in
+                            self.fetchCounts(fromLevelWithUUID: level.uuid,
+                                starting: sinceDate,
+                                ending: nil,
+                                completion: { counts, error in
+                                    guard let counts = counts
+                                        else{
+                                            NSLog("Error fetching counts")
+                                            return
+                                    }
+                                    
+                                    var level = level
+                                    level.counts = counts.map{$0}
+                                    structure.levels = [level]
+                                    withBlock(CKReport(structures: [structure]))
+                            })
+                            
                         })
-                    })
-                    
+                        
                 })
             })
             
         })
-        */
-
         
+
+        /**
 
         let query = CKQuery(recordType: "ParkingStructure", predicate: NSPredicate(value: true))
         publicDB.performQuery(query, inZoneWithID: nil, completionHandler: {results, error in
@@ -335,6 +363,6 @@ class CloudKitAPI: ParkingAPI{
                 }
             }
         })
-
+         */
     }
 }

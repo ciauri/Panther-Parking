@@ -20,7 +20,17 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wNc-I9-yWl" customClass="LineChartView" customModule="Charts">
                                 <rect key="frame" x="12" y="144" width="576" height="456"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <subviews>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="pmG-Tg-I26">
+                                        <rect key="frame" x="278" y="218" width="20" height="20"/>
+                                        <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="pmG-Tg-I26" firstAttribute="centerY" secondItem="wNc-I9-yWl" secondAttribute="centerY" id="Gwc-7D-rOH"/>
+                                    <constraint firstItem="pmG-Tg-I26" firstAttribute="centerX" secondItem="wNc-I9-yWl" secondAttribute="centerX" id="pU2-FS-rSJ"/>
+                                </constraints>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8sE-0q-q7w">
                                 <rect key="frame" x="20" y="72" width="560" height="29"/>
@@ -43,11 +53,15 @@
                                     <action selector="timeFrameSelected:" destination="NEW-LK-LrN" eventType="valueChanged" id="Fkd-VO-Ji3"/>
                                 </connections>
                             </segmentedControl>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="o9p-ob-kSz">
+                                <rect key="frame" x="0.0" y="64" width="600" height="2"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="trailing" secondItem="e4x-4u-15i" secondAttribute="trailingMargin" id="76E-yz-fYY"/>
                             <constraint firstItem="wNc-I9-yWl" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" constant="-8" id="9L5-KN-L9X"/>
+                            <constraint firstItem="o9p-ob-kSz" firstAttribute="centerX" secondItem="e4x-4u-15i" secondAttribute="centerX" id="Ayy-p9-EcS"/>
                             <constraint firstItem="7Jg-Fs-3Ld" firstAttribute="top" secondItem="wNc-I9-yWl" secondAttribute="bottom" id="I10-86-EMB"/>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="top" secondItem="8sE-0q-q7w" secondAttribute="bottom" constant="8" id="SLR-1r-bW4"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="trailing" secondItem="e4x-4u-15i" secondAttribute="trailingMargin" id="VhD-a7-FW4"/>
@@ -55,13 +69,17 @@
                             <constraint firstAttribute="trailingMargin" secondItem="wNc-I9-yWl" secondAttribute="trailing" constant="-8" id="Ypg-o2-Gdl"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="top" secondItem="HLd-W7-qa3" secondAttribute="bottom" constant="8" id="f6M-KV-3fg"/>
                             <constraint firstItem="wNc-I9-yWl" firstAttribute="top" secondItem="A6l-NF-IH3" secondAttribute="bottom" constant="8" id="gsZ-ig-uKj"/>
+                            <constraint firstItem="o9p-ob-kSz" firstAttribute="width" secondItem="e4x-4u-15i" secondAttribute="width" id="nT0-az-Bff"/>
+                            <constraint firstItem="o9p-ob-kSz" firstAttribute="top" secondItem="HLd-W7-qa3" secondAttribute="bottom" id="oC2-XZ-Ahg"/>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" id="rb8-cR-Epp"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="levelSelector" destination="8sE-0q-q7w" id="N0g-gj-85v"/>
                         <outlet property="lineChart" destination="wNc-I9-yWl" id="JPE-Wy-o0I"/>
+                        <outlet property="progress" destination="o9p-ob-kSz" id="w8e-ig-8oS"/>
                         <outlet property="scaleSelector" destination="A6l-NF-IH3" id="nEq-eT-jaD"/>
+                        <outlet property="spinner" destination="pmG-Tg-I26" id="XWO-tK-0Nf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xGE-KD-ate" userLabel="First Responder" sceneMemberID="firstResponder"/>

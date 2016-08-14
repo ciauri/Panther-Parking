@@ -9,6 +9,9 @@
 import Foundation
 import CloudKit
 
+/**
+ Defunct custom web API. Re-implement as-needed.
+
 class WebAPI: ParkingAPI{
     
     static let sharedInstance = WebAPI() as ParkingAPI
@@ -61,4 +64,5 @@ class WebAPI: ParkingAPI{
 
 // TODO: Implement "SinceLast"
 
+ */
 

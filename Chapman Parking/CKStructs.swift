@@ -13,16 +13,16 @@ protocol CKObject{
     var ckID: String {get set}
 }
 
-struct CKStructure: CKObject, CPStructure{
-    var ckID: String
+struct CKStructure: CPStructure{
+    var uuid: String
     var name: String?
     var levels: [CPLevel]
     var lat: Double?
     var long: Double?
 }
 
-struct CKLevel: CKObject, CPLevel{
-    var ckID: String
+struct CKLevel: CPLevel{
+    var uuid: String
     var name: String?
     var capacity: Int?
     var counts: [CPCount]
@@ -30,8 +30,8 @@ struct CKLevel: CKObject, CPLevel{
     
 }
 
-struct CKCount: CKObject, CPCount{
-    var ckID: String
+struct CKCount: CPCount{
+    var uuid: String
     var count: Int?
     var timestamp: NSDate?
 }

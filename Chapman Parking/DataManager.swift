@@ -73,7 +73,7 @@ class DataManager{
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         managedObjectContext.undoManager = nil
         managedObjectContext.persistentStoreCoordinator = self.persistentStoreCoordinator
-        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: {note in self.contextDidSaveNotificationHandler(note)})
+        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: self.contextDidSaveNotificationHandler)
 
         return managedObjectContext
     }()
@@ -132,25 +132,65 @@ class DataManager{
     
     
     
+    private func structureWith(uuid: String, moc: NSManagedObjectContext) -> Structure? {
+        let request = NSFetchRequest(entityName: "Structure")
+        request.predicate = NSPredicate(format: "uuid == %@", uuid)
+        var structure: Structure?
+        moc.performBlockAndWait({
+            do{
+                structure = try moc.executeFetchRequest(request).first as? Structure
+            }catch{
+                fatalError("WAT")
+            }
+        })
+        
+        return structure
+        
+    }
     
     private func parkingStructureForName(name: String, moc: NSManagedObjectContext) -> Structure?{
         let request = NSFetchRequest(entityName: "Structure")
         request.predicate = NSPredicate(format: "name == %@", name)
-        do{
-            return try moc.executeFetchRequest(request).first as? Structure
-        }catch{
-            return nil
-        }
+        var structure: Structure?
+        moc.performBlockAndWait({
+            do{
+                structure = try moc.executeFetchRequest(request).first as? Structure
+            }catch{
+                fatalError("WAT")
+            }
+        })
+        
+        return structure
+    }
+    
+    private func levelWith(uuid: String, moc: NSManagedObjectContext) -> Level? {
+        let request = NSFetchRequest(entityName: "Level")
+        request.predicate = NSPredicate(format: "uuid == %@", uuid)
+        var level: Level?
+        moc.performBlockAndWait({
+            do{
+                level = try moc.executeFetchRequest(request).first as? Level
+            }catch{
+                fatalError("WAT")
+            }
+        })
+        
+        return level
     }
     
     private func levelInStructureWithName(structure: Structure, name: String, moc: NSManagedObjectContext) -> Level?{
         let request = NSFetchRequest(entityName: "Level")
         request.predicate = NSPredicate(format: "structure == %@ AND name == %@", structure, name)
-        do{
-            return try moc.executeFetchRequest(request).first as? Level
-        }catch{
-            return nil
-        }
+        var level: Level?
+        moc.performBlockAndWait({
+            do{
+                level = try moc.executeFetchRequest(request).first as? Level
+            }catch{
+                fatalError("WAT")
+            }
+        })
+        
+        return level
     }
     
     
@@ -165,15 +205,19 @@ class DataManager{
         request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
         request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt <= %@)", level, date)
         request.fetchLimit = 1
-        do{
-            return try (context.executeFetchRequest(request) as? [Count])?.first
-        } catch {
-            NSLog("error")
-            return nil
-        }
+        
+        var count: Count?
+        context.performBlockAndWait({
+            do{
+                count = try (context.executeFetchRequest(request) as? [Count])?.first
+            } catch {
+                NSLog("error")
+            }
+        })
+        return count
     }
     
-    /// Fetches `Count` objects with UIMOC, returns chronologicall sorted list
+    /// Fetches `Count` objects with UIMOC, returns chronologically sorted list
     func countsOn(level: Level, since date: NSDate) -> [Count] {
         let context = DataManager.sharedInstance.managedObjectContext
         let request = NSFetchRequest(entityName: "Count")
@@ -193,6 +237,107 @@ class DataManager{
         return counts
     }
     
+    private func process(structure: CPStructure, withContext context: NSManagedObjectContext?) {
+        var moc: NSManagedObjectContext
+        if let context = context {
+            moc = context
+        } else {
+            moc = try! createPrivateQueueContext()
+        }
+        
+        moc.performBlock({
+            var s: Structure
+            if let structure = self.structureWith(structure.uuid, moc: moc) {
+                s = structure
+            } else {
+                s = NSEntityDescription.insertNewObjectForEntityForName("Structure", inManagedObjectContext: moc) as! Structure
+                let loc = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: moc) as! Location
+                s.location = loc
+                s.uuid = structure.uuid
+                NSLog("New Structure")
+            }
+            
+            s.location?.lat = structure.lat
+            s.location?.long = structure.long
+            s.name = structure.name
+            
+            try! moc.save()
+        })
+    }
+    
+    private func process(level: CPLevel, inStructure structure: Structure, withContext context: NSManagedObjectContext?) {
+        var moc: NSManagedObjectContext
+        if let context = context {
+            moc = context
+        } else {
+            moc = try! createPrivateQueueContext()
+        }
+        
+        moc.performBlock({
+            var l: Level
+            if let level = self.levelWith(level.uuid, moc: moc){
+                l = level
+            }else{
+                l = NSEntityDescription.insertNewObjectForEntityForName("Level", inManagedObjectContext: moc) as! Level
+                l.structure = structure
+                l.uuid = level.uuid
+                NSLog("New Level")
+            }
+            
+            l.name = level.name
+            l.capacity = level.capacity
+            l.currentCount = level.currentCount
+            try! moc.save()
+        })
+    }
+    
+    private func process(counts: [CPCount], onLevel level: Level, withContext context: NSManagedObjectContext?, completion: ([Count] -> ())?){
+        var moc: NSManagedObjectContext
+        if let context = context {
+            moc = context
+        } else {
+            moc = try! createPrivateQueueContext()
+        }
+        var countArray: [Count] = []
+        moc.performBlock({
+            for count in counts{
+                let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: moc) as! Count
+                c.availableSpaces = count.count
+                c.updatedAt = count.timestamp
+                c.level = moc.objectWithID(level.objectID) as? Level
+                c.uuid = count.uuid
+                countArray.append(c)
+            }
+            try! moc.save()
+            completion?(countArray)
+        })
+    }
+    
+    func update(level: Level, startDate start: NSDate?, endDate end: NSDate?, completion: ([Count] -> ())?){
+        guard let uuid = level.uuid
+            else {
+                NSLog("Level does not have a uuid... whoops")
+                return
+        }
+        
+        api.fetchCounts(fromLevelWithUUID: uuid,
+                        starting: start,
+                        ending: end,
+                        completion: {counts, error in
+                            if let error = error {
+                                NSLog("\(error)")
+                                completion?([])
+                            } else if let counts = counts {
+                                self.process(counts.map{$0},
+                                    onLevel: level,
+                                    withContext: nil,
+                                    completion: completion)
+                            }
+        })
+    }
+
+    
+    /// TODO: Re-implement using above new functions
     func updateCounts(updateType: UpdateType, withCompletion completion: (Bool -> ())? = nil){
         let backgroundContext = try! createPrivateQueueContext()
         var sinceDate: NSDate? = nil
@@ -217,67 +362,69 @@ class DataManager{
         
         api.generateReport(updateType, sinceDate: sinceDate, withBlock: {report in
             
-            
-            for structure in report.structures{
-                var s: Structure
-                
-                if let structure = self.parkingStructureForName(structure.name!, moc: backgroundContext){
-                    s = structure
-                }else{
-                    s = NSEntityDescription.insertNewObjectForEntityForName("Structure", inManagedObjectContext: backgroundContext) as! Structure
-                    let loc = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: backgroundContext) as! Location
-                    loc.lat = structure.lat
-                    loc.long = structure.long
+            backgroundContext.performBlock({
+                for structure in report.structures{
+                    var s: Structure
                     
-                    s.location = loc
-                    loc.structure = s
-                    NSLog("New Structure")
-                }
-                
-                s.name = structure.name
-                
-                for level in structure.levels{
-                    var l: Level
+                    if let structure = structure as? CKStructure {
+                        NSLog(structure.uuid)
+                    }
                     
-                    if let level = self.levelInStructureWithName(s, name: level.name!, moc: backgroundContext){
-                        l = level
+                    if let structure = self.structureWith(structure.uuid, moc: backgroundContext){
+                        s = structure
                     }else{
-                        l = NSEntityDescription.insertNewObjectForEntityForName("Level", inManagedObjectContext: backgroundContext) as! Level
-                        l.structure = s
-                        NSLog("New Level")
-                    }
-                    
-                    l.name = level.name
-                    l.capacity = level.capacity
-                    
-                    l.currentCount = level.currentCount
-                    
-                    var latestCount: CPCount? = nil
-                    
-                    for count in level.counts{
+                        s = NSEntityDescription.insertNewObjectForEntityForName("Structure", inManagedObjectContext: backgroundContext) as! Structure
+                        let loc = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: backgroundContext) as! Location
+                        loc.lat = structure.lat
+                        loc.long = structure.long
                         
-                        if latestCount == nil || latestCount?.timestamp?.compare(count.timestamp!) == NSComparisonResult.OrderedAscending{
-                            latestCount = count
+                        s.location = loc
+                        s.uuid = structure.uuid
+                        loc.structure = s
+                        NSLog("New Structure")
+                    }
+                    
+                    s.name = structure.name
+                    
+                    for level in structure.levels{
+                        var l: Level
+                        
+                        if let level = self.levelWith(level.uuid, moc: backgroundContext){
+                            l = level
+                        }else{
+                            l = NSEntityDescription.insertNewObjectForEntityForName("Level", inManagedObjectContext: backgroundContext) as! Level
+                            l.structure = s
+                            l.uuid = level.uuid
+                            NSLog("New Level")
                         }
-                    
-                        let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: backgroundContext) as! Count
-                        c.availableSpaces = count.count
-                        //                        print("Before: \(s.name!) \(l.name!): \(c.availableSpaces) vs \(l.currentCount). Total Count: \(l.counts?.count)")
-                        c.updatedAt = count.timestamp
-                        c.level = l
+                        
+                        l.name = level.name
+                        l.capacity = level.capacity
+                        l.currentCount = level.currentCount
+                        
+                        var latestCount: CPCount? = nil
+                        
+                        for count in level.counts{
+                            
+                            if latestCount == nil || latestCount?.timestamp?.compare(count.timestamp!) == NSComparisonResult.OrderedAscending{
+                                latestCount = count
+                            }
+                            
+                            let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: backgroundContext) as! Count
+                            c.availableSpaces = count.count
+                            c.updatedAt = count.timestamp
+                            c.level = l
+                            c.uuid = count.uuid
+                        }
+                        if let c = latestCount{
+                            l.updatedAt = c.timestamp
+                        }
+                        
                     }
-                    if let c = latestCount{
-                        l.updatedAt = c.timestamp
-                    }
-                    
-//                    l.willChangeValueForKey("counts")
-//                    l.didChangeValueForKey("counts")
-                    
                 }
-            }
-            try! backgroundContext.save()
-            completion?(true)
-//            backgroundContext.reset()
+                try! backgroundContext.save()
+                completion?(true)
+            })
         })
         
     }

@@ -14,6 +14,7 @@ import CoreData
 
 extension Count {
 
+    @NSManaged var uuid: String?
     @NSManaged var availableSpaces: NSNumber?
     @NSManaged var updatedAt: NSDate?
     @NSManaged var level: Level?

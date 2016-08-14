@@ -6,6 +6,9 @@
 //  Copyright © 2016 Stephen Ciauri. All rights reserved.
 //
 
+/**
+ Currently unused since we're using CloudKit for now. Implement this if we ever have a custom back-end
+ 
 import Foundation
 import Gloss
 
@@ -33,6 +36,7 @@ struct JSONStructure: Decodable, CPStructure{
         // Gloss sucks
         lat = Double(json["lat"] as! String)!
         long = Double(json["long"] as! String)!
+        
     }
     
 }
@@ -67,3 +71,5 @@ struct JSONCount: Decodable, CPCount{
     }
     
 }
+ 
+ */
