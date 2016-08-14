@@ -19,10 +19,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wNc-I9-yWl" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="12" y="144" width="576" height="456"/>
+                                <rect key="frame" x="0.0" y="144" width="600" height="456"/>
                                 <subviews>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="pmG-Tg-I26">
-                                        <rect key="frame" x="278" y="218" width="20" height="20"/>
+                                        <rect key="frame" x="290" y="218" width="20" height="20"/>
                                         <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -46,8 +46,8 @@
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="A6l-NF-IH3">
                                 <rect key="frame" x="20" y="108" width="560" height="29"/>
                                 <segments>
-                                    <segment title="Day"/>
-                                    <segment title="Week"/>
+                                    <segment title="Today"/>
+                                    <segment title="Last 7 Days"/>
                                 </segments>
                                 <connections>
                                     <action selector="timeFrameSelected:" destination="NEW-LK-LrN" eventType="valueChanged" id="Fkd-VO-Ji3"/>
@@ -60,13 +60,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="trailing" secondItem="e4x-4u-15i" secondAttribute="trailingMargin" id="76E-yz-fYY"/>
-                            <constraint firstItem="wNc-I9-yWl" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" constant="-8" id="9L5-KN-L9X"/>
+                            <constraint firstItem="wNc-I9-yWl" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leading" id="9L5-KN-L9X"/>
                             <constraint firstItem="o9p-ob-kSz" firstAttribute="centerX" secondItem="e4x-4u-15i" secondAttribute="centerX" id="Ayy-p9-EcS"/>
                             <constraint firstItem="7Jg-Fs-3Ld" firstAttribute="top" secondItem="wNc-I9-yWl" secondAttribute="bottom" id="I10-86-EMB"/>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="top" secondItem="8sE-0q-q7w" secondAttribute="bottom" constant="8" id="SLR-1r-bW4"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="trailing" secondItem="e4x-4u-15i" secondAttribute="trailingMargin" id="VhD-a7-FW4"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" id="XgV-OS-bOv"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="wNc-I9-yWl" secondAttribute="trailing" constant="-8" id="Ypg-o2-Gdl"/>
+                            <constraint firstAttribute="trailing" secondItem="wNc-I9-yWl" secondAttribute="trailing" id="Ypg-o2-Gdl"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="top" secondItem="HLd-W7-qa3" secondAttribute="bottom" constant="8" id="f6M-KV-3fg"/>
                             <constraint firstItem="wNc-I9-yWl" firstAttribute="top" secondItem="A6l-NF-IH3" secondAttribute="bottom" constant="8" id="gsZ-ig-uKj"/>
                             <constraint firstItem="o9p-ob-kSz" firstAttribute="width" secondItem="e4x-4u-15i" secondAttribute="width" id="nT0-az-Bff"/>
@@ -321,6 +321,39 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FFq-kZ-GMm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="532" y="368"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="pMH-a7-qkl">
+            <objects>
+                <viewController id="eJ5-Gu-BEc" customClass="ViewController" customModule="Chapman_Parking" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wco-mp-RDb"/>
+                        <viewControllerLayoutGuide type="bottom" id="eOH-rV-e9O"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="182-oD-GfQ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3nU-dT-xuD" userLabel="chart" customClass="LineChartView" customModule="Charts">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="3nU-dT-xuD" firstAttribute="centerY" secondItem="182-oD-GfQ" secondAttribute="centerY" id="0vB-9q-r1u"/>
+                            <constraint firstItem="3nU-dT-xuD" firstAttribute="height" secondItem="182-oD-GfQ" secondAttribute="height" id="EYo-6l-ugB"/>
+                            <constraint firstItem="3nU-dT-xuD" firstAttribute="width" secondItem="182-oD-GfQ" secondAttribute="width" id="Vh2-xw-grP"/>
+                            <constraint firstItem="3nU-dT-xuD" firstAttribute="centerX" secondItem="182-oD-GfQ" secondAttribute="centerX" id="iCl-rd-tSt"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="chart" destination="3nU-dT-xuD" id="Tmk-cv-ojE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DVv-op-OuR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1384" y="661"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

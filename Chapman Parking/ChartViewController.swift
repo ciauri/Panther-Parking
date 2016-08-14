@@ -23,7 +23,7 @@ class ChartViewController: UIViewController {
     
     
     let daysWorthOfSeconds = 86400
-    lazy var today: NSDate = NSDate()
+    lazy var today: NSDate = NSDate().dateFromTime(nil, minute: nil, second: 0)!
     lazy var formatter: NSDateFormatter = {
         let formatter = NSDateFormatter()
         formatter.dateStyle = .ShortStyle
@@ -34,11 +34,6 @@ class ChartViewController: UIViewController {
     var resolution: Int = 60
     var numberOfDays: Int = 1
     var selectedLevels: [Level]!
-    
-//    let today = NSDate()
-//    let yesterday = NSDate().dateByAddingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(0, minute: 0, second: 0)!
-    
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,11 +49,7 @@ class ChartViewController: UIViewController {
                 self.updateLevels()
                 self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
             })
-
         }
-        
-
-        // Do any additional setup after loading the view.
     }
     
 
@@ -195,6 +186,41 @@ class ChartViewController: UIViewController {
         return set
     }
     
+    private func dataSet(named levelName: String, withCounts counts: [Count], onTimeline timeline: [NSDate], withResolutionInMinutes resolution: Int) -> LineChartDataSet {
+        
+        var yVals: [ChartDataEntry] = []
+        
+        for element in counts {
+            let count = Double(element.availableSpaces!)
+//            let updatedAt = element.updatedAt!.dateFromTime(nil, minute: nil, second: 0)!
+            let index = element.updatedAt!.timeIntervalSinceDate(timeline.first!)/60
+            yVals.append(ChartDataEntry(value: count, xIndex: Int(index)))
+        }
+
+        
+        // Draws the line to the beginning and end of the visible chart
+        if let first = yVals.first,
+            last = yVals.last {
+            
+            if last.xIndex < timeline.count-1 {
+                let count = last.value
+                let index = timeline.count-1
+                yVals.append(ChartDataEntry(value: count, xIndex: index))
+            }
+            if first.xIndex > 0 {
+                let count = first.value
+                let index = 0
+                yVals.insert(ChartDataEntry(value: count, xIndex: Int(index)), atIndex: 0)
+            }
+        }
+
+        let set = LineChartDataSet(yVals: yVals, label: levelName)
+        set.lineWidth = 3
+        set.drawCirclesEnabled = false
+        
+        return set
+    }
+    
     
     func initChart(levels: [Level], withResolution minuteResolution: Int, numberOfDays days: Int){
         var colors =  ChartColorTemplates.colorful() + ChartColorTemplates.vordiplom()
@@ -206,8 +232,7 @@ class ChartViewController: UIViewController {
 
         for level in levels{
             let results = DataManager.sharedInstance.countsOn(level, since: pastDate)
-            let sortedPlot = integrateAndSort(results, fromLevel: level, intoTimeline: timeIntervals)
-            let set = dataSetFor(level, withdata: sortedPlot, andResolutionInMinutes: minuteResolution)
+            let set = dataSet(named: level.name!, withCounts: results, onTimeline: timeIntervals, withResolutionInMinutes: 60)
             
             if selectedLevels.count == 1 {
                 set.colors = [colors[levelSelector.selectedSegmentIndex]]
@@ -216,9 +241,10 @@ class ChartViewController: UIViewController {
             }
             set.mode = .Linear
             set.fill = ChartFill(color: set.colors.first!)
-            set.drawFilledEnabled = true
             set.valueFormatter?.zeroSymbol = ""
             set.valueFormatter?.maximumSignificantDigits = 3
+            set.drawFilledEnabled = true
+            set.drawValuesEnabled = false
             dataSets.append(set)
         }
         
@@ -230,10 +256,14 @@ class ChartViewController: UIViewController {
         lineChart.rightAxis.enabled = false
         lineChart.leftAxis.granularity = 1
         lineChart.leftAxis.axisMinValue = 0
+//        lineChart.leftAxis.drawLimitLinesBehindDataEnabled = true
+        lineChart.leftAxis.labelPosition = .InsideChart
         lineChart.legend.horizontalAlignment = .Center
         lineChart.legend.verticalAlignment = .Top
         lineChart.legend.orientation = .Horizontal
+//        lineChart.xAxis.setLabelsToSkip(147*numberOfDays)
         lineChart.xAxis.avoidFirstLastClippingEnabled = true
+//        lineChart.xAxis.axisLabelModulus = 60
         lineChart.descriptionText = ""
         lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
     }
