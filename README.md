@@ -3,7 +3,8 @@
 ## Use
 
 - Get real-time information about parking structures and neat-o historical data
-  - Get up to 100 minutes of historical data at a time
+  - Get up to 1 week of historical data at a time
+  - At-a-glance map view of structures and their available spots
   - Fun graphs
   - Neat-O list
 
