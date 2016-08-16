@@ -61,12 +61,12 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
                 mapView?.addAnnotation(a)
             }
         case .Move:
-//            if let a = anObject as? MKAnnotation{
-//                mapView?.removeAnnotation(a)
-//                mapView?.addAnnotation(a)
-//            }
-//            tableView?.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-//            tableView?.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            if let
+                annotation = anObject as? Structure,
+                annotationView = mapView?.viewForAnnotation(annotation) as? MKPinAnnotationView{
+                
+                annotationView.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
+            }
             if let indexPath = indexPath, cell = tableView?.cellForRowAtIndexPath(indexPath){
                 delegate?.configureCell(cell, atIndexPath: indexPath)
                 tableView?.moveRowAtIndexPath(indexPath, toIndexPath: newIndexPath!)
