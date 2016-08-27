@@ -1,12 +1,18 @@
 # [PantherPark](https://itunes.apple.com/us/app/pantherpark/id1111164917?ls=1&mt=8)
 
-## Use
+## Features
 
 - Get real-time information about parking structures and neat-o historical data
   - Get up to 1 week of historical data at a time
   - At-a-glance map view of structures and their available spots
   - Fun graphs
   - Neat-O list
+
+## Use
+
+- You can either download it from the [AppStore](https://itunes.apple.com/us/app/pantherpark/id1111164917?ls=1&mt=8) or build and run it on the iOS Simulator
+- If you plan to run it on the simulator, you __must__ be logged into iCloud on the simulator. Unfortunately this is a requirement that Apple puts on the simulator during the development process. It can be misleading because you may think that you need to be signed in to iCloud in order for the app to work in production, which you, in fact, do not.
+- Also ensure that you recursively download all of the submodules for this project if you plan to run it on your own machine.
 
 ## Motivation
 
