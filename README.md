@@ -24,7 +24,7 @@ Luckily, thanks to the CloudKitJS package, CloudKit is no longer Apple only. Use
 
 ## Resources
 
-- ~~[Custom Python Backend](https://github.com/ciauri/stephenciauri.com/tree/master/app/mod_parking)~~
+- ~~[Flask Microservice](https://github.com/ciauri/stephenciauri.com/tree/master/app/mod_parking)~~
 - CloudKit (Did end up biting me in the ass on 23 August 2016)
 - [Chapman's Parking Feed](https://webfarm.chapman.edu/parkingservice/parkingservice/counts)
 - AWS Lambda (To run Node cron jobs that upload to CloudKit using the CloudKitJS package)
