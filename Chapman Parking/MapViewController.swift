@@ -25,10 +25,12 @@ class MapViewController: UIViewController {
         addStructuresToMap()
         mapView.scrollEnabled = false
         mapView.zoomEnabled = false
+        mapView.rotateEnabled = false
         mapView.showsTraffic = true
         mapView.showsScale = true
         mapView.showsCompass = true
         mapView.showsBuildings = true
+        
         
 
         // Do any additional setup after loading the view.
