@@ -17,6 +17,7 @@ class ChartViewController: UIViewController {
     @IBOutlet var scaleSelector: UISegmentedControl!
     @IBOutlet var spinner: UIActivityIndicatorView!
     @IBOutlet var progress: UIProgressView!
+    @IBOutlet var yAxisLabel: UILabel!
     
     var structure: Structure!
     var levels: [Level]!
@@ -26,7 +27,7 @@ class ChartViewController: UIViewController {
     lazy var today: NSDate = NSDate().dateFromTime(nil, minute: nil, second: 0)!
     lazy var formatter: NSDateFormatter = {
         let formatter = NSDateFormatter()
-        formatter.dateStyle = .ShortStyle
+        formatter.dateStyle = .NoStyle
         formatter.timeStyle = .ShortStyle
         return formatter
     }()
@@ -39,8 +40,9 @@ class ChartViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.title = structure.name
         addLevelsToLevelSelector()
+        rotateAxisLabel()
         levelSelector.selectedSegmentIndex = 0
-        
+
         if let levels = structure.levels {
             self.levels = Array(levels)
             self.levels.sortInPlace({$0.0.name < $0.1.name})
@@ -52,6 +54,11 @@ class ChartViewController: UIViewController {
         }
     }
     
+    private func rotateAxisLabel() {
+        yAxisLabel.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI/2))
+        yAxisLabel.layoutIfNeeded()
+    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -59,9 +66,12 @@ class ChartViewController: UIViewController {
     }
     
     @IBAction func timeFrameSelected(selector: UISegmentedControl) {
+        lineChart.fitScreen()
         if selector.selectedSegmentIndex == 0 {
+            formatter.dateStyle = .NoStyle
             numberOfDays = 1
         } else {
+            formatter.dateStyle = .ShortStyle
             numberOfDays = 7
         }
         dispatch_async(dispatch_get_main_queue(), {
@@ -71,7 +81,6 @@ class ChartViewController: UIViewController {
     }
     
     @IBAction func levelSelected(selector: UISegmentedControl) {
-        NSLog("\(selector.selectedSegmentIndex)")
         if selector.selectedSegmentIndex == 0 {
             selectedLevels = levels
         } else {
@@ -124,77 +133,14 @@ class ChartViewController: UIViewController {
         }
     }
     
-    
-    
-    
-    /// Maps the results array onto a continuous array of tuples containing `date` and `count`
-    /// - Note:
-    ///     Results array dates are modified to have the `second` DateComponent set to 0. This allows for a better
-    ///       and more efficient hit rate of date comparisons. Timeline should have the same quality. Use `dateFromTime`
-    ///       on input timeline.
-    /// - Parameters:
-    ///     - results: List of count objects
-    ///     - fromLevel: The `Level` object the results belong to
-    ///     - intoTimeline: Continuous array of NSDates that the results should be mapped onto
-    /// - Complexity:
-    ///     O(nlogn)...
-    private func integrateAndSort(results: [Count], fromLevel level: Level, intoTimeline timeline: [NSDate]) -> [(date: NSDate, count: Int)] {
-        var plotDict: [NSDate:Int] = [:]
-        
-        // Normalize time to have 00 seconds for easier matching
-        results.forEach({$0.updatedAt = $0.updatedAt?.dateFromTime(nil, minute: nil, second: 0)})
-        
-        // Map plotDict to the desired timeline with default value used for filling in the blanks
-        timeline.forEach({plotDict[$0] = -1})
-        // Map results onto timeline
-        results.forEach({plotDict[$0.updatedAt!] = Int($0.availableSpaces!)})
-        
-        // Make sortable
-        let flattenedPlot = plotDict.map({(date: $0.0, count: $0.1)})
-        
-        // Sort
-        var sortedPlot = flattenedPlot.sort({$0.0.date.compare($0.1.date) == .OrderedAscending})
-        
-        // Fill holes with data from previous point. If no previous point exists, fetch older data
-        for (index, element) in sortedPlot.enumerate() where element.count == -1 {
-            if index != 0 {
-                sortedPlot[index] = (element.date, sortedPlot[index-1].count)
-            } else {
-                // Will execute a maximum of once per dataSet
-                let context = try! DataManager.sharedInstance.createPrivateQueueContext()
-                let count = DataManager.sharedInstance.mostRecentCount(fromDate: element.date, onLevel: level, usingContext: context)
-                sortedPlot[index] = (element.date, Int(count?.availableSpaces! ?? 0))
-            }
-        }
-        return sortedPlot
-    }
-    
-    private func dataSetFor(level: Level, withdata data: [(date: NSDate, count: Int)], andResolutionInMinutes resolution: Int) -> LineChartDataSet {
-        var yVals: [ChartDataEntry] = []
-        
-        for (index, element) in data.enumerate() {
-            if index % resolution == 0 {
-                yVals.append(ChartDataEntry(value: Double(element.count), xIndex: index))
-            }
-        }
-        
-        let set = LineChartDataSet(yVals: yVals, label: level.name)
-
-        set.lineWidth = 3
-        set.drawCirclesEnabled = false
-        
-        return set
-    }
-    
     private func dataSet(named levelName: String, withCounts counts: [Count], onTimeline timeline: [NSDate], withResolutionInMinutes resolution: Int) -> LineChartDataSet {
         
         var yVals: [ChartDataEntry] = []
         
         for element in counts {
             let count = Double(element.availableSpaces!)
-//            let updatedAt = element.updatedAt!.dateFromTime(nil, minute: nil, second: 0)!
             let index = element.updatedAt!.timeIntervalSinceDate(timeline.first!)/60
-            yVals.append(ChartDataEntry(value: count, xIndex: Int(index)))
+            yVals.append(ChartDataEntry(x: index, y: count))
         }
 
         
@@ -202,19 +148,19 @@ class ChartViewController: UIViewController {
         if let first = yVals.first,
             last = yVals.last {
             
-            if last.xIndex < timeline.count-1 {
-                let count = last.value
-                let index = timeline.count-1
-                yVals.append(ChartDataEntry(value: count, xIndex: index))
+            if Int(last.x) < timeline.count-1 {
+                let count = last.y
+                let index = Double(timeline.count-1)
+                yVals.append(ChartDataEntry(x: index, y: count))
             }
-            if first.xIndex > 0 {
-                let count = first.value
-                let index = 0
-                yVals.insert(ChartDataEntry(value: count, xIndex: Int(index)), atIndex: 0)
+            if first.x > 0 {
+                let count = first.y
+                let index = 0.0
+                yVals.insert(ChartDataEntry(x: index, y: count), atIndex: 0)
             }
         }
 
-        let set = LineChartDataSet(yVals: yVals, label: levelName)
+        let set = LineChartDataSet(values: yVals, label: levelName)
         set.lineWidth = 3
         set.drawCirclesEnabled = false
         
@@ -240,9 +186,7 @@ class ChartViewController: UIViewController {
                 set.colors = [colors.removeFirst()]
             }
             set.mode = .Linear
-            set.fill = ChartFill(color: set.colors.first!)
-            set.valueFormatter?.zeroSymbol = ""
-            set.valueFormatter?.maximumSignificantDigits = 3
+            set.fill = Fill(color: set.colors.first!)
             set.drawFilledEnabled = true
             set.drawValuesEnabled = false
             dataSets.append(set)
@@ -253,37 +197,22 @@ class ChartViewController: UIViewController {
         })
         
         let stringStamps = timeIntervals.map({return formatter.stringFromDate($0).stringByReplacingOccurrencesOfString(",", withString: "\n")})
+        let valueFormatter = DateValueFormatter(withStringArray: stringStamps)
+        
+        lineChart.xAxis.valueFormatter = valueFormatter
+        lineChart.xAxis.labelRotationAngle = -45
+        lineChart.xAxis.labelCount = 7
+        
         lineChart.rightAxis.enabled = false
         lineChart.leftAxis.granularity = 1
-        lineChart.leftAxis.axisMinValue = 0
-//        lineChart.leftAxis.drawLimitLinesBehindDataEnabled = true
+        lineChart.leftAxis.axisMinimum = 0
         lineChart.leftAxis.labelPosition = .InsideChart
         lineChart.legend.horizontalAlignment = .Center
         lineChart.legend.verticalAlignment = .Top
         lineChart.legend.orientation = .Horizontal
-//        lineChart.xAxis.setLabelsToSkip(147*numberOfDays)
-        lineChart.xAxis.avoidFirstLastClippingEnabled = true
-//        lineChart.xAxis.axisLabelModulus = 60
         lineChart.descriptionText = ""
-        lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
+        lineChart.data = LineChartData(dataSets: dataSets)
     }
-    
-    
-    /*
-    private func countThatMatches(date: NSDate, withCounts counts: [Count]) -> Count? {
-        let calendar = NSCalendar.currentCalendar()
-        for count in counts {
-            if calendar.compareDate(date, toDate: count.updatedAt!, toUnitGranularity: .Minute) == .OrderedSame {
-                return count
-            }
-        }
-        return nil
-    }
-    */
-    
-
-    
-
 
     
 
@@ -297,4 +226,30 @@ class ChartViewController: UIViewController {
     }
     */
 
+}
+
+class DateValueFormatter: NSObject, IAxisValueFormatter {
+    private var stringArray: [String]
+    
+    override private init() {
+        stringArray = []
+        super.init()
+    }
+    
+    init(withStringArray array: [String]) {
+        self.stringArray = array
+        super.init()
+    }
+    
+    func stringForValue(value: Double, axis: AxisBase?) -> String {
+        if value == 0 {
+            return ""
+        } else {
+            if value > Double(stringArray.count-1) {
+                return ""
+            } else {
+                return stringArray[Int(value)]
+            }
+        }
+    }
 }

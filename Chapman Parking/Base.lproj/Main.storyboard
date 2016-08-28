@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -19,10 +20,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wNc-I9-yWl" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="0.0" y="144" width="600" height="456"/>
+                                <rect key="frame" x="16" y="144" width="584" height="456"/>
                                 <subviews>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="pmG-Tg-I26">
-                                        <rect key="frame" x="290" y="218" width="20" height="20"/>
+                                        <rect key="frame" x="282" y="218" width="20" height="20"/>
                                         <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -56,23 +57,37 @@
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="o9p-ob-kSz">
                                 <rect key="frame" x="0.0" y="64" width="600" height="2"/>
                             </progressView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Available Spaces" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="reA-lY-Axk">
+                                <rect key="frame" x="-48.5" y="361" width="129" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="reA-lY-Axk" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" constant="-70" id="2fp-uD-w4N"/>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="trailing" secondItem="e4x-4u-15i" secondAttribute="trailingMargin" id="76E-yz-fYY"/>
-                            <constraint firstItem="wNc-I9-yWl" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leading" id="9L5-KN-L9X"/>
+                            <constraint firstItem="wNc-I9-yWl" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leading" constant="16" id="9L5-KN-L9X"/>
                             <constraint firstItem="o9p-ob-kSz" firstAttribute="centerX" secondItem="e4x-4u-15i" secondAttribute="centerX" id="Ayy-p9-EcS"/>
                             <constraint firstItem="7Jg-Fs-3Ld" firstAttribute="top" secondItem="wNc-I9-yWl" secondAttribute="bottom" id="I10-86-EMB"/>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="top" secondItem="8sE-0q-q7w" secondAttribute="bottom" constant="8" id="SLR-1r-bW4"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="trailing" secondItem="e4x-4u-15i" secondAttribute="trailingMargin" id="VhD-a7-FW4"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" id="XgV-OS-bOv"/>
                             <constraint firstAttribute="trailing" secondItem="wNc-I9-yWl" secondAttribute="trailing" id="Ypg-o2-Gdl"/>
+                            <constraint firstItem="reA-lY-Axk" firstAttribute="centerY" secondItem="wNc-I9-yWl" secondAttribute="centerY" id="dls-Sb-MwC"/>
                             <constraint firstItem="8sE-0q-q7w" firstAttribute="top" secondItem="HLd-W7-qa3" secondAttribute="bottom" constant="8" id="f6M-KV-3fg"/>
                             <constraint firstItem="wNc-I9-yWl" firstAttribute="top" secondItem="A6l-NF-IH3" secondAttribute="bottom" constant="8" id="gsZ-ig-uKj"/>
                             <constraint firstItem="o9p-ob-kSz" firstAttribute="width" secondItem="e4x-4u-15i" secondAttribute="width" id="nT0-az-Bff"/>
                             <constraint firstItem="o9p-ob-kSz" firstAttribute="top" secondItem="HLd-W7-qa3" secondAttribute="bottom" id="oC2-XZ-Ahg"/>
                             <constraint firstItem="A6l-NF-IH3" firstAttribute="leading" secondItem="e4x-4u-15i" secondAttribute="leadingMargin" id="rb8-cR-Epp"/>
+                            <constraint firstItem="reA-lY-Axk" firstAttribute="centerX" secondItem="wNc-I9-yWl" secondAttribute="leading" id="z9K-n1-FOq"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2fp-uD-w4N"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="levelSelector" destination="8sE-0q-q7w" id="N0g-gj-85v"/>
@@ -80,6 +95,7 @@
                         <outlet property="progress" destination="o9p-ob-kSz" id="w8e-ig-8oS"/>
                         <outlet property="scaleSelector" destination="A6l-NF-IH3" id="nEq-eT-jaD"/>
                         <outlet property="spinner" destination="pmG-Tg-I26" id="XWO-tK-0Nf"/>
+                        <outlet property="yAxisLabel" destination="reA-lY-Axk" id="UPs-7S-jRZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xGE-KD-ate" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -103,10 +119,10 @@
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="summaryCell" id="L4B-Ar-ErN" customClass="TotalCountTableViewCell" customModule="PantherPark" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="114" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="113.5" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="L4B-Ar-ErN" id="29x-Rg-uGX">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="xmQ-cw-i23">
@@ -160,10 +176,10 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="levelCell" id="qsE-Oa-ilY" customClass="LevelCountTableViewCell" customModule="PantherPark" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="158" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="157.5" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qsE-Oa-ilY" id="0qe-zK-ZcC">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="14b-RG-hxW">

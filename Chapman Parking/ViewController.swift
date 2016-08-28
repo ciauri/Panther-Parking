@@ -19,15 +19,15 @@ class ViewController: UIViewController {
         let months = [0,1,2,3,4,5,6,7,8,9,10,11]
         var dataEntries: [ChartDataEntry] = []
         
-        let entry1 = ChartDataEntry(value: 1, xIndex: 0)
-        let entry2 = ChartDataEntry(value: 2, xIndex: 1)
-        let entry3 = ChartDataEntry(value: 3, xIndex: 2)
-        let entry4 = ChartDataEntry(value: 8, xIndex: 5)
-        let entry5 = ChartDataEntry(value: 15, xIndex: 11)
+        let entry1 = ChartDataEntry(x: 1, y: 0)
+        let entry2 = ChartDataEntry(x: 2, y: 1)
+        let entry3 = ChartDataEntry(x: 3, y: 2)
+        let entry4 = ChartDataEntry(x: 8, y: 5)
+        let entry5 = ChartDataEntry(x: 15, y: 11)
         
         dataEntries = [entry1, entry2, entry3, entry4, entry5]
-        let dataSet = LineChartDataSet(yVals: dataEntries, label: "wat")
-        let chartData = LineChartData(xVals: months, dataSet: dataSet)
+        let dataSet = LineChartDataSet(values: dataEntries, label: "wat")
+        let chartData = LineChartData(dataSet: dataSet)
         
         chart.data = chartData
 
