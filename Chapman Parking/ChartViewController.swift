@@ -19,11 +19,14 @@ class ChartViewController: UIViewController {
     @IBOutlet var progress: UIProgressView!
     @IBOutlet var yAxisLabel: UILabel!
     
+    let daysWorthOfSeconds = 86400
+
     var structure: Structure!
     var levels: [Level]!
+    var resolution: Int = 60
+    var numberOfDays: Int = 1
+    var selectedLevels: [Level]!
     
-    
-    let daysWorthOfSeconds = 86400
     lazy var today: NSDate = NSDate().dateFromTime(nil, minute: nil, second: 0)!
     lazy var formatter: NSDateFormatter = {
         let formatter = NSDateFormatter()
@@ -31,10 +34,7 @@ class ChartViewController: UIViewController {
         formatter.timeStyle = .ShortStyle
         return formatter
     }()
-    
-    var resolution: Int = 60
-    var numberOfDays: Int = 1
-    var selectedLevels: [Level]!
+
 
     override func viewDidLoad() {
         super.viewDidLoad()

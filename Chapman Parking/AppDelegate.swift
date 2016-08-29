@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -38,8 +39,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         DataManager.sharedInstance.autoRefreshEnabled = true
         
+        // Register for push notifications
+        let notificationSettings = UIUserNotificationSettings(forTypes: .Alert, categories: nil)
+        application.registerUserNotificationSettings(notificationSettings)
+        application.registerForRemoteNotifications()
+//        api.registerForPushNotifications()
+        
+        let predicate = NSPredicate(format: "CurrentCount = %d", 0)
+        
+        api.unsubscribeFromAll(){
+            api.subscribeTo(ParkingEntity.Level, withUUID: nil, predicate: predicate, onActions: RemoteAction.Update, notificationText: "A level has filled up")
+        }
+
+
+        
+        
         return true
     }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        
+        /**
+         Continue implementing this if I want to take an action in-app
+        if let swiftInfo = userInfo as? [String : NSObject] {
+            let cloudKitNotification = CKNotification(fromRemoteNotificationDictionary: swiftInfo)
+            let alertBody = cloudKitNotification.alertBody
+            if cloudKitNotification.notificationType == .Query {
+                let recordID = (cloudKitNotification as! CKQueryNotification).recordID
+            }
+        }
+         */
+    }
+
     
 
     func applicationWillResignActive(application: UIApplication) {

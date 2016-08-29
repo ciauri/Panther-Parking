@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9C05DCF41D60C9CD00A69366 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C05DCF31D60C9CD00A69366 /* UIColor+.swift */; };
-		9C05DCFD1D60DAFB00A69366 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C05DCFC1D60DAFB00A69366 /* ViewController.swift */; };
 		9C0ED8B11CDDA2140087AEE6 /* NSDate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */; };
 		9C0ED8B41CDDA3540087AEE6 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B31CDDA3540087AEE6 /* Enums.swift */; };
 		9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */; };
@@ -142,7 +141,6 @@
 
 /* Begin PBXFileReference section */
 		9C05DCF31D60C9CD00A69366 /* UIColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
-		9C05DCFC1D60DAFB00A69366 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+.swift"; sourceTree = "<group>"; };
 		9C0ED8B31CDDA3540087AEE6 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericFetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
@@ -327,7 +325,6 @@
 				9CC114941CE984C30093215B /* MapViewController.swift */,
 				9C3325C71CDB34F500F49338 /* ParkingViewController.swift */,
 				9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */,
-				9C05DCFC1D60DAFB00A69366 /* ViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -519,7 +516,6 @@
 				9C3325B61CDB18ED00F49338 /* Structure+CoreDataProperties.swift in Sources */,
 				9C3325BA1CDB1F8700F49338 /* Location+CoreDataProperties.swift in Sources */,
 				9C05DCF41D60C9CD00A69366 /* UIColor+.swift in Sources */,
-				9C05DCFD1D60DAFB00A69366 /* ViewController.swift in Sources */,
 				9C2FDC9C1CE9A91A00A61F0F /* ChartViewController.swift in Sources */,
 				9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */,
 				9CC114951CE984C30093215B /* MapViewController.swift in Sources */,

@@ -31,14 +31,11 @@ class MapViewController: UIViewController {
         mapView.showsCompass = true
         mapView.showsBuildings = true
         
-        
-
         // Do any additional setup after loading the view.
     }
     
     func flipToList(){
         performSegueWithIdentifier("flip", sender: self)
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -74,9 +71,7 @@ class MapViewController: UIViewController {
         frcDelegate.mapView = mapView
         frc.delegate = frcDelegate
 
-        
         return frc
-        
     }
     
 
@@ -128,10 +123,5 @@ extension MapViewController: MKMapViewDelegate{
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         performSegueWithIdentifier("annotation", sender: self)
     }
-    
-
-//    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-//        let region = mapView.region
-//    }
     
 }
