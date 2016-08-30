@@ -13,7 +13,7 @@ class ParkingViewController: UIViewController {
     @IBOutlet var parkingTableView: UITableView!
     
     lazy var frc: NSFetchedResultsController = self.initFRC()
-    weak var frcDelegate = GenericFetchedResultsControllerDelegate()
+    var frcDelegate = GenericFetchedResultsControllerDelegate()
     
     var structure: Structure?
 
@@ -73,8 +73,8 @@ extension ParkingViewController: NSFetchedResultsControllerDelegate{
             request.predicate = NSPredicate(format: "structure = %@", s)
         }
         let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: DataManager.sharedInstance.managedObjectContext, sectionNameKeyPath: "structure.name", cacheName: nil)
-        frcDelegate?.tableView = parkingTableView
-        frcDelegate?.delegate = self
+        frcDelegate.tableView = parkingTableView
+        frcDelegate.delegate = self
         controller.delegate = frcDelegate
         return controller
     }

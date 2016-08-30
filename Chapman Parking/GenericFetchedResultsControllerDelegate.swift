@@ -18,9 +18,6 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     var mapView: MKMapView?
     weak var delegate: GenericFRCDelegate?
     
-    
-    
-    
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView?.beginUpdates()
         NSLog("Updating")
@@ -67,9 +64,8 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
                 
                 annotationView.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
             }
-            if let indexPath = indexPath, cell = tableView?.cellForRowAtIndexPath(indexPath){
-                delegate?.configureCell(cell, atIndexPath: indexPath)
-                tableView?.moveRowAtIndexPath(indexPath, toIndexPath: newIndexPath!)
+            if let indexPath = indexPath{
+                tableView?.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
             }
         }
     }
@@ -79,6 +75,7 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         tableView?.endUpdates()
+        tableView?.reloadData()
         NSLog("updated")
     }
     

@@ -42,6 +42,7 @@
 		9CC6E44A1CE5ACC400A79AEF /* CloudKitAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */; };
 		9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */; };
 		9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */; };
+		9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9B1801D752CDD003E610C /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,6 +178,8 @@
 		9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitAPI.swift; sourceTree = "<group>"; };
 		9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingAPI.swift; sourceTree = "<group>"; };
 		9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPStruct.swift; sourceTree = "<group>"; };
+		9CD9B17F1D752CDD003E610C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9CD9B1811D752CE2003E610C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,6 +258,7 @@
 				9C3325881CDB0EF200F49338 /* Info.plist */,
 				9C3325791CDB0EF200F49338 /* AppDelegate.swift */,
 				9C3325901CDB0F3D00F49338 /* Constants.swift */,
+				9CD9B1801D752CDD003E610C /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -486,6 +490,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C3325871CDB0EF200F49338 /* LaunchScreen.storyboard in Resources */,
+				9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */,
 				9C3325841CDB0EF200F49338 /* Assets.xcassets in Resources */,
 				9C33257F1CDB0EF200F49338 /* Main.storyboard in Resources */,
 			);
@@ -558,6 +563,15 @@
 				9C3325861CDB0EF200F49338 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		9CD9B1801D752CDD003E610C /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9CD9B17F1D752CDD003E610C /* en */,
+				9CD9B1811D752CE2003E610C /* Base */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

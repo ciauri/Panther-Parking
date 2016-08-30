@@ -48,7 +48,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let predicate = NSPredicate(format: "CurrentCount = %d", 0)
         
         api.unsubscribeFromAll(){
-            api.subscribeTo(ParkingEntity.Level, withUUID: nil, predicate: predicate, onActions: RemoteAction.Update, notificationText: "A level has filled up")
+//            api.subscribeTo(ParkingEntity.Level, withUUID: nil, predicate: predicate, onActions: RemoteAction.Update, notificationText: "A level has filled up")
+            DataManager.sharedInstance.subscribeToAllLevels()
         }
 
 

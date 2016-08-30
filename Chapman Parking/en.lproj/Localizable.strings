@@ -1,0 +1,9 @@
+/* 
+  Localization.strings
+  PantherPark
+
+  Created by Stephen Ciauri on 8/29/16.
+  Copyright © 2016 Stephen Ciauri. All rights reserved.
+*/
+
+"level-empty-message" = "%@ %@ is now full";

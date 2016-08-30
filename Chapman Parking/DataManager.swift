@@ -335,6 +335,28 @@ class DataManager{
                             }
         })
     }
+    
+    func subscribeToAllLevels() {
+        let backgroundContext = try! createPrivateQueueContext()
+        let request = NSFetchRequest(entityName: "Level")
+        
+        backgroundContext.performBlock({
+            do{
+                if let levels = try backgroundContext.executeFetchRequest(request) as? [Level] {
+                    for level in levels {
+                        guard let structureName = level.structure?.name, levelName = level.name else {return}
+                        self.api.subscribeTo(ParkingEntity.Level,
+                            withUUID: level.uuid,
+                            predicate: NSPredicate(format: "CurrentCount = %d",0),
+                            onActions: RemoteAction.Update,
+                            notificationText: "\(structureName) \(levelName) is now full")
+                    }
+                }
+            } catch {
+                NSLog("Error fetching levels for subscription")
+            }
+        })
+    }
 
     
     /// TODO: Re-implement using above new functions

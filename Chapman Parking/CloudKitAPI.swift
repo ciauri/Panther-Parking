@@ -80,30 +80,7 @@ class CloudKitAPI: ParkingAPI{
         
         publicDB.addOperation(queryOperation)
     }
-    
-//    /// TODO: Save 
-//    func registerForPushNotifications() {
-//        let id = CKRecordID(recordName: "65D375C1-39F7-4C97-8DD4-C05C2897D42B")
-//        let ref = CKReference(recordID: id, action: .None)
-//        let emptyLevelPredicate = NSPredicate(format: "recordID = %@", ref)
-//        let subscription = CKSubscription(recordType: "ParkingLevel",
-//                                          predicate: emptyLevelPredicate,
-//                                          options: CKSubscriptionOptions.FiresOnRecordUpdate)
-//        let notificationInfo = CKNotificationInfo()
-//        notificationInfo.alertLocalizationKey = "A parking structure level just filled up!"
-//        notificationInfo.shouldBadge = false
-//        subscription.notificationInfo = notificationInfo
-//        
-//        publicDB.saveSubscription(subscription,
-//                                  completionHandler: {(subscription, error) in
-//                                    if error != nil {
-//                                        NSLog(error.debugDescription)
-//                                    }
-//        })
-//        
-//        
-//        
-//    }
+
     
     // MARK:- Subscriptions
     
@@ -171,7 +148,9 @@ class CloudKitAPI: ParkingAPI{
             subscriptionKey = subscriptionKeyFor(entity, predicate: predicate, action: action)
         }
         let notificationInfo = CKNotificationInfo()
-        notificationInfo.alertLocalizationKey = text
+//        notificationInfo.alertLocalizationKey = "level-empty-message"
+//        notificationInfo.alertLocalizationArgs = ["Structure.Name","Name"]
+        notificationInfo.alertBody = text
         notificationInfo.shouldBadge = false
         subscription.notificationInfo = notificationInfo
         publicDB.saveSubscription(subscription,
