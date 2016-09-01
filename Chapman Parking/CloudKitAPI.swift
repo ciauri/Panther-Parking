@@ -16,8 +16,7 @@ class CloudKitAPI: ParkingAPI{
     private var container: CKContainer
     private var publicDB: CKDatabase
     private var privateDB: CKDatabase
-    private var subscriptions = Set<CKSubscription>()
-    private var subscriptionDictionary: [String : CKSubscription] = [:]
+    lazy private var subscriptionDictionary: [String : CKSubscription] = self.initSubscriptionDict()
     private let subscriptionQueue = dispatch_queue_create("Subscriptions-Queue", DISPATCH_QUEUE_SERIAL)
     
     var presenting: Bool = false
@@ -51,6 +50,20 @@ class CloudKitAPI: ParkingAPI{
         default:
             displayDevelopmentCloudKitAlert()
         }
+    }
+    
+    private func initSubscriptionDict() -> [String : CKSubscription] {
+        if let subscriptionData = NSUserDefaults.standardUserDefaults().objectForKey("subscriptions") as? NSData,
+        subscriptions = NSKeyedUnarchiver.unarchiveObjectWithData(subscriptionData) as? [String : CKSubscription] {
+            return subscriptions
+        } else {
+            return [:]
+        }
+    }
+    
+    func saveSubscriptions() {
+        let subscriptionData = NSKeyedArchiver.archivedDataWithRootObject(subscriptionDictionary)
+        NSUserDefaults.standardUserDefaults().setObject(subscriptionData, forKey: "subscriptions")
     }
 
     
@@ -115,11 +128,38 @@ class CloudKitAPI: ParkingAPI{
     }
     
     func unsubscribeFromAll(completion: () -> ()) {
-        publicDB.fetchAllSubscriptionsWithCompletionHandler() {(subscriptions, error) in
+        var completed = 0
+        let totalSubscriptions = subscriptionDictionary.count
+        if totalSubscriptions > 0 {
+            for (key, subscription) in subscriptionDictionary {
+                privateDB.deleteSubscriptionWithID(subscription.subscriptionID,
+                                                  completionHandler: {(string, error) in
+                                                    if let error = error {
+                                                        NSLog(error.debugDescription)
+                                                    } else {
+                                                        NSLog("Some string: \(string)")
+                                                        self.remove(subscriptionWithKey: key)
+                                                    }
+                                                    completed += 1
+                                                    if completed == totalSubscriptions {
+                                                        NSLog("Unsubscribed from everything")
+                                                        completion()
+                                                    }
+                })
+            }
+        } else {
+            NSLog("Nothing to unsubscribe from")
+            completion()
+        }
+        
+    }
+    
+    func unsubscribeFromAllxx(completion: () -> ()) {
+        privateDB.fetchAllSubscriptionsWithCompletionHandler() {(subscriptions, error) in
             if let subscriptions = subscriptions where !subscriptions.isEmpty {
                 var completed = 0
                 subscriptions.forEach(){
-                    self.publicDB.deleteSubscriptionWithID($0.subscriptionID,
+                    self.privateDB.deleteSubscriptionWithID($0.subscriptionID,
                         completionHandler: { (string, error) in
                             NSLog("Successfully unsubscribed from subscription with ID: \(string)")
                             completed += 1
@@ -153,16 +193,16 @@ class CloudKitAPI: ParkingAPI{
         notificationInfo.alertBody = text
         notificationInfo.shouldBadge = false
         subscription.notificationInfo = notificationInfo
-        publicDB.saveSubscription(subscription,
+        privateDB.saveSubscription(subscription,
                                   completionHandler: {(subscription, error) in
                                     if error != nil {
                                         NSLog(error.debugDescription)
-                                    } else {
-                                        if let subscription = subscription {
-                                            self.insert(subscriptionKey, subscription: subscription)
-                                            NSLog("Successfully subscribed to \(subscriptionKey)")
-                                        }
                                     }
+                                    if let subscription = subscription {
+                                        self.insert(subscriptionKey, subscription: subscription)
+                                        NSLog("Successfully subscribed to \(subscriptionKey)")
+                                    }
+                                    
         })
     }
     
@@ -204,12 +244,14 @@ class CloudKitAPI: ParkingAPI{
     private func insert(key: String, subscription: CKSubscription) {
         dispatch_async(subscriptionQueue){
             self.subscriptionDictionary[key] = subscription
+            self.saveSubscriptions()
         }
     }
     
     private func remove(subscriptionWithKey key: String) {
         dispatch_async(subscriptionQueue){
             self.subscriptionDictionary[key] = nil
+            self.saveSubscriptions()
         }
     }
     

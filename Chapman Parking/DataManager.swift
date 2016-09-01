@@ -131,7 +131,7 @@ class DataManager{
     }
     
     
-    
+    // MARK: - Convenience methods
     private func structureWith(uuid: String, moc: NSManagedObjectContext) -> Structure? {
         let request = NSFetchRequest(entityName: "Structure")
         request.predicate = NSPredicate(format: "uuid == %@", uuid)
@@ -195,11 +195,6 @@ class DataManager{
     
     
     
-    @objc
-    private func timerUpdateCounts(){
-        updateCounts(.SinceLast)
-    }
-    
     func mostRecentCount(fromDate date: NSDate, onLevel level: Level, usingContext context: NSManagedObjectContext) -> Count? {
         let request = NSFetchRequest(entityName: "Count")
         request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
@@ -236,6 +231,23 @@ class DataManager{
         
         return counts
     }
+    
+    func fetchAllStructures() -> [Structure] {
+        let context = managedObjectContext
+        let request = NSFetchRequest(entityName: "Structure")
+        var structures: [Structure] = []
+        context.performBlockAndWait({
+            do {
+                structures = try context.executeFetchRequest(request) as? [Structure] ?? []
+            } catch {
+                NSLog("Fetch error")
+            }
+        })
+        
+        return structures
+    }
+    
+    // MARK: - Object parsing from API
     
     private func process(structure: CPStructure, withContext context: NSManagedObjectContext?) {
         var moc: NSManagedObjectContext
@@ -336,6 +348,8 @@ class DataManager{
         })
     }
     
+    // MARK: - Push Notifications
+    
     func subscribeToAllLevels() {
         let backgroundContext = try! createPrivateQueueContext()
         let request = NSFetchRequest(entityName: "Level")
@@ -358,7 +372,12 @@ class DataManager{
         })
     }
 
-    
+    // MARK: - Heartbeat
+    @objc
+    private func timerUpdateCounts(){
+        updateCounts(.SinceLast)
+    }
+
     /// TODO: Re-implement using above new functions
     func updateCounts(updateType: UpdateType, withCompletion completion: (Bool -> ())? = nil){
         let backgroundContext = try! createPrivateQueueContext()
