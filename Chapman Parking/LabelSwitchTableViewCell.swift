@@ -13,6 +13,8 @@ class LabelSwitchTableViewCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var detailSwitch: UISwitch!
     
+    weak var delegate: SwitchCellDelegate?
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,4 +27,7 @@ class LabelSwitchTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    @IBAction func switchToggled(sender: UISwitch) {
+        delegate?.switchCell(self, toggledSwitch: detailSwitch)
+    }
 }

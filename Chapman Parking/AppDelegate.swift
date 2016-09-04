@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
         let api: ParkingAPI = CloudKitAPI.sharedInstance
         DataManager.sharedInstance.api = api
+        NotificationService.api = api
 
         if !defaults.boolForKey("initialized"){
             DataManager.sharedInstance.updateCounts(.All) { success in
@@ -45,17 +46,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
 //        api.registerForPushNotifications()
         
-        let predicate = NSPredicate(format: "CurrentCount = %d", 0)
+//        let predicate = NSPredicate(format: "CurrentCount = %d", 0)
         
         api.unsubscribeFromAll(){
 //            api.subscribeTo(ParkingEntity.Level, withUUID: nil, predicate: predicate, onActions: RemoteAction.Update, notificationText: "A level has filled up")
-            DataManager.sharedInstance.subscribeToAllLevels()
+//            DataManager.sharedInstance.subscribeToAllLevels()
         }
 
 
         
         
         return true
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        NSLog("Failed to register for notifications: \(error.debugDescription)")
+        NotificationService.notificationsEnabled = false
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        NSLog("Successfully registered for push notifications")
+        NotificationService.notificationsEnabled = true
+
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {

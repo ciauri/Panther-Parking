@@ -338,7 +338,7 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U4B-pr-rJc">
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="U4B-pr-rJc">
                                                     <rect key="frame" x="535" y="7" width="51" height="31"/>
                                                 </switch>
                                             </subviews>
@@ -397,11 +397,18 @@
                             <outlet property="delegate" destination="DMa-bH-tcO" id="LoF-lI-fcO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Settings" id="c9S-UL-pIn"/>
+                    <navigationItem key="navigationItem" title="Settings" id="c9S-UL-pIn">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="6cu-dr-z1h">
+                            <connections>
+                                <segue destination="RXw-vy-lAV" kind="unwind" unwindAction="prepareForSettingsDoneSegue:" id="2ur-NR-343"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yzv-kK-yoo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="RXw-vy-lAV" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1232" y="-2003"/>
+            <point key="canvasLocation" x="1216" y="-2171"/>
         </scene>
         <!--Notification Settings Table View Controller-->
         <scene sceneID="oVm-Fv-4WK">
@@ -427,6 +434,9 @@
                                         </label>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qka-Mw-TUX">
                                             <rect key="frame" x="535" y="6" width="51" height="31"/>
+                                            <connections>
+                                                <action selector="switchToggled:" destination="qpB-or-XyO" eventType="valueChanged" id="dyK-CM-Wcj"/>
+                                            </connections>
                                         </switch>
                                     </subviews>
                                     <constraints>
@@ -456,7 +466,7 @@
         <scene sceneID="kwp-Z8-Ds0">
             <objects>
                 <tableViewController id="vda-Ug-8yJ" customClass="ChartSettingsTableViewController" customModule="PantherPark" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="Cpw-yj-XDa">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="Cpw-yj-XDa">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -472,6 +482,9 @@
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hks-SU-bh7">
                                                     <rect key="frame" x="535" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="allLevelsSwitchToggled:" destination="vda-Ug-8yJ" eventType="valueChanged" id="95I-A2-wiB"/>
+                                                    </connections>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show &quot;All Levels&quot;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmX-Lu-pwZ">
                                                     <rect key="frame" x="16" y="11" width="131" height="21"/>
@@ -496,6 +509,9 @@
                             <outlet property="delegate" destination="vda-Ug-8yJ" id="a3O-N1-7tG"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="allLinesSwitch" destination="hks-SU-bh7" id="Uz4-ZV-beL"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SYC-HK-c5Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

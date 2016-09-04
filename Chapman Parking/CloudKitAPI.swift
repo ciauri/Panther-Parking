@@ -127,6 +127,7 @@ class CloudKitAPI: ParkingAPI{
         return entity.cloudKitName + predicate.description + action.description
     }
     
+
     func unsubscribeFromAll(completion: () -> ()) {
         var completed = 0
         let totalSubscriptions = subscriptionDictionary.count
@@ -153,9 +154,10 @@ class CloudKitAPI: ParkingAPI{
         }
         
     }
+
     
-    func unsubscribeFromAllxx(completion: () -> ()) {
-        privateDB.fetchAllSubscriptionsWithCompletionHandler() {(subscriptions, error) in
+    func forceUnsubscribeFromAll(completion: () -> ()) {
+        publicDB.fetchAllSubscriptionsWithCompletionHandler() {(subscriptions, error) in
             if let subscriptions = subscriptions where !subscriptions.isEmpty {
                 var completed = 0
                 subscriptions.forEach(){
@@ -178,7 +180,7 @@ class CloudKitAPI: ParkingAPI{
         }
     }
     
-    func subscribeTo(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String) {
+    func subscribeTo(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: (Bool)->()) {
         
         let subscription = subscriptionFor(entity, withUUID: uuid, predicate: predicate, onActions: action)
         var subscriptionKey: String
@@ -197,29 +199,50 @@ class CloudKitAPI: ParkingAPI{
                                   completionHandler: {(subscription, error) in
                                     if error != nil {
                                         NSLog(error.debugDescription)
+                                        completion(false)
                                     }
                                     if let subscription = subscription {
                                         self.insert(subscriptionKey, subscription: subscription)
                                         NSLog("Successfully subscribed to \(subscriptionKey)")
+                                        completion(true)
                                     }
                                     
         })
     }
     
-    func unsubscribeFrom(withUUID uuid: String, predicate: NSPredicate, onActions action: RemoteAction) {
-        let subscriptionKey = subscriptionKeyFor(uuid, predicate: predicate, action: action)
-        unsubscribeFrom(subscriptionWithKey: subscriptionKey)
+    func unsubscribeFrom(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: (Bool)->()) {
+        var subscriptionKey: String
+        if let uuid = uuid {
+            subscriptionKey = subscriptionKeyFor(uuid, predicate: predicate, action: action)
+        } else {
+            subscriptionKey = subscriptionKeyFor(entity, predicate: predicate, action: action)
+        }
+        
+        if subscribedTo(subscriptionWithKey: subscriptionKey) {
+            unsubscribeFrom(subscriptionWithKey: subscriptionKey, completion: completion)
+        } else {
+            completion(false)
+            NSLog("You are not currently subscribed to this event")
+        }
+        
     }
     
-    private func unsubscribeFrom(subscriptionWithKey key: String) {
+//    func unsubscribeFrom(withUUID uuid: String, predicate: NSPredicate, onActions action: RemoteAction) {
+//        let subscriptionKey = subscriptionKeyFor(uuid, predicate: predicate, action: action)
+//        unsubscribeFrom(subscriptionWithKey: subscriptionKey)
+//    }
+    
+    private func unsubscribeFrom(subscriptionWithKey key: String, completion: (Bool)->()) {
         if let subscription = subscription(withKey: key) {
-            publicDB.deleteSubscriptionWithID(subscription.subscriptionID,
+            privateDB.deleteSubscriptionWithID(subscription.subscriptionID,
                                               completionHandler: {(string, error) in
                                                 if error != nil {
                                                     NSLog(error.debugDescription)
+                                                    completion(false)
                                                 } else {
                                                     self.remove(subscriptionWithKey: key)
                                                     NSLog("Successfully unsubscribed from \(key)")
+                                                    completion(true)
                                                 }
             })
         }

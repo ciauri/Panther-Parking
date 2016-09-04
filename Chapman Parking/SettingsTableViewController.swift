@@ -103,6 +103,8 @@ class SettingsTableViewController: UITableViewController {
         }
     }
     
+  
+    
     
     private func prepareForNotificationSettings(withSegue segue: UIStoryboardSegue) {
         let notificationSettingsViewController = segue.destinationViewController as! NotificationSettingsTableViewController

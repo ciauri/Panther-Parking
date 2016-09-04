@@ -20,6 +20,7 @@ class ChartViewController: UIViewController {
     @IBOutlet var yAxisLabel: UILabel!
     
     let daysWorthOfSeconds = 86400
+    let shouldDrawCumulativeLine = NSUserDefaults.standardUserDefaults().boolForKey("showCumulativeLine")
 
     var structure: Structure!
     var levels: [Level]!
@@ -39,18 +40,23 @@ class ChartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = structure.name
-        addLevelsToLevelSelector()
-        rotateAxisLabel()
-        levelSelector.selectedSegmentIndex = 0
-
+        
         if let levels = structure.levels {
             self.levels = Array(levels)
             self.levels.sortInPlace({$0.0.name < $0.1.name})
+            if !shouldDrawCumulativeLine {
+                // Because "All Levels" will always be first alphabetically... Yeah, yeah its bad, I know
+                self.levels.removeFirst()
+            }
             selectedLevels = self.levels
             dispatch_async(dispatch_get_main_queue(), {
                 self.updateLevels()
                 self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
             })
+            
+            addLevelsToLevelSelector()
+            rotateAxisLabel()
+            levelSelector.selectedSegmentIndex = 0
         }
     }
     
@@ -84,7 +90,8 @@ class ChartViewController: UIViewController {
         if selector.selectedSegmentIndex == 0 {
             selectedLevels = levels
         } else {
-            selectedLevels = [levels[selector.selectedSegmentIndex]]
+            let index = shouldDrawCumulativeLine ? selector.selectedSegmentIndex : selector.selectedSegmentIndex-1
+            selectedLevels = [levels[index]]
         }
         dispatch_async(dispatch_get_main_queue(), {
             self.updateLevels()
@@ -120,15 +127,17 @@ class ChartViewController: UIViewController {
     
     private func addLevelsToLevelSelector() {
         levelSelector.removeAllSegments()
-        guard let levels = structure.levels else {return}
+//        guard let levels = structure.levels else {return}
         var levelNames = levels.map({$0.name!})
         levelNames.sortInPlace()
         
+        levelSelector.insertSegmentWithTitle("All", atIndex: 0, animated: false)
         for (index, name) in levelNames.enumerate() {
-            if index == 0 {
-                levelSelector.insertSegmentWithTitle("All", atIndex: index, animated: true)
+            if name == "All Levels" {
+                levelSelector.removeSegmentAtIndex(0, animated: false)
+                levelSelector.insertSegmentWithTitle("All", atIndex: index, animated: false)
             } else {
-                levelSelector.insertSegmentWithTitle(name, atIndex: index, animated: true)
+                levelSelector.insertSegmentWithTitle(name, atIndex: index+1, animated: false)
             }
         }
     }

@@ -11,15 +11,46 @@ import UIKit
 class NotificationSettingsTableViewController: UITableViewController {
     
     var structures: [Structure]!
+    
+    let SETTINGS_SECTION: Int = 0
+    let NOTIFICATIONS_ENABLED_INDEX_PATH = NSIndexPath(forRow: 0, inSection: 0)
+    let STRUCTURES_ONLY_INDEX_PATH = NSIndexPath(forRow: 1, inSection: 0)
+    
+    private var notificationsEnabled: Bool {
+        return NotificationService.notificationsEnabled
+    }
+    
+    private var structuresOnly: Bool {
+        return NotificationService.structuresOnly
+    }
+    
+    private func indexPathsForLevelCells(includeAllLevels include: Bool) -> [NSIndexPath] {
+        var indexPaths: [NSIndexPath] = []
+
+        for (section, structure) in structures.enumerate() {
+            var levels = Array(structure.levels!)
+            levels.sortInPlace { (l1, l2) -> Bool in
+                return l1.name! < l2.name!
+            }
+            
+            for (row, level) in levels.enumerate() {
+                if !include {
+                    if level.name != "All Levels" {
+                        indexPaths.append(NSIndexPath(forRow: row, inSection: section+1))
+                    }
+                } else {
+                    indexPaths.append(NSIndexPath(forRow: row, inSection: section+1))
+                }
+                
+            }
+        }
+        return indexPaths
+    }
+    
+   
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,74 +61,155 @@ class NotificationSettingsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return structures.count
+        return notificationsEnabled ? structures.count + 1 : 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return structures[section].levels?.count ?? 0
+        switch section {
+        case SETTINGS_SECTION:
+            return notificationsEnabled ? 2 : 1
+        default:
+            return notificationsEnabled ? structuresOnly ? 1 : structures[section-1].levels?.count ?? 0 : 1
+        }
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return structures[section].name ?? ""
+        switch section {
+        case SETTINGS_SECTION:
+            return "General Settings"
+        default:
+            return structures[section-1].name ?? ""
+        }
+    }
+    
+    override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case SETTINGS_SECTION:
+            return "Structure notifications notify you only when all levels in the structure are full."
+        default:
+            return nil
+        }
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("labelSwitch", forIndexPath: indexPath) as! LabelSwitchTableViewCell
         
-        var levels = Array(structures[indexPath.section].levels!)
-        levels.sortInPlace { (l1, l2) -> Bool in
-            return l1.name! < l2.name!
+        switch indexPath {
+        case NOTIFICATIONS_ENABLED_INDEX_PATH:
+            cell.label.text = "Notifications Enabled"
+            cell.detailSwitch.setOn(notificationsEnabled, animated: false)
+        case STRUCTURES_ONLY_INDEX_PATH:
+            cell.label.text = "Structure Notifications Only"
+            cell.detailSwitch.setOn(structuresOnly, animated: false)
+        default:
+            configureLevelCell(cell, atIndexPath: indexPath)
         }
-        cell.label.text = levels[indexPath.row].name!
+        
+        cell.delegate = self
 
         return cell
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    private func configureLevelCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+        let level = self.level(forIndexPath: indexPath)
+        
+        if indexPath.row == 0 {
+            (cell as! LabelSwitchTableViewCell).label.text = "Entire Structure"
+        } else {
+            (cell as! LabelSwitchTableViewCell).label.text = level.name!
+        }
+        
+        if let switchState = level.notificationsEnabled{
+            let on = Bool(switchState)
+            (cell as! LabelSwitchTableViewCell).detailSwitch.setOn(on, animated: false)
+        } else {
+            (cell as! LabelSwitchTableViewCell).detailSwitch.setOn(false, animated: false)
+        }
+        
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    private func level(forIndexPath indexPath: NSIndexPath) -> Level {
+        var levels = Array(structures[indexPath.section-1].levels!)
+        levels.sortInPlace { (l1, l2) -> Bool in
+            return l1.name! < l2.name!
+        }
+        return levels[indexPath.row]
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    
+    private func toggleNotificationCells(enabled: Bool) {
+        tableView.beginUpdates()
+        var indexPaths = indexPathsForLevelCells(includeAllLevels: true)
+        if structuresOnly {
+            indexPaths = indexPaths.filter({$0.row == 0})
+        }
+        indexPaths.append(STRUCTURES_ONLY_INDEX_PATH)
+        let range = NSRange(1...3)
+        let indexSet = NSIndexSet(indexesInRange: range)
+        
+        if enabled {
+            tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+            tableView.insertSections(indexSet, withRowAnimation: .Automatic)
+        } else {
+            tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+            tableView.deleteSections(indexSet, withRowAnimation: .Automatic)
+        }
+        tableView.endUpdates()
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    private func toggleLevelCells(enabled: Bool) {
+        tableView.beginUpdates()
+        if enabled {
+            tableView.deleteRowsAtIndexPaths(indexPathsForLevelCells(includeAllLevels: false), withRowAnimation: .Right)
+        } else {
+            tableView.insertRowsAtIndexPaths(indexPathsForLevelCells(includeAllLevels: false), withRowAnimation: .Right)
+        }
+        tableView.endUpdates()
     }
-    */
+    
+    
 
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+// MARK: - SwitchCellDelegate
+extension NotificationSettingsTableViewController: SwitchCellDelegate {
+    func switchCell(cell: LabelSwitchTableViewCell, toggledSwitch uiSwitch: UISwitch) {
+        if let indexPath = tableView.indexPathForCell(cell) {
+            switch indexPath {
+            case NOTIFICATIONS_ENABLED_INDEX_PATH:
+                if uiSwitch.on {
+                    NotificationService.enableNotifications()
+                } else {
+                    NotificationService.disableNotifications()
+                }
+                toggleNotificationCells(uiSwitch.on)
+            case STRUCTURES_ONLY_INDEX_PATH:
+                NotificationService.structuresOnly = uiSwitch.on
+                if uiSwitch.on {
+                    for structure in structures {
+                        if let levels = structure.levels {
+                            for level in levels where level.name != "All Levels" {
+                                NotificationService.disableNotificationFor(level)
+                            }
+                        }
+                    }
+                }
+                toggleLevelCells(uiSwitch.on)
+            default:
+                let level = self.level(forIndexPath: indexPath)
+                if uiSwitch.on {
+                    NotificationService.enableNotificationFor(level)
+                } else {
+                    NotificationService.disableNotificationFor(level)
+                }
+            }
+        }
     }
-    */
+    
+    
 
+}
+
+// MARK: - Protocol Declaration
+protocol SwitchCellDelegate: class {
+    func switchCell(cell: LabelSwitchTableViewCell, toggledSwitch uiSwitch: UISwitch)
 }

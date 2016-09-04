@@ -358,17 +358,38 @@ class DataManager{
             do{
                 if let levels = try backgroundContext.executeFetchRequest(request) as? [Level] {
                     for level in levels {
-                        guard let structureName = level.structure?.name, levelName = level.name else {return}
-                        self.api.subscribeTo(ParkingEntity.Level,
-                            withUUID: level.uuid,
-                            predicate: NSPredicate(format: "CurrentCount = %d",0),
-                            onActions: RemoteAction.Update,
-                            notificationText: "\(structureName) \(levelName) is now full")
+                        NotificationService.enableNotificationFor(level)
                     }
                 }
             } catch {
                 NSLog("Error fetching levels for subscription")
             }
+        })
+    }
+    
+    func disableAllNotifications() {
+        let backgroundContext = try! createPrivateQueueContext()
+        let request = NSFetchRequest(entityName: "Level")
+        backgroundContext.performBlock({
+            do{
+                if let levels = try backgroundContext.executeFetchRequest(request) as? [Level] {
+                    for level in levels {
+                        level.notificationsEnabled = false
+                    }
+                }
+                try backgroundContext.save()
+            } catch {
+                NSLog("Error fetching levels for subscription")
+            }
+        })
+    }
+    
+    func update(notificationsEnabled enabled: Bool, forLevel level: Level) {
+        let backgroundContext = try? createPrivateQueueContext()
+        backgroundContext?.performBlock({
+            let level = backgroundContext?.objectWithID(level.objectID) as! Level
+            level.notificationsEnabled = enabled
+            _ = try? backgroundContext?.save()
         })
     }
 
