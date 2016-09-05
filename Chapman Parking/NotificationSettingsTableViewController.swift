@@ -13,6 +13,7 @@ class NotificationSettingsTableViewController: UITableViewController {
     var structures: [Structure]!
     
     let SETTINGS_SECTION: Int = 0
+    let SETTINGS_FOOTER_TEXT = "Structure notifications notify you only when all levels in the structure are full."
     let NOTIFICATIONS_ENABLED_INDEX_PATH = NSIndexPath(forRow: 0, inSection: 0)
     let STRUCTURES_ONLY_INDEX_PATH = NSIndexPath(forRow: 1, inSection: 0)
     
@@ -85,7 +86,7 @@ class NotificationSettingsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
         case SETTINGS_SECTION:
-            return "Structure notifications notify you only when all levels in the structure are full."
+            return notificationsEnabled ? SETTINGS_FOOTER_TEXT : nil
         default:
             return nil
         }
@@ -149,9 +150,12 @@ class NotificationSettingsTableViewController: UITableViewController {
         if enabled {
             tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
             tableView.insertSections(indexSet, withRowAnimation: .Automatic)
+            tableView.footerViewForSection(SETTINGS_SECTION)?.textLabel?.text = SETTINGS_FOOTER_TEXT
         } else {
             tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
             tableView.deleteSections(indexSet, withRowAnimation: .Automatic)
+            tableView.footerViewForSection(SETTINGS_SECTION)?.textLabel?.text = nil
+
         }
         tableView.endUpdates()
     }

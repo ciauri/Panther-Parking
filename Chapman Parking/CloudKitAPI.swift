@@ -137,8 +137,8 @@ class CloudKitAPI: ParkingAPI{
                                                   completionHandler: {(string, error) in
                                                     if let error = error {
                                                         NSLog(error.debugDescription)
-                                                    } else {
-                                                        NSLog("Some string: \(string)")
+                                                    } else if let string = string{
+                                                        NSLog("Successfully unsubscribed from \(string)")
                                                         self.remove(subscriptionWithKey: key)
                                                     }
                                                     completed += 1
