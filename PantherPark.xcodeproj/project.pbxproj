@@ -216,6 +216,15 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
+		9C115A2D1D7BCAED00FF03E8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9C71169C1CE3118900C52F0E /* CloudKit.framework */,
+			);
+			name = Frameworks;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		9C2FDC811CE9A4BD00A61F0F /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,7 +239,6 @@
 		9C33256D1CDB0EF200F49338 = {
 			isa = PBXGroup;
 			children = (
-				9C71169C1CE3118900C52F0E /* CloudKit.framework */,
 				9C3325781CDB0EF200F49338 /* PantherPark */,
 				9C3325771CDB0EF200F49338 /* Products */,
 			);
@@ -267,6 +275,7 @@
 				9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */,
 				9C3325831CDB0EF200F49338 /* Assets.xcassets */,
 				9C3325921CDB110D00F49338 /* Submodules */,
+				9C115A2D1D7BCAED00FF03E8 /* Frameworks */,
 				9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */,
 				9C3325881CDB0EF200F49338 /* Info.plist */,
 				9C3325901CDB0F3D00F49338 /* Constants.swift */,
@@ -279,6 +288,7 @@
 			isa = PBXGroup;
 			children = (
 				9C3325BC1CDB250C00F49338 /* CoreData */,
+				9C3325BF1CDB2D9E00F49338 /* DataManager.swift */,
 				9C3325BD1CDB252300F49338 /* JSONStructs.swift */,
 				9C0ED8B31CDDA3540087AEE6 /* Enums.swift */,
 				9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */,
@@ -313,7 +323,6 @@
 			isa = PBXGroup;
 			children = (
 				9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */,
-				9C3325BF1CDB2D9E00F49338 /* DataManager.swift */,
 				9C3325AC1CDB18ED00F49338 /* Count+CoreDataProperties.swift */,
 				9C3325AD1CDB18ED00F49338 /* Count.swift */,
 				9C3325AE1CDB18ED00F49338 /* Level+CoreDataProperties.swift */,
