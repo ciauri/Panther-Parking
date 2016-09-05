@@ -39,24 +39,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         DataManager.sharedInstance.autoRefreshEnabled = true
-        
-        // Register for push notifications
-        let notificationSettings = UIUserNotificationSettings(forTypes: .Alert, categories: nil)
-        application.registerUserNotificationSettings(notificationSettings)
-        application.registerForRemoteNotifications()
-//        api.registerForPushNotifications()
-        
-//        let predicate = NSPredicate(format: "CurrentCount = %d", 0)
-        
-        api.unsubscribeFromAll(){
-            DataManager.sharedInstance.disableAllNotifications()
-//            api.subscribeTo(ParkingEntity.Level, withUUID: nil, predicate: predicate, onActions: RemoteAction.Update, notificationText: "A level has filled up")
-//            DataManager.sharedInstance.subscribeToAllLevels()
-        }
+
+//        api.unsubscribeFromAll(){
+//            DataManager.sharedInstance.disableAllNotifications()
+//        }
 
 
-        
-        
         return true
     }
     

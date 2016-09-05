@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ktw-Gs-pLw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ktw-Gs-pLw">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -404,13 +404,16 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="notificationDetailLabel" destination="bXb-c7-V7S" id="hgw-s4-SD4"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yzv-kK-yoo" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="RXw-vy-lAV" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1216" y="-2171"/>
         </scene>
-        <!--Notification Settings Table View Controller-->
+        <!--Notifications-->
         <scene sceneID="oVm-Fv-4WK">
             <objects>
                 <tableViewController id="eVh-ZQ-lwN" customClass="NotificationSettingsTableViewController" customModule="PantherPark" customModuleProvider="target" sceneMemberID="viewController">
@@ -457,12 +460,13 @@
                             <outlet property="delegate" destination="eVh-ZQ-lwN" id="GOI-jP-blq"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Notifications" id="qLl-OJ-jTG"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eds-xQ-wSv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1976" y="-2322"/>
         </scene>
-        <!--Chart Settings Table View Controller-->
+        <!--Chart-->
         <scene sceneID="kwp-Z8-Ds0">
             <objects>
                 <tableViewController id="vda-Ug-8yJ" customClass="ChartSettingsTableViewController" customModule="PantherPark" customModuleProvider="target" sceneMemberID="viewController">
@@ -509,6 +513,7 @@
                             <outlet property="delegate" destination="vda-Ug-8yJ" id="a3O-N1-7tG"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Chart" id="KQe-w1-Tzh"/>
                     <connections>
                         <outlet property="allLinesSwitch" destination="hks-SU-bh7" id="Uz4-ZV-beL"/>
                     </connections>
@@ -545,7 +550,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Parking Structures" id="aeE-FT-Xel">
+                        <barButtonItem key="backBarButtonItem" title="Map" id="IAL-2t-2aA"/>
                         <barButtonItem key="leftBarButtonItem" systemItem="organize" id="mvt-WA-ua7">
+                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="EjQ-R5-YGM" kind="presentation" identifier="settings" id="gAP-iB-st4"/>
                             </connections>
@@ -553,7 +560,9 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="fastForward" id="YKj-OK-ruy"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="listBarItem" destination="YKj-OK-ruy" id="Ear-CK-V7n"/>
                         <outlet property="mapView" destination="ck9-Lm-F7j" id="H5L-Oh-Gxx"/>
+                        <outlet property="settingsBarItem" destination="mvt-WA-ua7" id="GjT-aA-p6i"/>
                         <segue destination="lCS-iu-Yzc" kind="presentation" identifier="flip" modalTransitionStyle="flipHorizontal" id="4c2-Zp-m11"/>
                         <segue destination="Yz3-GM-qfZ" kind="show" identifier="annotation" id="LhW-Ml-MfM"/>
                     </connections>

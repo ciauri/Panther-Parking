@@ -12,7 +12,21 @@ import CoreData
 
 class MapViewController: UIViewController {
 
-    @IBOutlet var mapView: MKMapView!
+    @IBOutlet var mapView: MKMapView! {
+        didSet{
+            freezeMap()
+        }
+    }
+    @IBOutlet weak var settingsBarItem: UIBarButtonItem! {
+        didSet{
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "cogs"), style: .Plain, target: self, action: #selector(openSettings))
+        }
+    }
+    @IBOutlet weak var listBarItem: UIBarButtonItem! {
+        didSet{
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "list"), style: .Plain, target: self, action: #selector(flipToList))
+        }
+    }
     
     lazy var frcDelegate = GenericFetchedResultsControllerDelegate()
     lazy var frc: NSFetchedResultsController = self.initFetchedResultsController()
@@ -20,9 +34,11 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "list"), style: .Plain, target: self, action: #selector(flipToList))
-        mapView.setRegion(Constants.Locations.defaultRegion, animated: false)
         addStructuresToMap()
+    }
+    
+    private func freezeMap() {
+        mapView.setRegion(Constants.Locations.defaultRegion, animated: false)
         mapView.scrollEnabled = false
         mapView.zoomEnabled = false
         mapView.rotateEnabled = false
@@ -30,12 +46,14 @@ class MapViewController: UIViewController {
         mapView.showsScale = true
         mapView.showsCompass = true
         mapView.showsBuildings = true
-        
-        // Do any additional setup after loading the view.
     }
     
     func flipToList(){
         performSegueWithIdentifier("flip", sender: self)
+    }
+    
+    func openSettings(){
+        performSegueWithIdentifier("settings", sender: self)
     }
 
     override func didReceiveMemoryWarning() {
@@ -112,11 +130,7 @@ extension MapViewController: MKMapViewDelegate{
                 view.canShowCallout = true
                 view.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
                 view.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
-                
-                //Only works in iOS 8+
-                /*
-                 view.animatesDrop = true
-                 */
+                view.animatesDrop = true
             }
             return view
         }else{
