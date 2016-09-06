@@ -21,6 +21,8 @@ extension Level {
     @NSManaged var structure: Structure?
     @NSManaged var counts: NSSet?
     @NSManaged var updatedAt: NSDate?
+    @NSManaged var notificationsEnabled: NSNumber?
+
     
 //    var currentCount: Int{
 //        get{

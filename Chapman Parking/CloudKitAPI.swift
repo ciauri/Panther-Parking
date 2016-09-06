@@ -13,8 +13,11 @@ import UIKit
 class CloudKitAPI: ParkingAPI{
     static let sharedInstance = CloudKitAPI() as ParkingAPI
     
-    var container: CKContainer
-    var publicDB: CKDatabase
+    private var container: CKContainer
+    private var publicDB: CKDatabase
+    private var privateDB: CKDatabase
+    lazy private var subscriptionDictionary: [String : CKSubscription] = self.initSubscriptionDict()
+    private let subscriptionQueue = dispatch_queue_create("Subscriptions-Queue", DISPATCH_QUEUE_SERIAL)
     
     var presenting: Bool = false
     
@@ -22,6 +25,7 @@ class CloudKitAPI: ParkingAPI{
         container = CKContainer(identifier: "iCloud.com.stephenciauri.Chapman-Parking")
 //        container = CKContainer.defaultContainer()
         publicDB = container.publicCloudDatabase
+        privateDB = container.privateCloudDatabase
     }
     
     
@@ -46,6 +50,20 @@ class CloudKitAPI: ParkingAPI{
         default:
             displayDevelopmentCloudKitAlert()
         }
+    }
+    
+    private func initSubscriptionDict() -> [String : CKSubscription] {
+        if let subscriptionData = NSUserDefaults.standardUserDefaults().objectForKey("subscriptions") as? NSData,
+        subscriptions = NSKeyedUnarchiver.unarchiveObjectWithData(subscriptionData) as? [String : CKSubscription] {
+            return subscriptions
+        } else {
+            return [:]
+        }
+    }
+    
+    func saveSubscriptions() {
+        let subscriptionData = NSKeyedArchiver.archivedDataWithRootObject(subscriptionDictionary)
+        NSUserDefaults.standardUserDefaults().setObject(subscriptionData, forKey: "subscriptions")
     }
 
     
@@ -74,6 +92,185 @@ class CloudKitAPI: ParkingAPI{
         }
         
         publicDB.addOperation(queryOperation)
+    }
+
+    
+    // MARK:- Subscriptions
+    
+    private func subscriptionFor(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction) -> CKSubscription {
+        var ckAction: CKSubscriptionOptions
+        switch action {
+        case .Add:
+            ckAction = .FiresOnRecordCreation
+        case .Update:
+            ckAction = .FiresOnRecordUpdate
+        case .Delete:
+            ckAction = .FiresOnRecordDeletion
+        }
+        
+        var predicates = [predicate]
+        if let uuid = uuid {
+            let id = CKRecordID(recordName: uuid)
+            predicates.append(NSPredicate(format: "recordID = %@", id))
+        }
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        return CKSubscription(recordType: entity.cloudKitName,
+                                          predicate: compoundPredicate,
+                                          options: ckAction)
+    }
+    
+    private func subscriptionKeyFor(uuid: String, predicate: NSPredicate, action: RemoteAction) -> String {
+        return uuid + predicate.description + action.description
+    }
+    
+    private func subscriptionKeyFor(entity: ParkingEntity, predicate: NSPredicate, action: RemoteAction) -> String {
+        return entity.cloudKitName + predicate.description + action.description
+    }
+    
+
+    func unsubscribeFromAll(completion: () -> ()) {
+        var completed = 0
+        let totalSubscriptions = subscriptionDictionary.count
+        if totalSubscriptions > 0 {
+            for (key, subscription) in subscriptionDictionary {
+                privateDB.deleteSubscriptionWithID(subscription.subscriptionID,
+                                                  completionHandler: {(string, error) in
+                                                    if let error = error {
+                                                        NSLog(error.debugDescription)
+                                                    } else if let string = string{
+                                                        NSLog("Successfully unsubscribed from \(string)")
+                                                        self.remove(subscriptionWithKey: key)
+                                                    }
+                                                    completed += 1
+                                                    if completed == totalSubscriptions {
+                                                        NSLog("Unsubscribed from everything")
+                                                        completion()
+                                                    }
+                })
+            }
+        } else {
+            NSLog("Nothing to unsubscribe from")
+            completion()
+        }
+        
+    }
+
+    
+    func forceUnsubscribeFromAll(completion: () -> ()) {
+        publicDB.fetchAllSubscriptionsWithCompletionHandler() {(subscriptions, error) in
+            if let subscriptions = subscriptions where !subscriptions.isEmpty {
+                var completed = 0
+                subscriptions.forEach(){
+                    self.privateDB.deleteSubscriptionWithID($0.subscriptionID,
+                        completionHandler: { (string, error) in
+                            NSLog("Successfully unsubscribed from subscription with ID: \(string)")
+                            completed += 1
+                            if completed == subscriptions.count {
+                                NSLog("Unsubscribed from everything")
+                                completion()
+                            }
+                    })
+                }
+            } else if let error = error {
+                NSLog(error.debugDescription)
+            } else {
+                NSLog("Nothing to unsubscribe from")
+                completion()
+            }
+        }
+    }
+    
+    func subscribeTo(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: (Bool)->()) {
+        
+        let subscription = subscriptionFor(entity, withUUID: uuid, predicate: predicate, onActions: action)
+        var subscriptionKey: String
+        if let uuid = uuid {
+            subscriptionKey = subscriptionKeyFor(uuid, predicate: predicate, action: action)
+        } else {
+            subscriptionKey = subscriptionKeyFor(entity, predicate: predicate, action: action)
+        }
+        let notificationInfo = CKNotificationInfo()
+//        notificationInfo.alertLocalizationKey = "level-empty-message"
+//        notificationInfo.alertLocalizationArgs = ["Structure.Name","Name"]
+        notificationInfo.alertBody = text
+        notificationInfo.shouldBadge = false
+        subscription.notificationInfo = notificationInfo
+        privateDB.saveSubscription(subscription,
+                                  completionHandler: {(subscription, error) in
+                                    if error != nil {
+                                        NSLog(error.debugDescription)
+                                        completion(false)
+                                    }
+                                    if let subscription = subscription {
+                                        self.insert(subscriptionKey, subscription: subscription)
+                                        NSLog("Successfully subscribed to \(subscriptionKey)")
+                                        completion(true)
+                                    }
+                                    
+        })
+    }
+    
+    func unsubscribeFrom(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: (Bool)->()) {
+        var subscriptionKey: String
+        if let uuid = uuid {
+            subscriptionKey = subscriptionKeyFor(uuid, predicate: predicate, action: action)
+        } else {
+            subscriptionKey = subscriptionKeyFor(entity, predicate: predicate, action: action)
+        }
+        
+        if subscribedTo(subscriptionWithKey: subscriptionKey) {
+            unsubscribeFrom(subscriptionWithKey: subscriptionKey, completion: completion)
+        } else {
+            completion(false)
+            NSLog("You are not currently subscribed to this event")
+        }
+        
+    }
+    
+    private func unsubscribeFrom(subscriptionWithKey key: String, completion: (Bool)->()) {
+        if let subscription = subscription(withKey: key) {
+            privateDB.deleteSubscriptionWithID(subscription.subscriptionID,
+                                              completionHandler: {(string, error) in
+                                                if error != nil {
+                                                    NSLog(error.debugDescription)
+                                                    completion(false)
+                                                } else {
+                                                    self.remove(subscriptionWithKey: key)
+                                                    NSLog("Successfully unsubscribed from \(key)")
+                                                    completion(true)
+                                                }
+            })
+        }
+    }
+    
+    private func subscribedTo(subscriptionWithKey key: String)-> Bool {
+        var contains: Bool = false
+        dispatch_sync(subscriptionQueue){
+            contains = self.subscriptionDictionary[key] != nil
+        }
+        return contains
+    }
+    
+    private func subscription(withKey key: String) -> CKSubscription? {
+        var subscription: CKSubscription?
+        dispatch_sync(subscriptionQueue){
+            subscription = self.subscriptionDictionary[key]
+        }
+        return subscription
+    }
+    
+    private func insert(key: String, subscription: CKSubscription) {
+        dispatch_async(subscriptionQueue){
+            self.subscriptionDictionary[key] = subscription
+            self.saveSubscriptions()
+        }
+    }
+    
+    private func remove(subscriptionWithKey key: String) {
+        dispatch_async(subscriptionQueue){
+            self.subscriptionDictionary[key] = nil
+            self.saveSubscriptions()
+        }
     }
     
     private func processCount(withRecord record: CKRecord)->CKCount{

@@ -25,4 +25,11 @@ struct Constants{
         static let chartColors: [UIColor] = [UIColor.blueColor(), UIColor.redColor(), UIColor.whiteColor(), UIColor.greenColor(), UIColor.grayColor(), UIColor.brownColor()]
     }
     
+    struct DefaultsKeys{
+        static let cumulativeLine = "showCumulativeLine"
+        static let notificationsEnabled = "notificationsEnabled"
+        static let structuresOnly = "structuresOnly"
+
+    }
+    
 }
