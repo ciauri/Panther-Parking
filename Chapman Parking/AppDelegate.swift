@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
         let api: ParkingAPI = CloudKitAPI.sharedInstance
         DataManager.sharedInstance.api = api
+        NotificationService.api = api
 
         if !defaults.boolForKey("initialized"){
             DataManager.sharedInstance.updateCounts(.All) { success in
@@ -37,9 +39,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         DataManager.sharedInstance.autoRefreshEnabled = true
+
+//        api.unsubscribeFromAll(){
+//            DataManager.sharedInstance.disableAllNotifications()
+//        }
         
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().barTintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
+        UINavigationBar.appearance().barStyle = UIBarStyle.Black
+
+
+
+
         return true
     }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        NSLog("Failed to register for notifications: \(error.debugDescription)")
+        NotificationService.notificationsEnabled = false
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        NSLog("Successfully registered for push notifications")
+        NotificationService.notificationsEnabled = true
+
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        
+        /**
+         Continue implementing this if I want to take an action in-app
+        if let swiftInfo = userInfo as? [String : NSObject] {
+            let cloudKitNotification = CKNotification(fromRemoteNotificationDictionary: swiftInfo)
+            let alertBody = cloudKitNotification.alertBody
+            if cloudKitNotification.notificationType == .Query {
+                let recordID = (cloudKitNotification as! CKQueryNotification).recordID
+            }
+        }
+         */
+    }
+
     
 
     func applicationWillResignActive(application: UIApplication) {
