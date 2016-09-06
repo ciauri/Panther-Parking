@@ -227,11 +227,6 @@ class CloudKitAPI: ParkingAPI{
         
     }
     
-//    func unsubscribeFrom(withUUID uuid: String, predicate: NSPredicate, onActions action: RemoteAction) {
-//        let subscriptionKey = subscriptionKeyFor(uuid, predicate: predicate, action: action)
-//        unsubscribeFrom(subscriptionWithKey: subscriptionKey)
-//    }
-    
     private func unsubscribeFrom(subscriptionWithKey key: String, completion: (Bool)->()) {
         if let subscription = subscription(withKey: key) {
             privateDB.deleteSubscriptionWithID(subscription.subscriptionID,

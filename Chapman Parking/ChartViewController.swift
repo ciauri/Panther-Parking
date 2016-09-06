@@ -60,6 +60,8 @@ class ChartViewController: UIViewController {
         }
     }
     
+
+    
     private func rotateAxisLabel() {
         yAxisLabel.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI/2))
         yAxisLabel.layoutIfNeeded()

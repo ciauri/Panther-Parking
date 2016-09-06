@@ -43,6 +43,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        api.unsubscribeFromAll(){
 //            DataManager.sharedInstance.disableAllNotifications()
 //        }
+        
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().barTintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
+        UINavigationBar.appearance().barStyle = UIBarStyle.Black
+
+
 
 
         return true

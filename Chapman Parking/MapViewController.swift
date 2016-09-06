@@ -35,7 +35,13 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addStructuresToMap()
+
+        let pantherLogo = UIImageView(image: UIImage(named: "panther"))
+        pantherLogo.contentMode = .ScaleAspectFit
+        navigationItem.titleView = pantherLogo
+        
     }
+
     
     private func freezeMap() {
         mapView.setRegion(Constants.Locations.defaultRegion, animated: false)
@@ -115,8 +121,8 @@ class MapViewController: UIViewController {
 
 }
 
+
 extension MapViewController: MKMapViewDelegate{
-    
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? Structure{
             var view: MKPinAnnotationView

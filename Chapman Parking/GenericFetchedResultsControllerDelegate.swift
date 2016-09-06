@@ -20,7 +20,6 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView?.beginUpdates()
-        NSLog("Updating")
     }
     
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
@@ -76,7 +75,6 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         tableView?.endUpdates()
         tableView?.reloadData()
-        NSLog("updated")
     }
     
     

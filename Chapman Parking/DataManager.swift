@@ -83,11 +83,7 @@ class DataManager{
         let sender = notification.object as! NSManagedObjectContext
         if sender !== managedObjectContext {
             managedObjectContext.performBlock {
-//                print(self.managedObjectContext.hasChanges)
-                NSLog("Merging")
                 self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
-//                print(self.managedObjectContext.hasChanges)
-//                try! self.managedObjectContext.save()
             }
         }
     }
@@ -97,7 +93,6 @@ class DataManager{
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         
         context.performBlockAndWait() {
-            
             context.persistentStoreCoordinator = self.persistentStoreCoordinator
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             context.undoManager = nil
@@ -421,7 +416,7 @@ class DataManager{
                 
             })
         }
-        
+        NSLog("Generating report...")
         api.generateReport(updateType, sinceDate: sinceDate, withBlock: {report in
             
             guard let report = report
@@ -434,10 +429,6 @@ class DataManager{
             backgroundContext.performBlock({
                 for structure in report.structures{
                     var s: Structure
-                    
-                    if let structure = structure as? CKStructure {
-                        NSLog(structure.uuid)
-                    }
                     
                     if let structure = self.structureWith(structure.uuid, moc: backgroundContext){
                         s = structure
