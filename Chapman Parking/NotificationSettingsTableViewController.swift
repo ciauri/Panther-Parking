@@ -52,7 +52,14 @@ class NotificationSettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(reflectSystemNotificationStatus), name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
+    
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -129,6 +136,8 @@ class NotificationSettingsTableViewController: UITableViewController {
         
     }
     
+    // MARK: - Utility Functions
+    
     private func level(forIndexPath indexPath: NSIndexPath) -> Level {
         var levels = Array(structures[indexPath.section-1].levels!)
         levels.sortInPlace { (l1, l2) -> Bool in
@@ -170,6 +179,15 @@ class NotificationSettingsTableViewController: UITableViewController {
         tableView.endUpdates()
     }
     
+    @objc
+    private func reflectSystemNotificationStatus() {
+        let enabledCell = tableView.cellForRowAtIndexPath(NOTIFICATIONS_ENABLED_INDEX_PATH) as! LabelSwitchTableViewCell
+        if !notificationsEnabled && enabledCell.detailSwitch.on {
+            enabledCell.detailSwitch.setOn(false, animated: true)
+            toggleNotificationCells(false)
+        }
+    }
+    
     
 
 }
@@ -181,11 +199,16 @@ extension NotificationSettingsTableViewController: SwitchCellDelegate {
             switch indexPath {
             case NOTIFICATIONS_ENABLED_INDEX_PATH:
                 if uiSwitch.on {
-                    NotificationService.enableNotifications()
+                    NotificationService.enableNotifications(self)
+                    if notificationsEnabled {
+                        toggleNotificationCells(uiSwitch.on)
+                    } else {
+                        uiSwitch.setOn(false, animated: true)
+                    }
                 } else {
                     NotificationService.disableNotifications()
+                    toggleNotificationCells(uiSwitch.on)
                 }
-                toggleNotificationCells(uiSwitch.on)
             case STRUCTURES_ONLY_INDEX_PATH:
                 NotificationService.structuresOnly = uiSwitch.on
                 if uiSwitch.on {

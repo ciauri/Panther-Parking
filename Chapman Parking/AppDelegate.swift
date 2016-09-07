@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         NSLog("Successfully registered for push notifications")
-        NotificationService.notificationsEnabled = true
+//        NotificationService.notificationsEnabled = true
 
     }
     
