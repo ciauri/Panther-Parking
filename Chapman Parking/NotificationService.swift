@@ -10,10 +10,12 @@ import Foundation
 import UIKit
 
 class NotificationService {
-    static var api: ParkingAPI?
+    static let sharedInstance = NotificationService()
+    
+    var api: ParkingAPI?
     
     /// Validates both the iOS notification status and the in-app user preference. If user preference is true, but notifications are disabled in iOS, then the app will unregister for all notifications
-    static var notificationsEnabled: Bool {
+    var notificationsEnabled: Bool {
         get {
             if NSUserDefaults.standardUserDefaults().boolForKey(Constants.DefaultsKeys.notificationsEnabled) {
                 if let types = UIApplication.sharedApplication().currentUserNotificationSettings()?.types where types != .None {
@@ -30,7 +32,7 @@ class NotificationService {
         }
     }
     
-    static var structuresOnly: Bool {
+    var structuresOnly: Bool {
         get {
             return NSUserDefaults.standardUserDefaults().boolForKey(Constants.DefaultsKeys.structuresOnly)
         } set{
@@ -38,7 +40,11 @@ class NotificationService {
         }
     }
     
-    class func disableNotifications() {
+    private init() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(checkNotificationsEnabled), name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    
+    func disableNotifications() {
         notificationsEnabled = false
         api?.unsubscribeFromAll({
             NSLog("Unsubbed")
@@ -46,7 +52,7 @@ class NotificationService {
         })
     }
     
-    class func enableNotifications(sender: UIViewController) {
+    func enableNotifications(sender: UIViewController? = nil) {
         notificationsEnabled = true
         // Register for push notifications
         let application = UIApplication.sharedApplication()
@@ -54,13 +60,19 @@ class NotificationService {
         application.registerUserNotificationSettings(notificationSettings)
         application.registerForRemoteNotifications()
         
-        if let types = application.currentUserNotificationSettings()?.types where types == .None {
+        if let sender = sender, types = application.currentUserNotificationSettings()?.types where types == .None {
             notificationsEnabled = false
             promptForNotificationSettings(onViewController: sender)
         }
     }
     
-    private class func promptForNotificationSettings(onViewController viewController: UIViewController) {
+    // Taking advantage of the side effect of the variable setting itself to false if there is an inconsistency
+    @objc
+    private func checkNotificationsEnabled() {
+        _ = notificationsEnabled
+    }
+    
+    private func promptForNotificationSettings(onViewController viewController: UIViewController) {
         let alertController = UIAlertController(title: "Notification Error",
                                                 message: "It appears that you have disallowed push notifications. Please enable them in your device settings if you wish to receive them.",
                                                 preferredStyle: .Alert)
@@ -80,7 +92,7 @@ class NotificationService {
                                              completion: nil)
     }
 
-    class func disableNotificationFor(level: Level) {
+    func disableNotificationFor(level: Level) {
         api?.unsubscribeFrom(ParkingEntity.Level,
                              withUUID: level.uuid!,
                              predicate: NSPredicate(format: "CurrentCount = %d",0),
@@ -93,7 +105,7 @@ class NotificationService {
         })
     }
     
-    class func enableNotificationFor(level: Level) {
+    func enableNotificationFor(level: Level) {
         guard let structureName = level.structure?.name, levelName = level.name else {return}
         api?.subscribeTo(ParkingEntity.Level,
                          withUUID: level.uuid!,

@@ -84,6 +84,7 @@ class DataManager{
         if sender !== managedObjectContext {
             managedObjectContext.performBlock {
                 self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
+                self.saveContext()
             }
         }
     }
@@ -103,7 +104,7 @@ class DataManager{
     
     // MARK: - Core Data Saving support
     
-    private func saveContext () {
+    private func saveContext() {
         
         if managedObjectContext.hasChanges {
             do {
@@ -353,7 +354,7 @@ class DataManager{
             do{
                 if let levels = try backgroundContext.executeFetchRequest(request) as? [Level] {
                     for level in levels {
-                        NotificationService.enableNotificationFor(level)
+                        NotificationService.sharedInstance.enableNotificationFor(level)
                     }
                 }
             } catch {

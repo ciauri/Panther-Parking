@@ -18,7 +18,7 @@ class SettingsTableViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        notificationDetailLabel.text = NotificationService.notificationsEnabled ? "Enabled" : "Disabled"
+        notificationDetailLabel.text = NotificationService.sharedInstance.notificationsEnabled ? "Enabled" : "Disabled"
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(selectedRow, animated: animated)
         }

@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
         let api: ParkingAPI = CloudKitAPI.sharedInstance
         DataManager.sharedInstance.api = api
-        NotificationService.api = api
+        NotificationService.sharedInstance.api = api
 
         if !defaults.boolForKey("initialized"){
             DataManager.sharedInstance.updateCounts(.All) { success in
@@ -39,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         DataManager.sharedInstance.autoRefreshEnabled = true
+        NotificationService.sharedInstance.enableNotifications()
 
 //        api.unsubscribeFromAll(){
 //            DataManager.sharedInstance.disableAllNotifications()
@@ -57,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
         NSLog("Failed to register for notifications: \(error.debugDescription)")
-        NotificationService.notificationsEnabled = false
+        NotificationService.sharedInstance.notificationsEnabled = false
     }
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
