@@ -18,11 +18,11 @@ class NotificationSettingsTableViewController: UITableViewController {
     let STRUCTURES_ONLY_INDEX_PATH = NSIndexPath(forRow: 1, inSection: 0)
     
     private var notificationsEnabled: Bool {
-        return NotificationService.notificationsEnabled
+        return NotificationService.sharedInstance.notificationsEnabled
     }
     
     private var structuresOnly: Bool {
-        return NotificationService.structuresOnly
+        return NotificationService.sharedInstance.structuresOnly
     }
     
     private func indexPathsForLevelCells(includeAllLevels include: Bool) -> [NSIndexPath] {
@@ -199,23 +199,23 @@ extension NotificationSettingsTableViewController: SwitchCellDelegate {
             switch indexPath {
             case NOTIFICATIONS_ENABLED_INDEX_PATH:
                 if uiSwitch.on {
-                    NotificationService.enableNotifications(self)
+                    NotificationService.sharedInstance.enableNotifications(self)
                     if notificationsEnabled {
                         toggleNotificationCells(uiSwitch.on)
                     } else {
                         uiSwitch.setOn(false, animated: true)
                     }
                 } else {
-                    NotificationService.disableNotifications()
+                    NotificationService.sharedInstance.disableNotifications()
                     toggleNotificationCells(uiSwitch.on)
                 }
             case STRUCTURES_ONLY_INDEX_PATH:
-                NotificationService.structuresOnly = uiSwitch.on
+                NotificationService.sharedInstance.structuresOnly = uiSwitch.on
                 if uiSwitch.on {
                     for structure in structures {
                         if let levels = structure.levels {
                             for level in levels where level.name != "All Levels" {
-                                NotificationService.disableNotificationFor(level)
+                                NotificationService.sharedInstance.disableNotificationFor(level)
                             }
                         }
                     }
@@ -224,9 +224,9 @@ extension NotificationSettingsTableViewController: SwitchCellDelegate {
             default:
                 let level = self.level(forIndexPath: indexPath)
                 if uiSwitch.on {
-                    NotificationService.enableNotificationFor(level)
+                    NotificationService.sharedInstance.enableNotificationFor(level)
                 } else {
-                    NotificationService.disableNotificationFor(level)
+                    NotificationService.sharedInstance.disableNotificationFor(level)
                 }
             }
         }
