@@ -157,7 +157,7 @@ class CloudKitAPI: ParkingAPI{
 
     
     func forceUnsubscribeFromAll(completion: () -> ()) {
-        publicDB.fetchAllSubscriptionsWithCompletionHandler() {(subscriptions, error) in
+        privateDB.fetchAllSubscriptionsWithCompletionHandler() {(subscriptions, error) in
             if let subscriptions = subscriptions where !subscriptions.isEmpty {
                 var completed = 0
                 subscriptions.forEach(){

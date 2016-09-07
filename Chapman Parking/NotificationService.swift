@@ -12,9 +12,19 @@ import UIKit
 class NotificationService {
     static var api: ParkingAPI?
     
+    /// Validates both the iOS notification status and the in-app user preference. If user preference is true, but notifications are disabled in iOS, then the app will unregister for all notifications
     static var notificationsEnabled: Bool {
         get {
-            return NSUserDefaults.standardUserDefaults().boolForKey(Constants.DefaultsKeys.notificationsEnabled)
+            if NSUserDefaults.standardUserDefaults().boolForKey(Constants.DefaultsKeys.notificationsEnabled) {
+                if let types = UIApplication.sharedApplication().currentUserNotificationSettings()?.types where types != .None {
+                    return true
+                } else {
+                    disableNotifications()
+                    return false
+                }
+            } else {
+                return false
+            }
         } set{
             NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: Constants.DefaultsKeys.notificationsEnabled)
         }
@@ -33,11 +43,10 @@ class NotificationService {
         api?.unsubscribeFromAll({
             NSLog("Unsubbed")
             DataManager.sharedInstance.disableAllNotifications()
-            notificationsEnabled = false
         })
     }
     
-    class func enableNotifications() {
+    class func enableNotifications(sender: UIViewController) {
         notificationsEnabled = true
         // Register for push notifications
         let application = UIApplication.sharedApplication()
@@ -45,6 +54,30 @@ class NotificationService {
         application.registerUserNotificationSettings(notificationSettings)
         application.registerForRemoteNotifications()
         
+        if let types = application.currentUserNotificationSettings()?.types where types == .None {
+            notificationsEnabled = false
+            promptForNotificationSettings(onViewController: sender)
+        }
+    }
+    
+    private class func promptForNotificationSettings(onViewController viewController: UIViewController) {
+        let alertController = UIAlertController(title: "Notification Error",
+                                                message: "It appears that you have disallowed push notifications. Please enable them in your device settings if you wish to receive them.",
+                                                preferredStyle: .Alert)
+        let settingsAction = UIAlertAction(title: "Settings",
+                                        style: .Cancel,
+                                        handler: {_ in
+                                            UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
+        })
+        let cancelAction = UIAlertAction(title: "Cancel",
+                                         style: .Destructive,
+                                         handler: nil)
+        alertController.addAction(settingsAction)
+        alertController.addAction(cancelAction)
+        
+        viewController.presentViewController(alertController,
+                                             animated: true,
+                                             completion: nil)
     }
 
     class func disableNotificationFor(level: Level) {
