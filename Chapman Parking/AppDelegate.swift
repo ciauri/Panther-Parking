@@ -41,9 +41,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DataManager.sharedInstance.autoRefreshEnabled = true
         NotificationService.sharedInstance.enableNotifications()
 
-//        api.unsubscribeFromAll(){
-//            DataManager.sharedInstance.disableAllNotifications()
-//        }
+        api.unsubscribeFromAll(){
+            DataManager.sharedInstance.disableAllNotifications()
+        }
+        
+        api.forceUnsubscribeFromAll(){
+            NSLog("Unsubbed from server")
+        }
+        
+
         
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         UINavigationBar.appearance().barTintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
@@ -68,6 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        NSLog("Received remote notification")
         
         /**
          Continue implementing this if I want to take an action in-app

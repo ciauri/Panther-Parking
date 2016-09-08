@@ -17,6 +17,8 @@ protocol ParkingAPI: class{
     func subscribeTo(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: (Bool)->())
     func unsubscribeFrom(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: (Bool)->())
     func unsubscribeFromAll(completion: ()->())
+    func forceUnsubscribeFromAll(completion: ()->())
+    func fetchSubscriptions(completion: (uuids: String) -> ())
     
     
 }
