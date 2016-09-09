@@ -192,7 +192,11 @@ class ChartViewController: UIViewController {
             let set = dataSet(named: level.name!, withCounts: results, onTimeline: timeIntervals, withResolutionInMinutes: 60)
             
             if selectedLevels.count == 1 {
-                set.colors = [colors[levelSelector.selectedSegmentIndex]]
+                var offset = 0
+                if !shouldDrawCumulativeLine {
+                    offset = 1
+                }
+                set.colors = [colors[levelSelector.selectedSegmentIndex-offset]]
             } else {
                 set.colors = [colors.removeFirst()]
             }

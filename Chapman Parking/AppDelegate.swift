@@ -41,13 +41,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DataManager.sharedInstance.autoRefreshEnabled = true
         NotificationService.sharedInstance.enableNotifications()
 
-        api.unsubscribeFromAll(){
-            DataManager.sharedInstance.disableAllNotifications()
-        }
-        
-        api.forceUnsubscribeFromAll(){
-            NSLog("Unsubbed from server")
-        }
+//        api.forceUnsubscribeFromAll(){
+//            NSLog("Unsubbed from server")
+//            DataManager.sharedInstance.disableAllNotifications()
+//        }
         
 
         
@@ -55,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
         UINavigationBar.appearance().barStyle = UIBarStyle.Black
+        UISegmentedControl.appearance().tintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
 
 
 

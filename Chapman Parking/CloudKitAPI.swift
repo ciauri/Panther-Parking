@@ -144,6 +144,7 @@ class CloudKitAPI: ParkingAPI{
                             completed += 1
                             if completed == subscriptions.count {
                                 NSLog("Unsubscribed from everything")
+                                self.subscriptionDictionary = [:]
                                 completion()
                             }
                     })
@@ -152,6 +153,7 @@ class CloudKitAPI: ParkingAPI{
                 NSLog(error.debugDescription)
             } else {
                 NSLog("Nothing to unsubscribe from")
+                self.subscriptionDictionary = [:]
                 completion()
             }
         }
