@@ -52,6 +52,10 @@ class NotificationService {
         })
     }
     
+    func fetchNotificationUUIDs(completion: (uuids: [String]) -> ()) {
+        api?.fetchSubscriptions(completion)
+    }
+    
     func enableNotifications(sender: UIViewController? = nil) {
         notificationsEnabled = true
         // Register for push notifications
@@ -118,5 +122,13 @@ class NotificationService {
                             }
         })
 
+    }
+    
+    func fetchAndUpdateSubscriptions(withCompletion completion: ()->()) {
+        fetchNotificationUUIDs({ uuids in
+            DataManager.sharedInstance.update(notificationsEnabled: true,
+                forUUIDs: uuids,
+                withCompletion: completion)
+        })
     }
 }

@@ -192,7 +192,11 @@ class ChartViewController: UIViewController {
             let set = dataSet(named: level.name!, withCounts: results, onTimeline: timeIntervals, withResolutionInMinutes: 60)
             
             if selectedLevels.count == 1 {
-                set.colors = [colors[levelSelector.selectedSegmentIndex]]
+                var offset = 0
+                if !shouldDrawCumulativeLine {
+                    offset = 1
+                }
+                set.colors = [colors[levelSelector.selectedSegmentIndex-offset]]
             } else {
                 set.colors = [colors.removeFirst()]
             }
@@ -211,8 +215,9 @@ class ChartViewController: UIViewController {
         let valueFormatter = DateValueFormatter(withStringArray: stringStamps)
         
         lineChart.xAxis.valueFormatter = valueFormatter
-        lineChart.xAxis.labelRotationAngle = -45
-        lineChart.xAxis.labelCount = 7
+//        lineChart.xAxis.avoidFirstLastClippingEnabled = true
+//        lineChart.xAxis.labelRotationAngle = -45
+//        lineChart.xAxis.labelCount = 7
         
         lineChart.rightAxis.enabled = false
         lineChart.leftAxis.granularity = 1
@@ -256,11 +261,12 @@ class DateValueFormatter: NSObject, IAxisValueFormatter {
         if value == 0 {
             return ""
         } else {
-            if value > Double(stringArray.count-1) {
+            if value >= Double(stringArray.count-1) {
                 return ""
             } else {
                 return stringArray[Int(value)]
             }
         }
+        
     }
 }

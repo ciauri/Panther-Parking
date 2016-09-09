@@ -13,18 +13,18 @@ protocol ParkingAPI: class{
     static var sharedInstance: ParkingAPI {get}
     func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock: (CPReport? -> Void))
     func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: NSDate?, ending endDate: NSDate?, completion: ([CKCount]?, NSError?) -> ())
-//    func registerForPushNotifications()
     func subscribeTo(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: (Bool)->())
     func unsubscribeFrom(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: (Bool)->())
     func unsubscribeFromAll(completion: ()->())
-    
-    
+    func forceUnsubscribeFromAll(completion: ()->())
+    func fetchSubscriptions(completion: (uuids: [String]) -> ())
 }
 
-enum RemoteAction {
-    case Update
-    case Delete
-    case Add
+enum RemoteAction:Int {
+    case Update = 2
+    case Delete = 4
+    case Add = 1
+    case Once = 8
     
     var description: String {
         switch self{
@@ -34,6 +34,8 @@ enum RemoteAction {
             return "DELETE"
         case .Add:
             return "ADD"
+        case .Once:
+            return "ONCE"
         }
     }
 }
