@@ -380,6 +380,28 @@ class DataManager{
         })
     }
     
+    func update(notificationsEnabled enabled: Bool, forUUIDs uuids: [String], withCompletion completion: ()->()) {
+        let backgroundContext = try? createPrivateQueueContext()
+        backgroundContext?.performBlock({
+            let request = NSFetchRequest(entityName: "Level")
+            
+            // Enable notifications for objects in uuids
+            request.predicate = NSPredicate(format: "uuid IN %@", uuids)
+            if let levels = try? backgroundContext?.executeFetchRequest(request) as? [Level] {
+                levels?.forEach({ $0.notificationsEnabled = true })
+            }
+            
+            // Disable notifications for the rest
+            request.predicate = NSPredicate(format: "NOT (uuid IN %@)", uuids)
+            if let levels = try? backgroundContext?.executeFetchRequest(request) as? [Level] {
+                levels?.forEach({ $0.notificationsEnabled = false })
+            }
+            
+            _ = try? backgroundContext?.save()
+            completion()
+        })
+    }
+    
     func update(notificationsEnabled enabled: Bool, forLevel level: Level) {
         let backgroundContext = try? createPrivateQueueContext()
         backgroundContext?.performBlock({

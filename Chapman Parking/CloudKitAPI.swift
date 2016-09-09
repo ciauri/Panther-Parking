@@ -111,17 +111,24 @@ class CloudKitAPI: ParkingAPI{
         
     }
     
-    func fetchSubscriptions(completion: (uuids: String) -> ()) {
+    func fetchSubscriptions(completion: (uuids: [String]) -> ()) {
         var subscribedUUIDs: [String] = []
         publicDB.fetchAllSubscriptionsWithCompletionHandler() { (subscriptions, error) in
             if let subscriptions = subscriptions {
                 for subscription in subscriptions {
+                    // Super duper hacky way to rebuild my subscriptionKey...
                     if let predicate = subscription.predicate?.predicateFormat,
-                        match = predicate.rangeOfString("(?<=; )(.*?)(?=:)", options: .RegularExpressionSearch) {
-                        subscribedUUIDs.append(predicate.substringWithRange(match))
+                        uuidRange = predicate.rangeOfString("(?<=; )(.*?)(?=:)", options: .RegularExpressionSearch),
+                        predicateRange = predicate.rangeOfString("(?<=)(.*?)(?= AND)", options: .RegularExpressionSearch){
+                        let uuid = predicate.substringWithRange(uuidRange)
+                        let predicateString = predicate.substringWithRange(predicateRange)
+                        let type = RemoteAction(rawValue: Int(subscription.subscriptionOptions.rawValue))!.description
+                        self.insert(uuid+predicateString+type, subscriptionID: subscription.subscriptionID)
+                        subscribedUUIDs.append(uuid)
                     }
                 }
             }
+            completion(uuids: subscribedUUIDs)
         }
     }
     
@@ -226,6 +233,8 @@ class CloudKitAPI: ParkingAPI{
             ckAction = .FiresOnRecordUpdate
         case .Delete:
             ckAction = .FiresOnRecordDeletion
+        case .Once:
+            ckAction = .FiresOnce
         }
         
         var predicates = [predicate]

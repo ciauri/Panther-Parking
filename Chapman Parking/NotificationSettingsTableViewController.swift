@@ -25,28 +25,7 @@ class NotificationSettingsTableViewController: UITableViewController {
         return NotificationService.sharedInstance.structuresOnly
     }
     
-    private func indexPathsForLevelCells(includeAllLevels include: Bool) -> [NSIndexPath] {
-        var indexPaths: [NSIndexPath] = []
-
-        for (section, structure) in structures.enumerate() {
-            var levels = Array(structure.levels!)
-            levels.sortInPlace { (l1, l2) -> Bool in
-                return l1.name! < l2.name!
-            }
-            
-            for (row, level) in levels.enumerate() {
-                if !include {
-                    if level.name != "All Levels" {
-                        indexPaths.append(NSIndexPath(forRow: row, inSection: section+1))
-                    }
-                } else {
-                    indexPaths.append(NSIndexPath(forRow: row, inSection: section+1))
-                }
-                
-            }
-        }
-        return indexPaths
-    }
+    
     
    
 
@@ -54,6 +33,9 @@ class NotificationSettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(reflectSystemNotificationStatus), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationService.sharedInstance.fetchAndUpdateSubscriptions(withCompletion: {
+            self.updateCellsAnimated()
+        })
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -64,6 +46,17 @@ class NotificationSettingsTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    private func updateCellsAnimated() {
+        if let indexPaths = tableView.indexPathsForVisibleRows?.filter({$0.section > 0}) {
+            for indexPath in indexPaths {
+                let level = self.level(forIndexPath: indexPath)
+                if let cell = tableView.cellForRowAtIndexPath(indexPath) as? LabelSwitchTableViewCell {
+                    cell.detailSwitch.setOn(Bool(level.notificationsEnabled!), animated: true)
+                }
+            }
+        }
     }
 
     // MARK: - Table view data source
@@ -146,6 +139,29 @@ class NotificationSettingsTableViewController: UITableViewController {
         return levels[indexPath.row]
     }
     
+    private func indexPathsForLevelCells(includeAllLevels include: Bool) -> [NSIndexPath] {
+        var indexPaths: [NSIndexPath] = []
+        
+        for (section, structure) in structures.enumerate() {
+            var levels = Array(structure.levels!)
+            levels.sortInPlace { (l1, l2) -> Bool in
+                return l1.name! < l2.name!
+            }
+            
+            for (row, level) in levels.enumerate() {
+                if !include {
+                    if level.name != "All Levels" {
+                        indexPaths.append(NSIndexPath(forRow: row, inSection: section+1))
+                    }
+                } else {
+                    indexPaths.append(NSIndexPath(forRow: row, inSection: section+1))
+                }
+                
+            }
+        }
+        return indexPaths
+    }
+    
     private func toggleNotificationCells(enabled: Bool) {
         tableView.beginUpdates()
         var indexPaths = indexPathsForLevelCells(includeAllLevels: true)
@@ -187,6 +203,8 @@ class NotificationSettingsTableViewController: UITableViewController {
             toggleNotificationCells(false)
         }
     }
+    
+    
     
     
 
