@@ -18,61 +18,55 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
     var mapView: MKMapView?
     weak var delegate: GenericFRCDelegate?
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView?.beginUpdates()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type{
-        case .Insert:
-            tableView?.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete:
-            tableView?.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Move:
+        case .insert:
+            tableView?.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .delete:
+            tableView?.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .move:
             //            tableView.moveSection(<#T##section: Int##Int#>, toSection: <#T##Int#>)
             break
-        case .Update:
+        case .update:
             break
         }
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type{
-        case .Insert:
+        case .insert:
             if let a = anObject as? MKAnnotation{
                 mapView?.addAnnotation(a)
             }
-            tableView?.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        case .Delete:
-            tableView?.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            tableView?.insertRows(at: [newIndexPath!], with: .fade)
+        case .delete:
+            tableView?.deleteRows(at: [indexPath!], with: .fade)
             if let a = anObject as? MKAnnotation{
                 mapView?.removeAnnotation(a)
             }
-        case .Update:
-            if let indexPath = indexPath, cell = tableView?.cellForRowAtIndexPath(indexPath){
-                delegate?.configureCell(cell, atIndexPath: indexPath)
-            }
-            if let a = anObject as? MKAnnotation{
-                mapView?.removeAnnotation(a)
-                mapView?.addAnnotation(a)
-            }
-        case .Move:
+        // Update and Move
+        default:
             if let
                 annotation = anObject as? Structure,
-                annotationView = mapView?.viewForAnnotation(annotation) as? MKPinAnnotationView{
+                let annotationView = mapView?.view(for: annotation) as? MKPinAnnotationView{
                 
                 annotationView.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
             }
             if let indexPath = indexPath{
-                tableView?.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+                tableView?.reloadRows(at: [indexPath], with: .automatic)
             }
         }
+ 
     }
     
     
     
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView?.endUpdates()
         tableView?.reloadData()
     }
@@ -81,5 +75,5 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
 }
 
 protocol GenericFRCDelegate: class{
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath)
+    func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath)
 }

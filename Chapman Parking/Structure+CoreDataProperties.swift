@@ -50,16 +50,16 @@ extension Structure: MKAnnotation{
     }
     
     var subtitle: String?{
-        let formatter = NSNumberFormatter()
-        formatter.numberStyle = .PercentStyle
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
         
         NSLog("Count: \(currentCount) Cap: \(capacity)")
-        let percent = formatter.stringFromNumber(1-Double(currentCount)/Double(capacity))!
+        let percent = formatter.string(from: NSNumber(floatLiteral:1.0-Double(currentCount)/Double(capacity)))!
         return "\(percent) full"
     }
     
     var coordinate: CLLocationCoordinate2D{
-        if let location = location, lat = location.lat, long = location.long{
+        if let location = location, let lat = location.lat, let long = location.long{
             return CLLocationCoordinate2DMake(lat as Double, long as Double)
         }else{
             return CLLocationCoordinate2DMake(0, 0)

@@ -12,8 +12,8 @@ import UIKit
 
 struct Constants{
     struct URLs{
-        static let chapmanParkingURL = NSURL(string: "https://webfarm.chapman.edu/parkingservice/parkingservice/counts")!
-        static let stephenParkingURL = NSURL(string: "http://stephenciauri.com/parking/counts")!
+        static let chapmanParkingURL = URL(string: "https://webfarm.chapman.edu/parkingservice/parkingservice/counts")!
+        static let stephenParkingURL = URL(string: "http://stephenciauri.com/parking/counts")!
     }
     
     struct Locations{
@@ -22,7 +22,7 @@ struct Constants{
     }
     
     struct Colors{
-        static let chartColors: [UIColor] = [UIColor.blueColor(), UIColor.redColor(), UIColor.whiteColor(), UIColor.greenColor(), UIColor.grayColor(), UIColor.brownColor()]
+        static let chartColors: [UIColor] = [UIColor.blue, UIColor.red, UIColor.white, UIColor.green, UIColor.gray, UIColor.brown]
     }
     
     struct DefaultsKeys{

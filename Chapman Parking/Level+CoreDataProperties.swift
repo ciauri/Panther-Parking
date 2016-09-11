@@ -20,7 +20,7 @@ extension Level {
     @NSManaged var currentCount: NSNumber?
     @NSManaged var structure: Structure?
     @NSManaged var counts: NSSet?
-    @NSManaged var updatedAt: NSDate?
+    @NSManaged var updatedAt: Date?
     @NSManaged var notificationsEnabled: NSNumber?
 
     

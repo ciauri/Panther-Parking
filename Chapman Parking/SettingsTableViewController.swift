@@ -16,15 +16,15 @@ class SettingsTableViewController: UITableViewController {
 
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         notificationDetailLabel.text = NotificationService.sharedInstance.notificationsEnabled ? "Enabled" : "Disabled"
         if let selectedRow = tableView.indexPathForSelectedRow {
-            tableView.deselectRowAtIndexPath(selectedRow, animated: animated)
+            tableView.deselectRow(at: selectedRow, animated: animated)
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
     }
@@ -36,12 +36,12 @@ class SettingsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 3
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 1
     }
@@ -49,7 +49,7 @@ class SettingsTableViewController: UITableViewController {
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let identifier = segue.identifier {
             switch identifier {
             case "notificationSettings":
@@ -65,8 +65,8 @@ class SettingsTableViewController: UITableViewController {
   
     
     
-    private func prepareForNotificationSettings(withSegue segue: UIStoryboardSegue) {
-        let notificationSettingsViewController = segue.destinationViewController as! NotificationSettingsTableViewController
+    fileprivate func prepareForNotificationSettings(withSegue segue: UIStoryboardSegue) {
+        let notificationSettingsViewController = segue.destination as! NotificationSettingsTableViewController
         
         notificationSettingsViewController.structures = DataManager.sharedInstance.fetchAllStructures()
         

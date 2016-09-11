@@ -16,8 +16,8 @@ class Structure: NSManagedObject{
 // Insert code here to add functionality to your managed object subclass
     
     convenience init(json: JSON, insertIntoManagedObjectContext context: NSManagedObjectContext!){
-        let entity = NSEntityDescription.entityForName("Structure", inManagedObjectContext: context)!
-        self.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entity(forEntityName: "Structure", in: context)!
+        self.init(entity: entity, insertInto: context)
         name = "Name" <~~ json
 
     }

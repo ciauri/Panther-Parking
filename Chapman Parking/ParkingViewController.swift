@@ -12,7 +12,7 @@ import CoreData
 class ParkingViewController: UIViewController {
     @IBOutlet var parkingTableView: UITableView!
     
-    lazy var frc: NSFetchedResultsController = self.initFRC()
+    lazy var frc: NSFetchedResultsController<Level> = self.initFRC()
     var frcDelegate = GenericFetchedResultsControllerDelegate()
     
     var structure: Structure?
@@ -22,9 +22,9 @@ class ParkingViewController: UIViewController {
         super.viewDidLoad()
         
         if structure == nil{
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "map"), style: .Plain, target: self, action: #selector(flipToMap))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "map"), style: .plain, target: self, action: #selector(flipToMap))
         }else{
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "clock"), style: .Plain, target: self, action: #selector(segueToGraph))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "clock"), style: .plain, target: self, action: #selector(segueToGraph))
         }
         fetchData()
         // Do any additional setup after loading the view.
@@ -36,22 +36,22 @@ class ParkingViewController: UIViewController {
     }
     
     func flipToMap(){
-        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     func segueToGraph(){
-        performSegueWithIdentifier("chart", sender: self)
+        performSegue(withIdentifier: "chart", sender: self)
     }
     
     
      // MARK: - Navigation
      
      // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier!{
         case "chart":
-            let destinationVC = segue.destinationViewController as! ChartViewController
+            let destinationVC = segue.destination as! ChartViewController
             destinationVC.structure = structure
         default:
             break
@@ -63,8 +63,9 @@ class ParkingViewController: UIViewController {
 }
 
 extension ParkingViewController: NSFetchedResultsControllerDelegate{
-    private func initFRC() -> NSFetchedResultsController{
-        let request = NSFetchRequest(entityName: "Level")
+    fileprivate func initFRC() -> NSFetchedResultsController<Level>{
+        
+        let request = NSFetchRequest<Level>(entityName: "Level")
         let structureSort = NSSortDescriptor(key: "structure.name", ascending: true)
         let nameSort = NSSortDescriptor(key: "name", ascending: true)
         request.sortDescriptors = [structureSort, nameSort]
@@ -72,15 +73,15 @@ extension ParkingViewController: NSFetchedResultsControllerDelegate{
         if let s = structure{
             request.predicate = NSPredicate(format: "structure = %@", s)
         }
-        let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: DataManager.sharedInstance.managedObjectContext, sectionNameKeyPath: "structure.name", cacheName: nil)
+        let controller = NSFetchedResultsController<Level>(fetchRequest: request, managedObjectContext: DataManager.sharedInstance.managedObjectContext, sectionNameKeyPath: "structure.name", cacheName: nil)
         frcDelegate.tableView = parkingTableView
         frcDelegate.delegate = self
         controller.delegate = frcDelegate
         return controller
     }
     
-    private func fetchData(){
-        DataManager.sharedInstance.managedObjectContext.performBlock({
+    fileprivate func fetchData(){
+        DataManager.sharedInstance.managedObjectContext.perform({
             do{
                 try self.frc.performFetch()
                 self.parkingTableView.reloadData()
@@ -94,16 +95,16 @@ extension ParkingViewController: NSFetchedResultsControllerDelegate{
 }
 
 extension ParkingViewController: UITableViewDataSource, GenericFRCDelegate{
-    internal func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath){
-        let level = frc.objectAtIndexPath(indexPath) as! Level
+    internal func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath){
+        let level = frc.object(at: indexPath)
         
         if level.name == "All Levels"{
             let cell = cell as! TotalCountTableViewCell
             cell.nameLabel?.text = level.name
             let percent = Float(Int(level.capacity!) - Int(level.currentCount!)) / Float(level.capacity!)
-            let formatter = NSNumberFormatter()
-            formatter.numberStyle = .PercentStyle
-            cell.countLabel?.text = formatter.stringFromNumber(percent)
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .percent
+            cell.countLabel?.text = formatter.string(from: NSNumber(value: percent))
             cell.progressBar?.progress = percent
             cell.updateProgressBarColor()
         }else{
@@ -119,37 +120,37 @@ extension ParkingViewController: UITableViewDataSource, GenericFRCDelegate{
         
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sectionResults = frc.sections![section]
         let level = sectionResults.objects!.first as! Level
         
         return level.structure!.name
     }
     
-    func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         let sectionResults = frc.sections![section]
         let level = sectionResults.objects!.first as! Level
-        let date = level.updatedAt ?? NSDate()
-        let formatter = NSDateFormatter()
-        formatter.timeStyle = .MediumStyle
-        formatter.dateStyle = .LongStyle
-        formatter.timeZone = NSTimeZone.defaultTimeZone()
-        return "Updated "+formatter.stringFromDate(date)
+        let date = level.updatedAt ?? Date()
+        let formatter = DateFormatter()
+        formatter.timeStyle = .medium
+        formatter.dateStyle = .long
+        formatter.timeZone = TimeZone.current
+        return "Updated "+formatter.string(from: date)
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return frc.sections?.count ?? 0
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sections = frc.sections! as [NSFetchedResultsSectionInfo]
         let sectionInfo = sections[section]
         return sectionInfo.numberOfObjects
         //        return 0
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let level = frc.objectAtIndexPath(indexPath) as! Level
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let level = frc.object(at: indexPath) 
         var reuseID: String
         if level.name == "All Levels"{
             reuseID = "summaryCell"
@@ -157,7 +158,7 @@ extension ParkingViewController: UITableViewDataSource, GenericFRCDelegate{
             reuseID = "levelCell"
         }
         
-        let cell = parkingTableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
+        let cell = parkingTableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath)
         configureCell(cell, atIndexPath: indexPath)
 
 

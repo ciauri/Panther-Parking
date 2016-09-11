@@ -14,14 +14,14 @@ class NotificationSettingsTableViewController: UITableViewController {
     
     let SETTINGS_SECTION: Int = 0
     let SETTINGS_FOOTER_TEXT = "Structure notifications notify you only when all levels in the structure are full."
-    let NOTIFICATIONS_ENABLED_INDEX_PATH = NSIndexPath(forRow: 0, inSection: 0)
-    let STRUCTURES_ONLY_INDEX_PATH = NSIndexPath(forRow: 1, inSection: 0)
+    let NOTIFICATIONS_ENABLED_INDEX_PATH = IndexPath(row: 0, section: 0)
+    let STRUCTURES_ONLY_INDEX_PATH = IndexPath(row: 1, section: 0)
     
-    private var notificationsEnabled: Bool {
+    fileprivate var notificationsEnabled: Bool {
         return NotificationService.sharedInstance.notificationsEnabled
     }
     
-    private var structuresOnly: Bool {
+    fileprivate var structuresOnly: Bool {
         return NotificationService.sharedInstance.structuresOnly
     }
     
@@ -32,14 +32,14 @@ class NotificationSettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(reflectSystemNotificationStatus), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reflectSystemNotificationStatus), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationService.sharedInstance.fetchAndUpdateSubscriptions(withCompletion: {
             self.updateCellsAnimated()
         })
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
 
 
@@ -48,11 +48,11 @@ class NotificationSettingsTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    private func updateCellsAnimated() {
-        if let indexPaths = tableView.indexPathsForVisibleRows?.filter({$0.section > 0}) {
+    fileprivate func updateCellsAnimated() {
+        if let indexPaths = tableView.indexPathsForVisibleRows?.filter({($0 as NSIndexPath).section > 0}) {
             for indexPath in indexPaths {
                 let level = self.level(forIndexPath: indexPath)
-                if let cell = tableView.cellForRowAtIndexPath(indexPath) as? LabelSwitchTableViewCell {
+                if let cell = tableView.cellForRow(at: indexPath) as? LabelSwitchTableViewCell {
                     cell.detailSwitch.setOn(Bool(level.notificationsEnabled!), animated: true)
                 }
             }
@@ -61,11 +61,11 @@ class NotificationSettingsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return notificationsEnabled ? structures.count + 1 : 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case SETTINGS_SECTION:
             return notificationsEnabled ? 2 : 1
@@ -74,7 +74,7 @@ class NotificationSettingsTableViewController: UITableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case SETTINGS_SECTION:
             return "General Settings"
@@ -83,7 +83,7 @@ class NotificationSettingsTableViewController: UITableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
         case SETTINGS_SECTION:
             return notificationsEnabled ? SETTINGS_FOOTER_TEXT : nil
@@ -92,8 +92,8 @@ class NotificationSettingsTableViewController: UITableViewController {
         }
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("labelSwitch", forIndexPath: indexPath) as! LabelSwitchTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "labelSwitch", for: indexPath) as! LabelSwitchTableViewCell
         
         switch indexPath {
         case NOTIFICATIONS_ENABLED_INDEX_PATH:
@@ -111,10 +111,10 @@ class NotificationSettingsTableViewController: UITableViewController {
         return cell
     }
     
-    private func configureLevelCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+    fileprivate func configureLevelCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) {
         let level = self.level(forIndexPath: indexPath)
         
-        if indexPath.row == 0 {
+        if (indexPath as NSIndexPath).row == 0 {
             (cell as! LabelSwitchTableViewCell).label.text = "Entire Structure"
         } else {
             (cell as! LabelSwitchTableViewCell).label.text = level.name!
@@ -131,30 +131,30 @@ class NotificationSettingsTableViewController: UITableViewController {
     
     // MARK: - Utility Functions
     
-    private func level(forIndexPath indexPath: NSIndexPath) -> Level {
-        var levels = Array(structures[indexPath.section-1].levels!)
-        levels.sortInPlace { (l1, l2) -> Bool in
+    fileprivate func level(forIndexPath indexPath: IndexPath) -> Level {
+        var levels = Array(structures[(indexPath as NSIndexPath).section-1].levels!)
+        levels.sort { (l1, l2) -> Bool in
             return l1.name! < l2.name!
         }
-        return levels[indexPath.row]
+        return levels[(indexPath as NSIndexPath).row]
     }
     
-    private func indexPathsForLevelCells(includeAllLevels include: Bool) -> [NSIndexPath] {
-        var indexPaths: [NSIndexPath] = []
+    fileprivate func indexPathsForLevelCells(includeAllLevels include: Bool) -> [IndexPath] {
+        var indexPaths: [IndexPath] = []
         
-        for (section, structure) in structures.enumerate() {
+        for (section, structure) in structures.enumerated() {
             var levels = Array(structure.levels!)
-            levels.sortInPlace { (l1, l2) -> Bool in
+            levels.sort { (l1, l2) -> Bool in
                 return l1.name! < l2.name!
             }
             
-            for (row, level) in levels.enumerate() {
+            for (row, level) in levels.enumerated() {
                 if !include {
                     if level.name != "All Levels" {
-                        indexPaths.append(NSIndexPath(forRow: row, inSection: section+1))
+                        indexPaths.append(IndexPath(row: row, section: section+1))
                     }
                 } else {
-                    indexPaths.append(NSIndexPath(forRow: row, inSection: section+1))
+                    indexPaths.append(IndexPath(row: row, section: section+1))
                 }
                 
             }
@@ -162,43 +162,44 @@ class NotificationSettingsTableViewController: UITableViewController {
         return indexPaths
     }
     
-    private func toggleNotificationCells(enabled: Bool) {
+    fileprivate func toggleNotificationCells(_ enabled: Bool) {
         tableView.beginUpdates()
         var indexPaths = indexPathsForLevelCells(includeAllLevels: true)
         if structuresOnly {
-            indexPaths = indexPaths.filter({$0.row == 0})
+            indexPaths = indexPaths.filter({($0 as NSIndexPath).row == 0})
         }
         indexPaths.append(STRUCTURES_ONLY_INDEX_PATH)
-        let range = NSRange(1...3)
-        let indexSet = NSIndexSet(indexesInRange: range)
+        let range = 1...3
+        //let range = NSRange(1...3)
+        let indexSet = IndexSet(integersIn: range)
         
         if enabled {
-            tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
-            tableView.insertSections(indexSet, withRowAnimation: .Automatic)
-            tableView.footerViewForSection(SETTINGS_SECTION)?.textLabel?.text = SETTINGS_FOOTER_TEXT
+            tableView.insertRows(at: indexPaths, with: .automatic)
+            tableView.insertSections(indexSet, with: .automatic)
+            tableView.footerView(forSection: SETTINGS_SECTION)?.textLabel?.text = SETTINGS_FOOTER_TEXT
         } else {
-            tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
-            tableView.deleteSections(indexSet, withRowAnimation: .Automatic)
-            tableView.footerViewForSection(SETTINGS_SECTION)?.textLabel?.text = nil
+            tableView.deleteRows(at: indexPaths, with: .automatic)
+            tableView.deleteSections(indexSet, with: .automatic)
+            tableView.footerView(forSection: SETTINGS_SECTION)?.textLabel?.text = nil
 
         }
         tableView.endUpdates()
     }
     
-    private func toggleLevelCells(enabled: Bool) {
+    fileprivate func toggleLevelCells(_ enabled: Bool) {
         tableView.beginUpdates()
         if enabled {
-            tableView.deleteRowsAtIndexPaths(indexPathsForLevelCells(includeAllLevels: false), withRowAnimation: .Right)
+            tableView.deleteRows(at: indexPathsForLevelCells(includeAllLevels: false), with: .right)
         } else {
-            tableView.insertRowsAtIndexPaths(indexPathsForLevelCells(includeAllLevels: false), withRowAnimation: .Right)
+            tableView.insertRows(at: indexPathsForLevelCells(includeAllLevels: false), with: .right)
         }
         tableView.endUpdates()
     }
     
     @objc
-    private func reflectSystemNotificationStatus() {
-        let enabledCell = tableView.cellForRowAtIndexPath(NOTIFICATIONS_ENABLED_INDEX_PATH) as! LabelSwitchTableViewCell
-        if !notificationsEnabled && enabledCell.detailSwitch.on {
+    fileprivate func reflectSystemNotificationStatus() {
+        let enabledCell = tableView.cellForRow(at: NOTIFICATIONS_ENABLED_INDEX_PATH) as! LabelSwitchTableViewCell
+        if !notificationsEnabled && enabledCell.detailSwitch.isOn {
             enabledCell.detailSwitch.setOn(false, animated: true)
             toggleNotificationCells(false)
         }
@@ -212,24 +213,24 @@ class NotificationSettingsTableViewController: UITableViewController {
 
 // MARK: - SwitchCellDelegate
 extension NotificationSettingsTableViewController: SwitchCellDelegate {
-    func switchCell(cell: LabelSwitchTableViewCell, toggledSwitch uiSwitch: UISwitch) {
-        if let indexPath = tableView.indexPathForCell(cell) {
+    func switchCell(_ cell: LabelSwitchTableViewCell, toggledSwitch uiSwitch: UISwitch) {
+        if let indexPath = tableView.indexPath(for: cell) {
             switch indexPath {
             case NOTIFICATIONS_ENABLED_INDEX_PATH:
-                if uiSwitch.on {
+                if uiSwitch.isOn {
                     NotificationService.sharedInstance.enableNotifications(self)
                     if notificationsEnabled {
-                        toggleNotificationCells(uiSwitch.on)
+                        toggleNotificationCells(uiSwitch.isOn)
                     } else {
                         uiSwitch.setOn(false, animated: true)
                     }
                 } else {
                     NotificationService.sharedInstance.disableNotifications()
-                    toggleNotificationCells(uiSwitch.on)
+                    toggleNotificationCells(uiSwitch.isOn)
                 }
             case STRUCTURES_ONLY_INDEX_PATH:
-                NotificationService.sharedInstance.structuresOnly = uiSwitch.on
-                if uiSwitch.on {
+                NotificationService.sharedInstance.structuresOnly = uiSwitch.isOn
+                if uiSwitch.isOn {
                     for structure in structures {
                         if let levels = structure.levels {
                             for level in levels where level.name != "All Levels" {
@@ -238,10 +239,10 @@ extension NotificationSettingsTableViewController: SwitchCellDelegate {
                         }
                     }
                 }
-                toggleLevelCells(uiSwitch.on)
+                toggleLevelCells(uiSwitch.isOn)
             default:
                 let level = self.level(forIndexPath: indexPath)
-                if uiSwitch.on {
+                if uiSwitch.isOn {
                     NotificationService.sharedInstance.enableNotificationFor(level)
                 } else {
                     NotificationService.sharedInstance.disableNotificationFor(level)
@@ -256,5 +257,5 @@ extension NotificationSettingsTableViewController: SwitchCellDelegate {
 
 // MARK: - Protocol Declaration
 protocol SwitchCellDelegate: class {
-    func switchCell(cell: LabelSwitchTableViewCell, toggledSwitch uiSwitch: UISwitch)
+    func switchCell(_ cell: LabelSwitchTableViewCell, toggledSwitch uiSwitch: UISwitch)
 }

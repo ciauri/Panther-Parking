@@ -10,6 +10,19 @@ import UIKit
 import Charts
 import CoreData
 
+/*
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+*/
+
 class ChartViewController: UIViewController {
 
     @IBOutlet var lineChart: LineChartView!
@@ -20,7 +33,7 @@ class ChartViewController: UIViewController {
     @IBOutlet var yAxisLabel: UILabel!
     
     let daysWorthOfSeconds = 86400
-    let shouldDrawCumulativeLine = NSUserDefaults.standardUserDefaults().boolForKey("showCumulativeLine")
+    let shouldDrawCumulativeLine = UserDefaults.standard.bool(forKey: "showCumulativeLine")
 
     var structure: Structure!
     var levels: [Level]!
@@ -28,11 +41,11 @@ class ChartViewController: UIViewController {
     var numberOfDays: Int = 1
     var selectedLevels: [Level]!
     
-    lazy var today: NSDate = NSDate().dateFromTime(nil, minute: nil, second: 0)!
-    lazy var formatter: NSDateFormatter = {
-        let formatter = NSDateFormatter()
-        formatter.dateStyle = .NoStyle
-        formatter.timeStyle = .ShortStyle
+    lazy var today: Date = Date().dateFromTime(nil, minute: nil, second: 0)!
+    lazy var formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
         return formatter
     }()
 
@@ -43,13 +56,13 @@ class ChartViewController: UIViewController {
         
         if let levels = structure.levels {
             self.levels = Array(levels)
-            self.levels.sortInPlace({$0.0.name < $0.1.name})
+            self.levels.sort(by: {$0.0.name! < $0.1.name!})
             if !shouldDrawCumulativeLine {
                 // Because "All Levels" will always be first alphabetically... Yeah, yeah its bad, I know
                 self.levels.removeFirst()
             }
             selectedLevels = self.levels
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.updateLevels()
                 self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
             })
@@ -62,8 +75,8 @@ class ChartViewController: UIViewController {
     
 
     
-    private func rotateAxisLabel() {
-        yAxisLabel.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI/2))
+    fileprivate func rotateAxisLabel() {
+        yAxisLabel.transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI/2))
         yAxisLabel.layoutIfNeeded()
     }
     
@@ -73,36 +86,36 @@ class ChartViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func timeFrameSelected(selector: UISegmentedControl) {
+    @IBAction func timeFrameSelected(_ selector: UISegmentedControl) {
         lineChart.fitScreen()
         if selector.selectedSegmentIndex == 0 {
-            formatter.dateStyle = .NoStyle
+            formatter.dateStyle = .none
             numberOfDays = 1
         } else {
-            formatter.dateStyle = .ShortStyle
+            formatter.dateStyle = .short
             numberOfDays = 7
         }
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             self.updateLevels()
             self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
         })
     }
     
-    @IBAction func levelSelected(selector: UISegmentedControl) {
+    @IBAction func levelSelected(_ selector: UISegmentedControl) {
         if selector.selectedSegmentIndex == 0 {
             selectedLevels = levels
         } else {
             let index = shouldDrawCumulativeLine ? selector.selectedSegmentIndex : selector.selectedSegmentIndex-1
             selectedLevels = [levels[index]]
         }
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             self.updateLevels()
             self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
         })
     }
     
-    private func updateLevels(){
-        let pastDate = today.dateByAddingTimeInterval(-Double(daysWorthOfSeconds*(numberOfDays-1))).dateFromTime(0, minute: 0, second: 0)!
+    fileprivate func updateLevels(){
+        let pastDate = today.addingTimeInterval(-Double(daysWorthOfSeconds*(numberOfDays-1))).dateFromTime(0, minute: 0, second: 0)!
         var completedCalls = 0
         spinner.startAnimating()
         progress.progress = 0
@@ -112,11 +125,11 @@ class ChartViewController: UIViewController {
                 endDate: today,
                 completion: {_ in
                     completedCalls += 1
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         self.progress.setProgress(Float(completedCalls)/Float(self.selectedLevels.count), animated: true)
                     })
                     if completedCalls == self.selectedLevels.count {
-                        dispatch_async(dispatch_get_main_queue(), {
+                        DispatchQueue.main.async(execute: {
                             self.spinner.stopAnimating()
                             self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
                         })
@@ -127,51 +140,52 @@ class ChartViewController: UIViewController {
         })
     }
     
-    private func addLevelsToLevelSelector() {
+    fileprivate func addLevelsToLevelSelector() {
         levelSelector.removeAllSegments()
 //        guard let levels = structure.levels else {return}
         var levelNames = levels.map({$0.name!})
-        levelNames.sortInPlace()
+        levelNames.sort()
         
-        levelSelector.insertSegmentWithTitle("All", atIndex: 0, animated: false)
-        for (index, name) in levelNames.enumerate() {
+        levelSelector.insertSegment(withTitle: "All", at: 0, animated: false)
+        for (index, name) in levelNames.enumerated() {
             if name == "All Levels" {
-                levelSelector.removeSegmentAtIndex(0, animated: false)
-                levelSelector.insertSegmentWithTitle("All", atIndex: index, animated: false)
+                levelSelector.removeSegment(at: 0, animated: false)
+                levelSelector.insertSegment(withTitle: "All", at: index, animated: false)
             } else {
-                levelSelector.insertSegmentWithTitle(name, atIndex: index+1, animated: false)
+                levelSelector.insertSegment(withTitle: name, at: index+1, animated: false)
             }
         }
     }
     
-    private func dataSet(named levelName: String, withCounts counts: [Count], onTimeline timeline: [NSDate], withResolutionInMinutes resolution: Int) -> LineChartDataSet {
+    fileprivate func dataSet(named levelName: String, withCounts counts: [Count], onTimeline timeline: [Date], withResolutionInMinutes resolution: Int) -> LineChartDataSet {
         
         var yVals: [ChartDataEntry] = []
         
         for element in counts {
             let count = Double(element.availableSpaces!)
-            let index = element.updatedAt!.timeIntervalSinceDate(timeline.first!)/60
-            yVals.append(ChartDataEntry(x: index, y: count))
+//            let updatedAt = element.updatedAt!.dateFromTime(nil, minute: nil, second: 0)!
+            let index = element.updatedAt!.timeIntervalSince(timeline.first!)/60
+            yVals.append(ChartDataEntry(value: count, xIndex: Int(index)))
         }
 
         
         // Draws the line to the beginning and end of the visible chart
         if let first = yVals.first,
-            last = yVals.last {
+            let last = yVals.last {
             
-            if Int(last.x) < timeline.count-1 {
-                let count = last.y
-                let index = Double(timeline.count-1)
-                yVals.append(ChartDataEntry(x: index, y: count))
+            if last.xIndex < timeline.count-1 {
+                let count = last.value
+                let index = timeline.count-1
+                yVals.append(ChartDataEntry(value: count, xIndex: index))
             }
-            if first.x > 0 {
-                let count = first.y
-                let index = 0.0
-                yVals.insert(ChartDataEntry(x: index, y: count), atIndex: 0)
+            if first.xIndex > 0 {
+                let count = first.value
+                let index = 0
+                yVals.insert(ChartDataEntry(value: count, xIndex: Int(index)), at: 0)
             }
         }
 
-        let set = LineChartDataSet(values: yVals, label: levelName)
+        let set = LineChartDataSet(yVals: yVals, label: levelName)
         set.lineWidth = 3
         set.drawCirclesEnabled = false
         
@@ -179,13 +193,13 @@ class ChartViewController: UIViewController {
     }
     
     
-    func initChart(levels: [Level], withResolution minuteResolution: Int, numberOfDays days: Int){
+    func initChart(_ levels: [Level], withResolution minuteResolution: Int, numberOfDays days: Int){
         var colors =  ChartColorTemplates.colorful() + ChartColorTemplates.vordiplom()
         let days = days-1
-        let pastDate = today.dateByAddingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(0, minute: 0, second: 0)!
+        let pastDate = today.addingTimeInterval(-Double(daysWorthOfSeconds*days)).dateFromTime(0, minute: 0, second: 0)!
 
         var dataSets: [LineChartDataSet] = []
-        let timeIntervals = NSDate.datesInRange(pastDate, endDate: today, withInterval: 60)
+        let timeIntervals = Date.datesInRange(pastDate, endDate: today, withInterval: 60)
 
         for level in levels{
             let results = DataManager.sharedInstance.countsOn(level, since: pastDate)
@@ -200,34 +214,33 @@ class ChartViewController: UIViewController {
             } else {
                 set.colors = [colors.removeFirst()]
             }
-            set.mode = .Linear
-            set.fill = Fill(color: set.colors.first!)
+            set.mode = .linear
+            set.fill = ChartFill(color: set.colors.first!.cgColor)
+            set.valueFormatter?.zeroSymbol = ""
+            set.valueFormatter?.maximumSignificantDigits = 3
             set.drawFilledEnabled = true
             set.drawValuesEnabled = false
             dataSets.append(set)
         }
         
-        dataSets.sortInPlace({(set1, set2) in
-            set1.label < set2.label
+        dataSets.sort(by: {(set1, set2) in
+            set1.label! < set2.label!
         })
         
-        let stringStamps = timeIntervals.map({return formatter.stringFromDate($0).stringByReplacingOccurrencesOfString(",", withString: "\n")})
-        let valueFormatter = DateValueFormatter(withStringArray: stringStamps)
-        
-        lineChart.xAxis.valueFormatter = valueFormatter
-//        lineChart.xAxis.avoidFirstLastClippingEnabled = true
-//        lineChart.xAxis.labelRotationAngle = -45
-//        lineChart.xAxis.labelCount = 7
-        
+        let stringStamps = timeIntervals.map({return formatter.string(from: $0).replacingOccurrences(of:",", with: "\n")})
         lineChart.rightAxis.enabled = false
         lineChart.leftAxis.granularity = 1
-        lineChart.leftAxis.axisMinimum = 0
-        lineChart.leftAxis.labelPosition = .InsideChart
-        lineChart.legend.horizontalAlignment = .Center
-        lineChart.legend.verticalAlignment = .Top
-        lineChart.legend.orientation = .Horizontal
+        lineChart.leftAxis.axisMinValue = 0
+//        lineChart.leftAxis.drawLimitLinesBehindDataEnabled = true
+        lineChart.leftAxis.labelPosition = .insideChart
+        lineChart.legend.horizontalAlignment = .center
+        lineChart.legend.verticalAlignment = .top
+        lineChart.legend.orientation = .horizontal
+//        lineChart.xAxis.setLabelsToSkip(147*numberOfDays)
+        lineChart.xAxis.avoidFirstLastClippingEnabled = true
+//        lineChart.xAxis.axisLabelModulus = 60
         lineChart.descriptionText = ""
-        lineChart.data = LineChartData(dataSets: dataSets)
+        lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
     }
 
     
@@ -244,29 +257,4 @@ class ChartViewController: UIViewController {
 
 }
 
-class DateValueFormatter: NSObject, IAxisValueFormatter {
-    private var stringArray: [String]
-    
-    override private init() {
-        stringArray = []
-        super.init()
-    }
-    
-    init(withStringArray array: [String]) {
-        self.stringArray = array
-        super.init()
-    }
-    
-    func stringForValue(value: Double, axis: AxisBase?) -> String {
-        if value == 0 {
-            return ""
-        } else {
-            if value >= Double(stringArray.count-1) {
-                return ""
-            } else {
-                return stringArray[Int(value)]
-            }
-        }
-        
-    }
-}
+

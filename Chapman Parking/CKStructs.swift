@@ -33,7 +33,7 @@ struct CKLevel: CPLevel{
 struct CKCount: CPCount{
     var uuid: String
     var count: Int?
-    var timestamp: NSDate?
+    var timestamp: Date?
 }
 
 struct CKReport:CPReport{

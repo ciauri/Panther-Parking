@@ -21,13 +21,13 @@ class LabelSwitchTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
 
-    @IBAction func switchToggled(sender: UISwitch) {
+    @IBAction func switchToggled(_ sender: UISwitch) {
         delegate?.switchCell(self, toggledSwitch: detailSwitch)
     }
 }

@@ -16,7 +16,7 @@ extension Count {
 
     @NSManaged var uuid: String?
     @NSManaged var availableSpaces: NSNumber?
-    @NSManaged var updatedAt: NSDate?
+    @NSManaged var updatedAt: Date?
     @NSManaged var level: Level?
 
 }

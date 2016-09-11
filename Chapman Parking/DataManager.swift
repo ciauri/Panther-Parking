@@ -20,37 +20,37 @@ class DataManager{
     var autoRefreshEnabled: Bool = true{
         didSet{
             if autoRefreshEnabled && (refreshTimer == nil){
-                refreshTimer = NSTimer.scheduledTimerWithTimeInterval(self.autoRefreshInterval, target: self, selector: #selector(timerUpdateCounts), userInfo: nil, repeats: true)
+                refreshTimer = Timer.scheduledTimer(timeInterval: self.autoRefreshInterval, target: self, selector: #selector(timerUpdateCounts), userInfo: nil, repeats: true)
             }else if !autoRefreshEnabled{
                 refreshTimer?.invalidate()
             }
         }
     }
     
-    lazy var refreshTimer: NSTimer? = {
-        let timer = NSTimer.scheduledTimerWithTimeInterval(self.autoRefreshInterval, target: self, selector: #selector(timerUpdateCounts), userInfo: nil, repeats: true)
+    lazy var refreshTimer: Timer? = {
+        let timer = Timer.scheduledTimer(timeInterval: self.autoRefreshInterval, target: self, selector: #selector(timerUpdateCounts), userInfo: nil, repeats: true)
         
         return timer
     }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
     // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-    let modelURL = NSBundle.mainBundle().URLForResource("Chapman_Parking", withExtension: "momd")!
-    return NSManagedObjectModel(contentsOfURL: modelURL)!
+    let modelURL = Bundle.main.url(forResource: "Chapman_Parking", withExtension: "momd")!
+    return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
+        let url = self.applicationDocumentsDirectory.appendingPathComponent("SingleViewCoreData.sqlite")
         let failureReason = "There was an error creating or loading the application's saved data."
         do {
-            try persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: [NSInferMappingModelAutomaticallyOption: true, NSMigratePersistentStoresAutomaticallyOption: true])
+            try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: [NSInferMappingModelAutomaticallyOption: true, NSMigratePersistentStoresAutomaticallyOption: true])
             return persistentStoreCoordinator
         } catch {
             // Report any error we got.
             var dict = [String: AnyObject]()
-            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
-            dict[NSLocalizedFailureReasonErrorKey] = failureReason
+            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data" as AnyObject?
+            dict[NSLocalizedFailureReasonErrorKey] = failureReason as AnyObject?
             
             dict[NSUnderlyingErrorKey] = error as NSError
             let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
@@ -62,28 +62,28 @@ class DataManager{
     }()
 
     
-    lazy var applicationDocumentsDirectory: NSURL = {
+    lazy var applicationDocumentsDirectory: URL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.stephenciauri.Chapman_Parking" in the application's documents Application Support directory.
-        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1]
     }()
     
     lazy var managedObjectContext: NSManagedObjectContext = {
-        let managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         managedObjectContext.undoManager = nil
         managedObjectContext.persistentStoreCoordinator = self.persistentStoreCoordinator
-        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil, usingBlock: self.contextDidSaveNotificationHandler)
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.NSManagedObjectContextDidSave, object: nil, queue: nil, using: self.contextDidSaveNotificationHandler)
 
         return managedObjectContext
     }()
     
     
-    private func contextDidSaveNotificationHandler(notification: NSNotification){
+    fileprivate func contextDidSaveNotificationHandler(_ notification: Notification){
         let sender = notification.object as! NSManagedObjectContext
         if sender !== managedObjectContext {
-            managedObjectContext.performBlock {
-                self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
+            managedObjectContext.perform {
+                self.managedObjectContext.mergeChanges(fromContextDidSave: notification)
                 self.saveContext()
             }
         }
@@ -91,9 +91,9 @@ class DataManager{
     
     // Creates a new Core Data stack and returns a managed object context associated with a private queue.
     func createPrivateQueueContext() throws -> NSManagedObjectContext {
-        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         
-        context.performBlockAndWait() {
+        context.performAndWait() {
             context.persistentStoreCoordinator = self.persistentStoreCoordinator
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             context.undoManager = nil
@@ -104,7 +104,7 @@ class DataManager{
     
     // MARK: - Core Data Saving support
     
-    private func saveContext() {
+    fileprivate func saveContext() {
         
         if managedObjectContext.hasChanges {
             do {
@@ -122,19 +122,19 @@ class DataManager{
     
     
     enum ParkingObject{
-        case Structure
-        case Level
+        case structure
+        case level
     }
     
     
     // MARK: - Convenience methods
-    private func structureWith(uuid: String, moc: NSManagedObjectContext) -> Structure? {
-        let request = NSFetchRequest(entityName: "Structure")
+    fileprivate func structureWith(_ uuid: String, moc: NSManagedObjectContext) -> Structure? {
+        let request = NSFetchRequest<Structure>(entityName: "Structure")
         request.predicate = NSPredicate(format: "uuid == %@", uuid)
         var structure: Structure?
-        moc.performBlockAndWait({
+        moc.performAndWait({
             do{
-                structure = try moc.executeFetchRequest(request).first as? Structure
+                structure = try moc.fetch(request).first
             }catch{
                 fatalError("WAT")
             }
@@ -144,13 +144,13 @@ class DataManager{
         
     }
     
-    private func parkingStructureForName(name: String, moc: NSManagedObjectContext) -> Structure?{
-        let request = NSFetchRequest(entityName: "Structure")
+    fileprivate func parkingStructureForName(_ name: String, moc: NSManagedObjectContext) -> Structure?{
+        let request = NSFetchRequest<Structure>(entityName: "Structure")
         request.predicate = NSPredicate(format: "name == %@", name)
         var structure: Structure?
-        moc.performBlockAndWait({
+        moc.performAndWait({
             do{
-                structure = try moc.executeFetchRequest(request).first as? Structure
+                structure = try moc.fetch(request).first
             }catch{
                 fatalError("WAT")
             }
@@ -159,13 +159,13 @@ class DataManager{
         return structure
     }
     
-    private func levelWith(uuid: String, moc: NSManagedObjectContext) -> Level? {
-        let request = NSFetchRequest(entityName: "Level")
+    fileprivate func levelWith(_ uuid: String, moc: NSManagedObjectContext) -> Level? {
+        let request = NSFetchRequest<Level>(entityName: "Level")
         request.predicate = NSPredicate(format: "uuid == %@", uuid)
         var level: Level?
-        moc.performBlockAndWait({
+        moc.performAndWait({
             do{
-                level = try moc.executeFetchRequest(request).first as? Level
+                level = try moc.fetch(request).first
             }catch{
                 fatalError("WAT")
             }
@@ -174,13 +174,13 @@ class DataManager{
         return level
     }
     
-    private func levelInStructureWithName(structure: Structure, name: String, moc: NSManagedObjectContext) -> Level?{
-        let request = NSFetchRequest(entityName: "Level")
+    fileprivate func levelInStructureWithName(_ structure: Structure, name: String, moc: NSManagedObjectContext) -> Level?{
+        let request = NSFetchRequest<Level>(entityName: "Level")
         request.predicate = NSPredicate(format: "structure == %@ AND name == %@", structure, name)
         var level: Level?
-        moc.performBlockAndWait({
+        moc.performAndWait({
             do{
-                level = try moc.executeFetchRequest(request).first as? Level
+                level = try moc.fetch(request).first
             }catch{
                 fatalError("WAT")
             }
@@ -191,16 +191,16 @@ class DataManager{
     
     
     
-    func mostRecentCount(fromDate date: NSDate, onLevel level: Level, usingContext context: NSManagedObjectContext) -> Count? {
-        let request = NSFetchRequest(entityName: "Count")
+    func mostRecentCount(fromDate date: Date, onLevel level: Level, usingContext context: NSManagedObjectContext) -> Count? {
+        let request = NSFetchRequest<Count>(entityName: "Count")
         request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
-        request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt <= %@)", level, date)
+        request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt <= %@)", [level, date])
         request.fetchLimit = 1
         
         var count: Count?
-        context.performBlockAndWait({
+        context.performAndWait({
             do{
-                count = try (context.executeFetchRequest(request) as? [Count])?.first
+                count = try context.fetch(request).first
             } catch {
                 NSLog("error")
             }
@@ -209,17 +209,17 @@ class DataManager{
     }
     
     /// Fetches `Count` objects with UIMOC, returns chronologically sorted list
-    func countsOn(level: Level, since date: NSDate) -> [Count] {
+    func countsOn(_ level: Level, since date: Date) -> [Count] {
         let context = DataManager.sharedInstance.managedObjectContext
-        let request = NSFetchRequest(entityName: "Count")
+        let request = NSFetchRequest<Count>(entityName: "Count")
         let chronoSort = NSSortDescriptor(key: "updatedAt", ascending: true)
         request.sortDescriptors = [chronoSort]
-        request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt >= %@)", level, date)
+        request.predicate = NSPredicate(format: "(level == %@) AND (updatedAt >= %@)", level, date as CVarArg)
         
         var counts: [Count] = []
-        context.performBlockAndWait({
+        context.performAndWait({
             do{
-                counts = try context.executeFetchRequest(request) as! [Count]
+                counts = try context.fetch(request)
             } catch {
                 NSLog("error with fetch")
             }
@@ -230,11 +230,11 @@ class DataManager{
     
     func fetchAllStructures() -> [Structure] {
         let context = managedObjectContext
-        let request = NSFetchRequest(entityName: "Structure")
+        let request = NSFetchRequest<Structure>(entityName: "Structure")
         var structures: [Structure] = []
-        context.performBlockAndWait({
+        context.performAndWait({
             do {
-                structures = try context.executeFetchRequest(request) as? [Structure] ?? []
+                structures = try context.fetch(request)
             } catch {
                 NSLog("Fetch error")
             }
@@ -245,7 +245,7 @@ class DataManager{
     
     // MARK: - Object parsing from API
     
-    private func process(structure: CPStructure, withContext context: NSManagedObjectContext?) {
+    fileprivate func process(_ structure: CPStructure, withContext context: NSManagedObjectContext?) {
         var moc: NSManagedObjectContext
         if let context = context {
             moc = context
@@ -253,27 +253,27 @@ class DataManager{
             moc = try! createPrivateQueueContext()
         }
         
-        moc.performBlock({
+        moc.perform({
             var s: Structure
             if let structure = self.structureWith(structure.uuid, moc: moc) {
                 s = structure
             } else {
-                s = NSEntityDescription.insertNewObjectForEntityForName("Structure", inManagedObjectContext: moc) as! Structure
-                let loc = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: moc) as! Location
+                s = NSEntityDescription.insertNewObject(forEntityName: "Structure", into: moc) as! Structure
+                let loc = NSEntityDescription.insertNewObject(forEntityName: "Location", into: moc) as! Location
                 s.location = loc
                 s.uuid = structure.uuid
                 NSLog("New Structure")
             }
             
-            s.location?.lat = structure.lat
-            s.location?.long = structure.long
+            s.location?.lat = structure.lat as NSNumber?
+            s.location?.long = structure.long as NSNumber?
             s.name = structure.name
             
             try! moc.save()
         })
     }
     
-    private func process(level: CPLevel, inStructure structure: Structure, withContext context: NSManagedObjectContext?) {
+    fileprivate func process(_ level: CPLevel, inStructure structure: Structure, withContext context: NSManagedObjectContext?) {
         var moc: NSManagedObjectContext
         if let context = context {
             moc = context
@@ -281,25 +281,25 @@ class DataManager{
             moc = try! createPrivateQueueContext()
         }
         
-        moc.performBlock({
+        moc.perform({
             var l: Level
             if let level = self.levelWith(level.uuid, moc: moc){
                 l = level
             }else{
-                l = NSEntityDescription.insertNewObjectForEntityForName("Level", inManagedObjectContext: moc) as! Level
+                l = NSEntityDescription.insertNewObject(forEntityName: "Level", into: moc) as! Level
                 l.structure = structure
                 l.uuid = level.uuid
                 NSLog("New Level")
             }
             
             l.name = level.name
-            l.capacity = level.capacity
-            l.currentCount = level.currentCount
+            l.capacity = level.capacity as NSNumber?
+            l.currentCount = level.currentCount as NSNumber?
             try! moc.save()
         })
     }
     
-    private func process(counts: [CPCount], onLevel level: Level, withContext context: NSManagedObjectContext?, completion: ([Count] -> ())?){
+    fileprivate func process(_ counts: [CPCount], onLevel level: Level, withContext context: NSManagedObjectContext?, completion: (([Count]) -> ())?){
         var moc: NSManagedObjectContext
         if let context = context {
             moc = context
@@ -307,12 +307,12 @@ class DataManager{
             moc = try! createPrivateQueueContext()
         }
         var countArray: [Count] = []
-        moc.performBlock({
+        moc.perform({
             for count in counts{
-                let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: moc) as! Count
-                c.availableSpaces = count.count
+                let c = NSEntityDescription.insertNewObject(forEntityName: "Count", into: moc) as! Count
+                c.availableSpaces = count.count as NSNumber?
                 c.updatedAt = count.timestamp
-                c.level = moc.objectWithID(level.objectID) as? Level
+                c.level = moc.object(with: level.objectID) as? Level
                 c.uuid = count.uuid
                 countArray.append(c)
             }
@@ -321,7 +321,7 @@ class DataManager{
         })
     }
     
-    func update(level: Level, startDate start: NSDate?, endDate end: NSDate?, completion: ([Count] -> ())?){
+    func update(_ level: Level, startDate start: Date?, endDate end: Date?, completion: (([Count]) -> ())?){
         guard let uuid = level.uuid
             else {
                 NSLog("Level does not have a uuid... whoops")
@@ -348,15 +348,15 @@ class DataManager{
     
     func subscribeToAllLevels() {
         let backgroundContext = try! createPrivateQueueContext()
-        let request = NSFetchRequest(entityName: "Level")
+        let request = NSFetchRequest<Level>(entityName: "Level")
         
-        backgroundContext.performBlock({
+        backgroundContext.perform({
             do{
-                if let levels = try backgroundContext.executeFetchRequest(request) as? [Level] {
-                    for level in levels {
-                        NotificationService.sharedInstance.enableNotificationFor(level)
-                    }
+                let levels = try backgroundContext.fetch(request)
+                for level in levels {
+                    NotificationService.sharedInstance.enableNotificationFor(level)
                 }
+                
             } catch {
                 NSLog("Error fetching levels for subscription")
             }
@@ -365,14 +365,14 @@ class DataManager{
     
     func disableAllNotifications() {
         let backgroundContext = try! createPrivateQueueContext()
-        let request = NSFetchRequest(entityName: "Level")
-        backgroundContext.performBlock({
+        let request = NSFetchRequest<Level>(entityName: "Level")
+        backgroundContext.perform({
             do{
-                if let levels = try backgroundContext.executeFetchRequest(request) as? [Level] {
-                    for level in levels {
-                        level.notificationsEnabled = false
-                    }
+                let levels = try backgroundContext.fetch(request)
+                for level in levels {
+                    level.notificationsEnabled = false
                 }
+                
                 try backgroundContext.save()
             } catch {
                 NSLog("Error fetching levels for subscription")
@@ -380,20 +380,22 @@ class DataManager{
         })
     }
     
-    func update(notificationsEnabled enabled: Bool, forUUIDs uuids: [String], withCompletion completion: ()->()) {
+    func update(notificationsEnabled enabled: Bool, forUUIDs uuids: [String], withCompletion completion: @escaping ()->()) {
         let backgroundContext = try? createPrivateQueueContext()
-        backgroundContext?.performBlock({
-            let request = NSFetchRequest(entityName: "Level")
+        backgroundContext?.perform({
+            let request = NSFetchRequest<Level>(entityName: "Level")
             
             // Enable notifications for objects in uuids
             request.predicate = NSPredicate(format: "uuid IN %@", uuids)
-            if let levels = try? backgroundContext?.executeFetchRequest(request) as? [Level] {
+            if let levels = try? backgroundContext?.fetch(request){
                 levels?.forEach({ $0.notificationsEnabled = true })
             }
             
+            
+            
             // Disable notifications for the rest
             request.predicate = NSPredicate(format: "NOT (uuid IN %@)", uuids)
-            if let levels = try? backgroundContext?.executeFetchRequest(request) as? [Level] {
+            if let levels = try? backgroundContext?.fetch(request){
                 levels?.forEach({ $0.notificationsEnabled = false })
             }
             
@@ -404,32 +406,32 @@ class DataManager{
     
     func update(notificationsEnabled enabled: Bool, forLevel level: Level) {
         let backgroundContext = try? createPrivateQueueContext()
-        backgroundContext?.performBlock({
-            let level = backgroundContext?.objectWithID(level.objectID) as! Level
-            level.notificationsEnabled = enabled
+        backgroundContext?.perform({
+            let level = backgroundContext?.object(with: level.objectID) as! Level
+            level.notificationsEnabled = enabled as NSNumber?
             _ = try? backgroundContext?.save()
         })
     }
 
     // MARK: - Heartbeat
     @objc
-    private func timerUpdateCounts(){
-        updateCounts(.SinceLast)
+    fileprivate func timerUpdateCounts(){
+        updateCounts(.sinceLast)
     }
 
     /// TODO: Re-implement using above new functions
-    func updateCounts(updateType: UpdateType, withCompletion completion: (Bool -> ())? = nil){
+    func updateCounts(_ updateType: UpdateType, withCompletion completion: ((Bool) -> ())? = nil){
         let backgroundContext = try! createPrivateQueueContext()
-        var sinceDate: NSDate? = nil
+        var sinceDate: Date? = nil
         
-        if updateType == .SinceLast{
-            let request = NSFetchRequest(entityName: "Count")
+        if updateType == .sinceLast{
+            let request = NSFetchRequest<Count>(entityName: "Count")
             request.fetchLimit = 1
             let dateSort = NSSortDescriptor(key: "updatedAt", ascending: false)
             request.sortDescriptors = [dateSort]
             
-            backgroundContext.performBlockAndWait({
-                if let date = try? (backgroundContext.executeFetchRequest(request).first as? Count)?.updatedAt {
+            backgroundContext.performAndWait({
+                if let date = try? backgroundContext.fetch(request).first?.updatedAt {
                     sinceDate = date
                     NSLog("Getting counts since \(sinceDate)")
                 } else {
@@ -449,17 +451,17 @@ class DataManager{
                     return
             }
             
-            backgroundContext.performBlock({
+            backgroundContext.perform({
                 for structure in report.structures{
                     var s: Structure
                     
                     if let structure = self.structureWith(structure.uuid, moc: backgroundContext){
                         s = structure
                     }else{
-                        s = NSEntityDescription.insertNewObjectForEntityForName("Structure", inManagedObjectContext: backgroundContext) as! Structure
-                        let loc = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: backgroundContext) as! Location
-                        loc.lat = structure.lat
-                        loc.long = structure.long
+                        s = NSEntityDescription.insertNewObject(forEntityName: "Structure", into: backgroundContext) as! Structure
+                        let loc = NSEntityDescription.insertNewObject(forEntityName: "Location", into: backgroundContext) as! Location
+                        loc.lat = structure.lat as NSNumber?
+                        loc.long = structure.long as NSNumber?
                         
                         s.location = loc
                         s.uuid = structure.uuid
@@ -475,26 +477,26 @@ class DataManager{
                         if let level = self.levelWith(level.uuid, moc: backgroundContext){
                             l = level
                         }else{
-                            l = NSEntityDescription.insertNewObjectForEntityForName("Level", inManagedObjectContext: backgroundContext) as! Level
+                            l = NSEntityDescription.insertNewObject(forEntityName: "Level", into: backgroundContext) as! Level
                             l.structure = s
                             l.uuid = level.uuid
                             NSLog("New Level")
                         }
                         
                         l.name = level.name
-                        l.capacity = level.capacity
-                        l.currentCount = level.currentCount
+                        l.capacity = level.capacity as NSNumber?
+                        l.currentCount = level.currentCount as NSNumber?
                         
                         var latestCount: CPCount? = nil
                         
                         for count in level.counts{
                             
-                            if latestCount == nil || latestCount?.timestamp?.compare(count.timestamp!) == NSComparisonResult.OrderedAscending{
+                            if latestCount == nil || latestCount?.timestamp?.compare(count.timestamp!) == ComparisonResult.orderedAscending{
                                 latestCount = count
                             }
                             
-                            let c = NSEntityDescription.insertNewObjectForEntityForName("Count", inManagedObjectContext: backgroundContext) as! Count
-                            c.availableSpaces = count.count
+                            let c = NSEntityDescription.insertNewObject(forEntityName: "Count", into: backgroundContext) as! Count
+                            c.availableSpaces = count.count as NSNumber?
                             c.updatedAt = count.timestamp
                             c.level = l
                             c.uuid = count.uuid

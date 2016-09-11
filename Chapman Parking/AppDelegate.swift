@@ -16,25 +16,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         let api: ParkingAPI = CloudKitAPI.sharedInstance
         DataManager.sharedInstance.api = api
         NotificationService.sharedInstance.api = api
 
-        if !defaults.boolForKey("initialized"){
-            DataManager.sharedInstance.updateCounts(.All) { success in
+        if !defaults.bool(forKey: "initialized"){
+            DataManager.sharedInstance.updateCounts(.all) { success in
                 if success {
-                    defaults.setBool(true, forKey: "initialized")
+                    defaults.set(true, forKey: "initialized")
                 } else {
                     NSLog("error updating counts")
                 }
             }
             NSLog("Initializing Data")
         }else{
-            DataManager.sharedInstance.updateCounts(UpdateType.SinceLast, withCompletion: nil)
+            DataManager.sharedInstance.updateCounts(UpdateType.sinceLast, withCompletion: nil)
             NSLog("Catching up")
         }
         
@@ -48,10 +48,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 
         
-        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().barTintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-        UINavigationBar.appearance().barStyle = UIBarStyle.Black
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.white]
+        UINavigationBar.appearance().barStyle = UIBarStyle.black
         UISegmentedControl.appearance().tintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
 
 
@@ -60,18 +60,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        NSLog("Failed to register for notifications: \(error.debugDescription)")
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        NSLog("Failed to register for notifications: \(error.localizedDescription)")
         NotificationService.sharedInstance.notificationsEnabled = false
     }
     
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         NSLog("Successfully registered for push notifications")
 //        NotificationService.notificationsEnabled = true
 
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         NSLog("Received remote notification")
         
         /**
@@ -88,31 +88,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        if NSUserDefaults.standardUserDefaults().boolForKey("initialized"){
-            DataManager.sharedInstance.updateCounts(UpdateType.SinceLast)
+        if UserDefaults.standard.bool(forKey: "initialized"){
+            DataManager.sharedInstance.updateCounts(UpdateType.sinceLast)
             NSLog("Catching up")
         }
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         
         
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
 //        self.saveContext()

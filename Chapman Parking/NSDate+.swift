@@ -8,32 +8,32 @@
 
 import Foundation
 
-public extension NSDate {
-    public class func ISOStringFromDate(date: NSDate) -> String {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+public extension Date {
+    public static func ISOStringFromDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
         
-        return dateFormatter.stringFromDate(date)
+        return dateFormatter.string(from: date)
     }
     
-    public class func dateFromISOString(string: String) -> NSDate {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+    public static func dateFromISOString(_ string: String) -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         
-        return dateFormatter.dateFromString(string)!
+        return dateFormatter.date(from: string)!
     }
     
     /// Returns a choronological list of NSDates within the desired range with interval in seconds
-    class func datesInRange(startDate: NSDate, endDate:NSDate, withInterval seconds: Double) -> [NSDate]{
-        var secondsBetween = endDate.timeIntervalSinceDate(startDate)
-        var dates: [NSDate] = []
+    static func datesInRange(_ startDate: Date, endDate:Date, withInterval seconds: Double) -> [Date]{
+        var secondsBetween = endDate.timeIntervalSince(startDate)
+        var dates: [Date] = []
         
         while(secondsBetween > 0){
-            dates.insert(startDate.dateByAddingTimeInterval(secondsBetween), atIndex: 0)
+            dates.insert(startDate.addingTimeInterval(secondsBetween), at: 0)
             secondsBetween -= seconds
         }
         
@@ -41,18 +41,18 @@ public extension NSDate {
     }
     
     /// Returns the localized first day of the week of the desired date
-    class func firstDayOfWeekWithDate(date: NSDate)->NSDate{
-        var beginningOfWeek: NSDate?
-        let calendar = NSCalendar.currentCalendar()
-        calendar.rangeOfUnit(.WeekOfYear, startDate: &beginningOfWeek, interval: nil, forDate: date)
+    static func firstDayOfWeekWithDate(_ date: Date)->Date{
+        var beginningOfWeek: NSDate? = date as NSDate?
+        let calendar = Calendar.current
+        (calendar as NSCalendar).range(of: .weekOfYear, start: &beginningOfWeek, interval: nil, for: date)
         
-        return beginningOfWeek!
+        return beginningOfWeek! as Date
     }
     
-    func dateFromTime(hour: Int?, minute: Int?, second: Int?) -> NSDate? {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Hour,.Minute,.Second], fromDate: self)
+    func dateFromTime(_ hour: Int?, minute: Int?, second: Int?) -> Date? {
+        let calendar = Calendar.current
+        let components = (calendar as NSCalendar).components([.hour,.minute,.second], from: self)
         
-        return calendar.dateBySettingHour(hour ?? components.hour, minute: minute ?? components.minute, second: second ?? components.second, ofDate: self, options: .MatchFirst)
+        return (calendar as NSCalendar).date(bySettingHour: hour ?? components.hour!, minute: minute ?? components.minute!, second: second ?? components.second!, of: self, options: .matchFirst)
     }
 }

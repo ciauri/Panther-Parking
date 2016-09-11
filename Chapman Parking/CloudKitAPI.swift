@@ -13,11 +13,11 @@ import UIKit
 class CloudKitAPI: ParkingAPI{
     static let sharedInstance = CloudKitAPI() as ParkingAPI
     
-    private var container: CKContainer
-    private var publicDB: CKDatabase
-    private var privateDB: CKDatabase
-    lazy private var subscriptionDictionary: [String : String] = self.initSubscriptionDict()
-    private let subscriptionQueue = dispatch_queue_create("Subscriptions-Queue", DISPATCH_QUEUE_SERIAL)
+    fileprivate var container: CKContainer
+    fileprivate var publicDB: CKDatabase
+    fileprivate var privateDB: CKDatabase
+    lazy fileprivate var subscriptionDictionary: [String : String] = self.initSubscriptionDict()
+    fileprivate let subscriptionQueue = DispatchQueue(label: "Subscriptions-Queue", attributes: [])
     
     var presenting: Bool = false
     
@@ -30,39 +30,39 @@ class CloudKitAPI: ParkingAPI{
     
     // MARK: - CloudKit Account Status
     
-    private func displayDevelopmentCloudKitAlert() {
+    fileprivate func displayDevelopmentCloudKitAlert() {
         if !presenting {
             presenting = true
-            let alertController = UIAlertController(title: "iCloud Required for Development Device", message: "Please login to your iCloud account to continue. If you are not on a development build and you believe you are reaching this screen in error, please email thecatalyticmind@gmail.com with details.", preferredStyle: .Alert)
-            let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (_) -> Void in
-                UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
+            let alertController = UIAlertController(title: "iCloud Required for Development Device", message: "Please login to your iCloud account to continue. If you are not on a development build and you believe you are reaching this screen in error, please email thecatalyticmind@gmail.com with details.", preferredStyle: .alert)
+            let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+                UIApplication.shared.openURL(URL(string:"prefs:root=CASTLE")!)
             }
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
             alertController.addAction(settingsAction)
             alertController.addAction(cancelAction)
-            dispatch_async(dispatch_get_main_queue(), {
-                UIApplication.sharedApplication().delegate?.window!?.rootViewController?.presentViewController(alertController, animated: true, completion: {_ in self.presenting = false})
+            DispatchQueue.main.async(execute: {
+                UIApplication.shared.delegate?.window!?.rootViewController?.present(alertController, animated: true, completion: {_ in self.presenting = false})
             })
         }
     }
     
     
     /// Use this later when we want to make writes to CloudKit
-    private func loginHandler(status: CKAccountStatus, error: NSError?){
+    fileprivate func loginHandler(_ status: CKAccountStatus, error: NSError?){
         guard error == nil else{
             NSLog("error getting account status?")
             return
         }
         switch status{
-        case .Available:
+        case .available:
             NSLog("logged in")
-        case .CouldNotDetermine:
+        case .couldNotDetermine:
             NSLog("cant determine")
             fallthrough
-        case .NoAccount:
+        case .noAccount:
             NSLog("no account")
             fallthrough
-        case .Restricted:
+        case .restricted:
             NSLog("ur a kid lol")
             fallthrough
         default:
@@ -80,19 +80,19 @@ class CloudKitAPI: ParkingAPI{
     
     
     func saveSubscriptions() {
-        let subscriptionData = NSKeyedArchiver.archivedDataWithRootObject(subscriptionDictionary)
-        NSUserDefaults.standardUserDefaults().setObject(subscriptionData, forKey: "subscriptions")
+        let subscriptionData = NSKeyedArchiver.archivedData(withRootObject: subscriptionDictionary)
+        UserDefaults.standard.set(subscriptionData, forKey: "subscriptions")
     }
     
-    func unsubscribeFromAll(completion: () -> ()) {
+    func unsubscribeFromAll(_ completion: @escaping () -> ()) {
         var completed = 0
         let totalSubscriptions = subscriptionDictionary.count
         if totalSubscriptions > 0 {
             for (key, subscriptionID) in subscriptionDictionary {
-                privateDB.deleteSubscriptionWithID(subscriptionID,
+                privateDB.delete(withSubscriptionID: subscriptionID,
                                                    completionHandler: {(string, error) in
                                                     if let error = error {
-                                                        NSLog(error.debugDescription)
+                                                        NSLog(error.localizedDescription)
                                                     } else if let string = string{
                                                         NSLog("Successfully unsubscribed from \(string)")
                                                         self.remove(subscriptionWithKey: key)
@@ -111,34 +111,34 @@ class CloudKitAPI: ParkingAPI{
         
     }
     
-    func fetchSubscriptions(completion: (uuids: [String]) -> ()) {
+    func fetchSubscriptions(_ completion: @escaping (_ uuids: [String]) -> ()) {
         var subscribedUUIDs: [String] = []
-        publicDB.fetchAllSubscriptionsWithCompletionHandler() { (subscriptions, error) in
+        publicDB.fetchAllSubscriptions() { (subscriptions, error) in
             if let subscriptions = subscriptions {
                 for subscription in subscriptions {
                     // Super duper hacky way to rebuild my subscriptionKey...
                     if let predicate = subscription.predicate?.predicateFormat,
-                        uuidRange = predicate.rangeOfString("(?<=; )(.*?)(?=:)", options: .RegularExpressionSearch),
-                        predicateRange = predicate.rangeOfString("(?<=)(.*?)(?= AND)", options: .RegularExpressionSearch){
-                        let uuid = predicate.substringWithRange(uuidRange)
-                        let predicateString = predicate.substringWithRange(predicateRange)
+                        let uuidRange = predicate.range(of: "(?<=; )(.*?)(?=:)", options: .regularExpression),
+                        let predicateRange = predicate.range(of: "(?<=)(.*?)(?= AND)", options: .regularExpression){
+                        let uuid = predicate.substring(with: uuidRange)
+                        let predicateString = predicate.substring(with: predicateRange)
                         let type = RemoteAction(rawValue: Int(subscription.subscriptionOptions.rawValue))!.description
                         self.insert(uuid+predicateString+type, subscriptionID: subscription.subscriptionID)
                         subscribedUUIDs.append(uuid)
                     }
                 }
             }
-            completion(uuids: subscribedUUIDs)
+            completion(subscribedUUIDs)
         }
     }
     
     
-    func forceUnsubscribeFromAll(completion: () -> ()) {
-        publicDB.fetchAllSubscriptionsWithCompletionHandler() {(subscriptions, error) in
-            if let subscriptions = subscriptions where !subscriptions.isEmpty {
+    func forceUnsubscribeFromAll(_ completion: @escaping () -> ()) {
+        publicDB.fetchAllSubscriptions() {(subscriptions, error) in
+            if let subscriptions = subscriptions , !subscriptions.isEmpty {
                 var completed = 0
                 subscriptions.forEach(){
-                    self.publicDB.deleteSubscriptionWithID($0.subscriptionID,
+                    self.publicDB.delete(withSubscriptionID: $0.subscriptionID,
                         completionHandler: { (string, error) in
                             NSLog("Successfully unsubscribed from subscription with ID: \(string)")
                             completed += 1
@@ -150,7 +150,7 @@ class CloudKitAPI: ParkingAPI{
                     })
                 }
             } else if let error = error {
-                NSLog(error.debugDescription)
+                NSLog(error.localizedDescription)
             } else {
                 NSLog("Nothing to unsubscribe from")
                 self.subscriptionDictionary = [:]
@@ -159,7 +159,7 @@ class CloudKitAPI: ParkingAPI{
         }
     }
     
-    func subscribeTo(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: (Bool)->()) {
+    func subscribeTo(_ entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: @escaping (Bool)->()) {
         
         let subscription = subscriptionFor(entity, withUUID: uuid, predicate: predicate, onActions: action)
         var subscriptionKey: String
@@ -179,15 +179,15 @@ class CloudKitAPI: ParkingAPI{
             NSLog("Successfully subscribed to \(subscriptionKey)")
             completion(true)
         }
-        publicDB.saveSubscription(subscription,
+        publicDB.save(subscription,
                                    completionHandler: {(subscription, error) in
                                     if let error = error {
-                                        if error.description.containsString("duplicate") {
+                                        if error.localizedDescription.contains("duplicate") {
                                             NSLog("Catching duplicate")
-                                            let subscriptionID = error.description.componentsSeparatedByString("'")[1]
+                                            let subscriptionID = error.localizedDescription.components(separatedBy: "'")[1]
                                             successBlock(subscriptionID)
                                         } else {
-                                            NSLog(error.debugDescription)
+                                            NSLog(error.localizedDescription)
                                             completion(false)
                                         }
                                     }
@@ -199,7 +199,7 @@ class CloudKitAPI: ParkingAPI{
         
     }
     
-    func unsubscribeFrom(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: (Bool)->()) {
+    func unsubscribeFrom(_ entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: @escaping (Bool)->()) {
         var subscriptionKey: String
         if let uuid = uuid {
             subscriptionKey = subscriptionKeyFor(uuid, predicate: predicate, action: action)
@@ -216,9 +216,9 @@ class CloudKitAPI: ParkingAPI{
         
     }
     
-    private func initSubscriptionDict() -> [String : String] {
-        if let subscriptionData = NSUserDefaults.standardUserDefaults().objectForKey("subscriptions") as? NSData,
-            subscriptions = NSKeyedUnarchiver.unarchiveObjectWithData(subscriptionData) as? [String : String] {
+    fileprivate func initSubscriptionDict() -> [String : String] {
+        if let subscriptionData = UserDefaults.standard.object(forKey: "subscriptions") as? Data,
+            let subscriptions = NSKeyedUnarchiver.unarchiveObject(with: subscriptionData) as? [String : String] {
             return subscriptions
         } else {
             return [:]
@@ -226,17 +226,17 @@ class CloudKitAPI: ParkingAPI{
     }
 
     
-    private func subscriptionFor(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction) -> CKSubscription {
+    fileprivate func subscriptionFor(_ entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction) -> CKSubscription {
         var ckAction: CKSubscriptionOptions
         switch action {
-        case .Add:
-            ckAction = .FiresOnRecordCreation
-        case .Update:
-            ckAction = .FiresOnRecordUpdate
-        case .Delete:
-            ckAction = .FiresOnRecordDeletion
-        case .Once:
-            ckAction = .FiresOnce
+        case .add:
+            ckAction = .firesOnRecordCreation
+        case .update:
+            ckAction = .firesOnRecordUpdate
+        case .delete:
+            ckAction = .firesOnRecordDeletion
+        case .once:
+            ckAction = .firesOnce
         }
         
         var predicates = [predicate]
@@ -250,20 +250,20 @@ class CloudKitAPI: ParkingAPI{
                                           options: ckAction)
     }
     
-    private func subscriptionKeyFor(uuid: String, predicate: NSPredicate, action: RemoteAction) -> String {
+    fileprivate func subscriptionKeyFor(_ uuid: String, predicate: NSPredicate, action: RemoteAction) -> String {
         return uuid + predicate.description + action.description
     }
     
-    private func subscriptionKeyFor(entity: ParkingEntity, predicate: NSPredicate, action: RemoteAction) -> String {
+    fileprivate func subscriptionKeyFor(_ entity: ParkingEntity, predicate: NSPredicate, action: RemoteAction) -> String {
         return entity.cloudKitName + predicate.description + action.description
     }
     
 
     
     
-    private func unsubscribeFrom(subscriptionWithKey key: String, completion: (Bool)->()) {
+    fileprivate func unsubscribeFrom(subscriptionWithKey key: String, completion: @escaping (Bool)->()) {
         if let subscriptionID = subscriptionID(withKey: key) {
-            publicDB.deleteSubscriptionWithID(subscriptionID,
+            publicDB.delete(withSubscriptionID: subscriptionID,
                                               completionHandler: {(string, error) in
                                                 if error != nil {
                                                     NSLog(error.debugDescription)
@@ -277,31 +277,31 @@ class CloudKitAPI: ParkingAPI{
         }
     }
     
-    private func subscribedTo(subscriptionWithKey key: String)-> Bool {
+    fileprivate func subscribedTo(subscriptionWithKey key: String)-> Bool {
         var contains: Bool = false
-        dispatch_sync(subscriptionQueue){
+        subscriptionQueue.sync{
             contains = self.subscriptionDictionary[key] != nil
         }
         return contains
     }
     
-    private func subscriptionID(withKey key: String) -> String? {
+    fileprivate func subscriptionID(withKey key: String) -> String? {
         var subscription: String?
-        dispatch_sync(subscriptionQueue){
+        subscriptionQueue.sync{
             subscription = self.subscriptionDictionary[key]
         }
         return subscription
     }
     
-    private func insert(key: String, subscriptionID: String) {
-        dispatch_async(subscriptionQueue){
+    fileprivate func insert(_ key: String, subscriptionID: String) {
+        subscriptionQueue.async{
             self.subscriptionDictionary[key] = subscriptionID
             self.saveSubscriptions()
         }
     }
     
-    private func remove(subscriptionWithKey key: String) {
-        dispatch_async(subscriptionQueue){
+    fileprivate func remove(subscriptionWithKey key: String) {
+        subscriptionQueue.async{
             self.subscriptionDictionary[key] = nil
             self.saveSubscriptions()
         }
@@ -309,7 +309,7 @@ class CloudKitAPI: ParkingAPI{
     
     // MARK: - Data Source
     
-    func executeQueryOperation(queryOperation: CKQueryOperation, withCounts counts: [CKCount] = [], completion :(([CKCount]) -> Void)){
+    func executeQueryOperation(_ queryOperation: CKQueryOperation, withCounts counts: [CKCount] = [], completion :@escaping (([CKCount]) -> Void)){
         
         // Assign a record process handler
         var counts = counts
@@ -319,7 +319,7 @@ class CloudKitAPI: ParkingAPI{
         }
         
         // Assign a completion handler
-        queryOperation.queryCompletionBlock = { (cursor: CKQueryCursor?, error: NSError?) -> Void in
+        queryOperation.queryCompletionBlock = { (cursor: CKQueryCursor?, error: Error?) -> Void in
             guard error==nil else {
                 // Handle the error
                 NSLog("QO error")
@@ -333,11 +333,11 @@ class CloudKitAPI: ParkingAPI{
             }
         }
         
-        publicDB.addOperation(queryOperation)
+        publicDB.add(queryOperation)
     }
     
     /// If no dates are provided, only the most recent counts are fetched
-    func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: NSDate? = nil, ending endDate: NSDate? = nil, completion: ([CKCount]?, NSError?) -> ()) {
+    func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: Date? = nil, ending endDate: Date? = nil, completion: @escaping ([CKCount]?, NSError?) -> ()) {
         
         var resultLimit: Int?
         var datePredicates: [NSPredicate] = []
@@ -345,15 +345,15 @@ class CloudKitAPI: ParkingAPI{
             resultLimit = 1
         } else {
             if let startDate = startDate {
-                datePredicates.append(NSPredicate(format: "UpdatedAt > %@", startDate))
+                datePredicates.append(NSPredicate(format: "UpdatedAt > %@", startDate as CVarArg))
             }
             if let endDate = endDate {
-                datePredicates.append(NSPredicate(format: "UpdatedAt < %@", endDate))
+                datePredicates.append(NSPredicate(format: "UpdatedAt < %@", endDate as CVarArg))
                 
             }
         }
         let id = CKRecordID(recordName: uuid)
-        let ref = CKReference(recordID: id, action: .None)
+        let ref = CKReference(recordID: id, action: .none)
         let levelPredicate = NSPredicate(format: "Level == %@", ref)
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: datePredicates + [levelPredicate])
         let spotQuery = CKQuery(recordType: "ParkingSpotCount", predicate: predicate)
@@ -364,7 +364,7 @@ class CloudKitAPI: ParkingAPI{
         // If there is a result limit, handle the results and query directly
         if let resultLimit = resultLimit {
             spotQueryOperation.resultsLimit = resultLimit
-            spotQueryOperation.qualityOfService = .UserInitiated
+            spotQueryOperation.qualityOfService = .userInitiated
             spotQueryOperation.recordFetchedBlock = { record in
                 completion([self.processCount(withRecord: record)], nil)
             }
@@ -373,7 +373,7 @@ class CloudKitAPI: ParkingAPI{
                     print("\(error)")
                 }
             }
-            publicDB.addOperation(spotQueryOperation)
+            publicDB.add(spotQueryOperation)
         } else {
             self.executeQueryOperation(spotQueryOperation, completion: { counts in
                 completion(counts, nil)
@@ -390,7 +390,7 @@ class CloudKitAPI: ParkingAPI{
     
     
     
-    func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock completion: (CPReport? -> Void)) {
+    func generateReport(_ updateType: UpdateType, sinceDate: Date?, withBlock completion: @escaping ((CPReport?) -> Void)) {
         //        container.accountStatusWithCompletionHandler(loginHandler)
         
         fetchParkingStructures({ structures, error in
@@ -448,20 +448,20 @@ class CloudKitAPI: ParkingAPI{
     }
 
     
-    private func processCount(withRecord record: CKRecord)->CKCount{
+    fileprivate func processCount(withRecord record: CKRecord)->CKCount{
         let ckID = record.recordID.recordName
-        let numSpaces = record.objectForKey("NumberOfSpaces") as! Int
-        let timestamp = record.objectForKey("UpdatedAt") as! NSDate
+        let numSpaces = record.object(forKey: "NumberOfSpaces") as! Int
+        let timestamp = record.object(forKey: "UpdatedAt") as! Date
         return CKCount(uuid: ckID, count: numSpaces, timestamp: timestamp)
     }
     
-    private func fetchParkingStructures(completion: ([CKStructure]?, NSError?) -> ()) {
+    fileprivate func fetchParkingStructures(_ completion: @escaping ([CKStructure]?, NSError?) -> ()) {
         let query = CKQuery(recordType: "ParkingStructure", predicate: NSPredicate(value: true))
-        publicDB.performQuery(query,
-                              inZoneWithID: nil,
+        publicDB.perform(query,
+                              inZoneWith: nil,
                               completionHandler: { records, error in
                                 if let e = error {
-                                    completion(nil, e)
+                                    completion(nil, e as NSError?)
                                     return
                                 } else if let records = records {
                                     completion(self.parseParkingStructures(records), nil)
@@ -471,12 +471,12 @@ class CloudKitAPI: ParkingAPI{
         })
     }
     
-    private func parseParkingStructures(records: [CKRecord]) -> [CKStructure] {
+    fileprivate func parseParkingStructures(_ records: [CKRecord]) -> [CKStructure] {
         var structures: [CKStructure] = []
         for record in records {
             guard let
-                name = record.objectForKey("Name") as? String,
-                location = record.objectForKey("Location") as? CLLocation
+                name = record.object(forKey: "Name") as? String,
+                let location = record.object(forKey: "Location") as? CLLocation
                 else{
                     NSLog("Cant parse structure. Model issue")
                     return []
@@ -492,16 +492,16 @@ class CloudKitAPI: ParkingAPI{
     }
     
     
-    private func fetchLevels(fromStructureWithUUID uuid: String, withCompletion completion: ([CKLevel]?, NSError?) -> ()) {
+    fileprivate func fetchLevels(fromStructureWithUUID uuid: String, withCompletion completion: @escaping ([CKLevel]?, NSError?) -> ()) {
         let id = CKRecordID(recordName: uuid)
-        let ref = CKReference(recordID: id, action: .None)
+        let ref = CKReference(recordID: id, action: .none)
         let levelQuery = CKQuery(recordType: "ParkingLevel", predicate: NSPredicate(format: "Structure == %@", ref))
         
-        publicDB.performQuery(levelQuery,
-                              inZoneWithID: nil,
+        publicDB.perform(levelQuery,
+                              inZoneWith: nil,
                               completionHandler: { records, error in
                                 if let e = error {
-                                    completion(nil, e)
+                                    completion(nil, e as NSError?)
                                     return
                                 } else if let records = records {
                                     completion(self.parseLevels(records), nil)
@@ -511,13 +511,13 @@ class CloudKitAPI: ParkingAPI{
         })
     }
     
-    private func parseLevels(records: [CKRecord]) -> [CKLevel] {
+    fileprivate func parseLevels(_ records: [CKRecord]) -> [CKLevel] {
         var levels: [CKLevel] = []
         for level in records {
             guard let
-                levelName = level.objectForKey("Name") as? String,
-                levelCap = level.objectForKey("Capacity") as? Int,
-                levelCount = level.objectForKey("CurrentCount") as? Int
+                levelName = level.object(forKey: "Name") as? String,
+                let levelCap = level.object(forKey: "Capacity") as? Int,
+                let levelCount = level.object(forKey: "CurrentCount") as? Int
                 else{
                     NSLog("Error parsing levels. Model issue")
                     return []

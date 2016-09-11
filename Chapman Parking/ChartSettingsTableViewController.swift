@@ -12,8 +12,8 @@ class ChartSettingsTableViewController: UITableViewController {
     
     @IBOutlet weak var allLinesSwitch: UISwitch! {
         didSet {
-            let defaults = NSUserDefaults.standardUserDefaults()
-            allLinesSwitch.setOn(defaults.boolForKey(Constants.DefaultsKeys.cumulativeLine), animated: false)
+            let defaults = UserDefaults.standard
+            allLinesSwitch.setOn(defaults.bool(forKey: Constants.DefaultsKeys.cumulativeLine), animated: false)
         }
     }
 
@@ -27,9 +27,9 @@ class ChartSettingsTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
-    @IBAction func allLevelsSwitchToggled(sender: UISwitch) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setBool(sender.on, forKey: Constants.DefaultsKeys.cumulativeLine)
+    @IBAction func allLevelsSwitchToggled(_ sender: UISwitch) {
+        let defaults = UserDefaults.standard
+        defaults.set(sender.isOn, forKey: Constants.DefaultsKeys.cumulativeLine)
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,12 +39,12 @@ class ChartSettingsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 1
     }

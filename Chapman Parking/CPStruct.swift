@@ -35,5 +35,5 @@ protocol CPLevel{
 protocol CPCount{
     var uuid: String {get}
     var count: Int? {get}
-    var timestamp: NSDate? {get}
+    var timestamp: Date? {get}
 }

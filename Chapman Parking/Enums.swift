@@ -10,7 +10,7 @@ import Foundation
 
 
 enum UpdateType{
-    case All
-    case Latest
-    case SinceLast
+    case all
+    case latest
+    case sinceLast
 }

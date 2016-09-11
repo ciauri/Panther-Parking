@@ -11,47 +11,47 @@ import Foundation
 
 protocol ParkingAPI: class{
     static var sharedInstance: ParkingAPI {get}
-    func generateReport(updateType: UpdateType, sinceDate: NSDate?, withBlock: (CPReport? -> Void))
-    func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: NSDate?, ending endDate: NSDate?, completion: ([CKCount]?, NSError?) -> ())
-    func subscribeTo(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: (Bool)->())
-    func unsubscribeFrom(entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: (Bool)->())
-    func unsubscribeFromAll(completion: ()->())
-    func forceUnsubscribeFromAll(completion: ()->())
-    func fetchSubscriptions(completion: (uuids: [String]) -> ())
+    func generateReport(_ updateType: UpdateType, sinceDate: Date?, withBlock completion: @escaping ((CPReport?) -> Void))
+    func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: Date?, ending endDate: Date?, completion: @escaping ([CKCount]?, NSError?) -> ())
+    func subscribeTo(_ entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: @escaping (Bool)->())
+    func unsubscribeFrom(_ entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: @escaping (Bool)->())
+    func unsubscribeFromAll(_ completion: @escaping ()->())
+    func forceUnsubscribeFromAll(_ completion: @escaping ()->())
+    func fetchSubscriptions(_ completion: @escaping (_ uuids: [String]) -> ())
 }
 
 enum RemoteAction:Int {
-    case Update = 2
-    case Delete = 4
-    case Add = 1
-    case Once = 8
+    case update = 2
+    case delete = 4
+    case add = 1
+    case once = 8
     
     var description: String {
         switch self{
-        case .Update:
+        case .update:
             return "UPDATE"
-        case .Delete:
+        case .delete:
             return "DELETE"
-        case .Add:
+        case .add:
             return "ADD"
-        case .Once:
+        case .once:
             return "ONCE"
         }
     }
 }
 
 enum ParkingEntity {
-    case Structure
-    case Level
-    case Count
+    case structure
+    case level
+    case count
     
     var cloudKitName: String {
         switch self{
-        case .Structure:
+        case .structure:
             return "ParkingStructure"
-        case .Level:
+        case .level:
             return "ParkingLevel"
-        case .Count:
+        case .count:
             return "ParkingCount"
         }
     }
