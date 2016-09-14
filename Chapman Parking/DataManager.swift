@@ -83,11 +83,8 @@ class DataManager{
         let sender = notification.object as! NSManagedObjectContext
         if sender !== managedObjectContext {
             managedObjectContext.performBlock {
-//                print(self.managedObjectContext.hasChanges)
-                NSLog("Merging")
                 self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
-//                print(self.managedObjectContext.hasChanges)
-//                try! self.managedObjectContext.save()
+                self.saveContext()
             }
         }
     }
@@ -97,7 +94,6 @@ class DataManager{
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         
         context.performBlockAndWait() {
-            
             context.persistentStoreCoordinator = self.persistentStoreCoordinator
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             context.undoManager = nil
@@ -108,7 +104,7 @@ class DataManager{
     
     // MARK: - Core Data Saving support
     
-    private func saveContext () {
+    private func saveContext() {
         
         if managedObjectContext.hasChanges {
             do {
@@ -131,7 +127,7 @@ class DataManager{
     }
     
     
-    
+    // MARK: - Convenience methods
     private func structureWith(uuid: String, moc: NSManagedObjectContext) -> Structure? {
         let request = NSFetchRequest(entityName: "Structure")
         request.predicate = NSPredicate(format: "uuid == %@", uuid)
@@ -195,11 +191,6 @@ class DataManager{
     
     
     
-    @objc
-    private func timerUpdateCounts(){
-        updateCounts(.SinceLast)
-    }
-    
     func mostRecentCount(fromDate date: NSDate, onLevel level: Level, usingContext context: NSManagedObjectContext) -> Count? {
         let request = NSFetchRequest(entityName: "Count")
         request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
@@ -236,6 +227,23 @@ class DataManager{
         
         return counts
     }
+    
+    func fetchAllStructures() -> [Structure] {
+        let context = managedObjectContext
+        let request = NSFetchRequest(entityName: "Structure")
+        var structures: [Structure] = []
+        context.performBlockAndWait({
+            do {
+                structures = try context.executeFetchRequest(request) as? [Structure] ?? []
+            } catch {
+                NSLog("Fetch error")
+            }
+        })
+        
+        return structures
+    }
+    
+    // MARK: - Object parsing from API
     
     private func process(structure: CPStructure, withContext context: NSManagedObjectContext?) {
         var moc: NSManagedObjectContext
@@ -335,8 +343,80 @@ class DataManager{
                             }
         })
     }
-
     
+    // MARK: - Push Notifications
+    
+    func subscribeToAllLevels() {
+        let backgroundContext = try! createPrivateQueueContext()
+        let request = NSFetchRequest(entityName: "Level")
+        
+        backgroundContext.performBlock({
+            do{
+                if let levels = try backgroundContext.executeFetchRequest(request) as? [Level] {
+                    for level in levels {
+                        NotificationService.sharedInstance.enableNotificationFor(level)
+                    }
+                }
+            } catch {
+                NSLog("Error fetching levels for subscription")
+            }
+        })
+    }
+    
+    func disableAllNotifications() {
+        let backgroundContext = try! createPrivateQueueContext()
+        let request = NSFetchRequest(entityName: "Level")
+        backgroundContext.performBlock({
+            do{
+                if let levels = try backgroundContext.executeFetchRequest(request) as? [Level] {
+                    for level in levels {
+                        level.notificationsEnabled = false
+                    }
+                }
+                try backgroundContext.save()
+            } catch {
+                NSLog("Error fetching levels for subscription")
+            }
+        })
+    }
+    
+    func update(notificationsEnabled enabled: Bool, forUUIDs uuids: [String], withCompletion completion: ()->()) {
+        let backgroundContext = try? createPrivateQueueContext()
+        backgroundContext?.performBlock({
+            let request = NSFetchRequest(entityName: "Level")
+            
+            // Enable notifications for objects in uuids
+            request.predicate = NSPredicate(format: "uuid IN %@", uuids)
+            if let levels = try? backgroundContext?.executeFetchRequest(request) as? [Level] {
+                levels?.forEach({ $0.notificationsEnabled = true })
+            }
+            
+            // Disable notifications for the rest
+            request.predicate = NSPredicate(format: "NOT (uuid IN %@)", uuids)
+            if let levels = try? backgroundContext?.executeFetchRequest(request) as? [Level] {
+                levels?.forEach({ $0.notificationsEnabled = false })
+            }
+            
+            _ = try? backgroundContext?.save()
+            completion()
+        })
+    }
+    
+    func update(notificationsEnabled enabled: Bool, forLevel level: Level) {
+        let backgroundContext = try? createPrivateQueueContext()
+        backgroundContext?.performBlock({
+            let level = backgroundContext?.objectWithID(level.objectID) as! Level
+            level.notificationsEnabled = enabled
+            _ = try? backgroundContext?.save()
+        })
+    }
+
+    // MARK: - Heartbeat
+    @objc
+    private func timerUpdateCounts(){
+        updateCounts(.SinceLast)
+    }
+
     /// TODO: Re-implement using above new functions
     func updateCounts(updateType: UpdateType, withCompletion completion: (Bool -> ())? = nil){
         let backgroundContext = try! createPrivateQueueContext()
@@ -359,7 +439,7 @@ class DataManager{
                 
             })
         }
-        
+        NSLog("Generating report...")
         api.generateReport(updateType, sinceDate: sinceDate, withBlock: {report in
             
             guard let report = report
@@ -372,10 +452,6 @@ class DataManager{
             backgroundContext.performBlock({
                 for structure in report.structures{
                     var s: Structure
-                    
-                    if let structure = structure as? CKStructure {
-                        NSLog(structure.uuid)
-                    }
                     
                     if let structure = self.structureWith(structure.uuid, moc: backgroundContext){
                         s = structure

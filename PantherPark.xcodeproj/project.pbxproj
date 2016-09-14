@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9C05DCF41D60C9CD00A69366 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C05DCF31D60C9CD00A69366 /* UIColor+.swift */; };
-		9C05DCFD1D60DAFB00A69366 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C05DCFC1D60DAFB00A69366 /* ViewController.swift */; };
 		9C0ED8B11CDDA2140087AEE6 /* NSDate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */; };
 		9C0ED8B41CDDA3540087AEE6 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B31CDDA3540087AEE6 /* Enums.swift */; };
 		9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */; };
@@ -37,12 +36,20 @@
 		9C3325C21CDB342D00F49338 /* TotalCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */; };
 		9C3325C41CDB344300F49338 /* LevelCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */; };
 		9C3325C81CDB34F600F49338 /* ParkingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C71CDB34F500F49338 /* ParkingViewController.swift */; };
+		9C4C5FA41D77CB120036CA4D /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FA31D77CB120036CA4D /* SettingsTableViewController.swift */; };
+		9C4C5FA61D77D6140036CA4D /* NotificationSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FA51D77D6140036CA4D /* NotificationSettingsTableViewController.swift */; };
+		9C4C5FA81D77D6310036CA4D /* ChartSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FA71D77D6310036CA4D /* ChartSettingsTableViewController.swift */; };
+		9C4C5FAB1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */; };
 		9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C71169C1CE3118900C52F0E /* CloudKit.framework */; };
+		9C8D593B1D7B9983008ED843 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8D593A1D7B9983008ED843 /* NotificationService.swift */; };
+		9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA216E41D7E5EFB0006A093 /* LocationService.swift */; };
 		9CC114951CE984C30093215B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC114941CE984C30093215B /* MapViewController.swift */; };
 		9CC6E4441CE57BFC00A79AEF /* CKStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */; };
 		9CC6E44A1CE5ACC400A79AEF /* CloudKitAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */; };
 		9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */; };
 		9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */; };
+		9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9B1801D752CDD003E610C /* Localizable.strings */; };
+		9CDDB71E1D7FBFDF00C07689 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CDDB71D1D7FBFDF00C07689 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,7 +149,6 @@
 
 /* Begin PBXFileReference section */
 		9C05DCF31D60C9CD00A69366 /* UIColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
-		9C05DCFC1D60DAFB00A69366 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+.swift"; sourceTree = "<group>"; };
 		9C0ED8B31CDDA3540087AEE6 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericFetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
@@ -171,14 +177,24 @@
 		9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TotalCountTableViewCell.swift; sourceTree = "<group>"; };
 		9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelCountTableViewCell.swift; sourceTree = "<group>"; };
 		9C3325C71CDB34F500F49338 /* ParkingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingViewController.swift; sourceTree = "<group>"; };
+		9C4C5FA31D77CB120036CA4D /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		9C4C5FA51D77D6140036CA4D /* NotificationSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSettingsTableViewController.swift; sourceTree = "<group>"; };
+		9C4C5FA71D77D6310036CA4D /* ChartSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSettingsTableViewController.swift; sourceTree = "<group>"; };
+		9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chapman Parking.entitlements"; sourceTree = "<group>"; };
 		9C71169C1CE3118900C52F0E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 2.xcdatamodel"; sourceTree = "<group>"; };
+		9C8D59391D7B929A008ED843 /* Chapman_Parking 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 3.xcdatamodel"; sourceTree = "<group>"; };
+		9C8D593A1D7B9983008ED843 /* NotificationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		9CA216E41D7E5EFB0006A093 /* LocationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		9CC114941CE984C30093215B /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKStructs.swift; sourceTree = "<group>"; };
 		9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitAPI.swift; sourceTree = "<group>"; };
 		9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingAPI.swift; sourceTree = "<group>"; };
 		9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPStruct.swift; sourceTree = "<group>"; };
+		9CD9B17F1D752CDD003E610C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9CD9B1811D752CE2003E610C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9CDDB71D1D7FBFDF00C07689 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +220,15 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
+		9C115A2D1D7BCAED00FF03E8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9C71169C1CE3118900C52F0E /* CloudKit.framework */,
+			);
+			name = Frameworks;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		9C2FDC811CE9A4BD00A61F0F /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,7 +243,7 @@
 		9C33256D1CDB0EF200F49338 = {
 			isa = PBXGroup;
 			children = (
-				9C71169C1CE3118900C52F0E /* CloudKit.framework */,
+				9CDDB71D1D7FBFDF00C07689 /* Default-568h@2x.png */,
 				9C3325781CDB0EF200F49338 /* PantherPark */,
 				9C3325771CDB0EF200F49338 /* Products */,
 			);
@@ -236,11 +261,13 @@
 			isa = PBXGroup;
 			children = (
 				9CC6E44B1CE5ACDC00A79AEF /* APIs */,
-				9C0ED8B21CDDA2370087AEE6 /* Extensions */,
-				9C3325C51CDB344700F49338 /* Views */,
+				9C8D593C1D7B9989008ED843 /* Services */,
 				9C33258F1CDB0F0700F49338 /* Model */,
+				9C3325C51CDB344700F49338 /* Views */,
 				9C3325C61CDB344E00F49338 /* Controllers */,
 				9C33257D1CDB0EF200F49338 /* Main.storyboard */,
+				9C3325791CDB0EF200F49338 /* AppDelegate.swift */,
+				9C0ED8B21CDDA2370087AEE6 /* Extensions */,
 				9C33258E1CDB0EFE00F49338 /* Supporting Files */,
 			);
 			name = PantherPark;
@@ -253,10 +280,11 @@
 				9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */,
 				9C3325831CDB0EF200F49338 /* Assets.xcassets */,
 				9C3325921CDB110D00F49338 /* Submodules */,
+				9C115A2D1D7BCAED00FF03E8 /* Frameworks */,
 				9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */,
 				9C3325881CDB0EF200F49338 /* Info.plist */,
-				9C3325791CDB0EF200F49338 /* AppDelegate.swift */,
 				9C3325901CDB0F3D00F49338 /* Constants.swift */,
+				9CD9B1801D752CDD003E610C /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -265,10 +293,12 @@
 			isa = PBXGroup;
 			children = (
 				9C3325BC1CDB250C00F49338 /* CoreData */,
+				9C3325BF1CDB2D9E00F49338 /* DataManager.swift */,
 				9C3325BD1CDB252300F49338 /* JSONStructs.swift */,
 				9C0ED8B31CDDA3540087AEE6 /* Enums.swift */,
 				9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */,
 				9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */,
+				9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -298,7 +328,6 @@
 			isa = PBXGroup;
 			children = (
 				9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */,
-				9C3325BF1CDB2D9E00F49338 /* DataManager.swift */,
 				9C3325AC1CDB18ED00F49338 /* Count+CoreDataProperties.swift */,
 				9C3325AD1CDB18ED00F49338 /* Count.swift */,
 				9C3325AE1CDB18ED00F49338 /* Level+CoreDataProperties.swift */,
@@ -314,6 +343,7 @@
 		9C3325C51CDB344700F49338 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */,
 				9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */,
 				9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */,
 			);
@@ -326,10 +356,28 @@
 				9C2FDC9B1CE9A91A00A61F0F /* ChartViewController.swift */,
 				9CC114941CE984C30093215B /* MapViewController.swift */,
 				9C3325C71CDB34F500F49338 /* ParkingViewController.swift */,
-				9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */,
-				9C05DCFC1D60DAFB00A69366 /* ViewController.swift */,
+				9C4C5FA91D77D6440036CA4D /* Settings */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		9C4C5FA91D77D6440036CA4D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				9C4C5FA31D77CB120036CA4D /* SettingsTableViewController.swift */,
+				9C4C5FA51D77D6140036CA4D /* NotificationSettingsTableViewController.swift */,
+				9C4C5FA71D77D6310036CA4D /* ChartSettingsTableViewController.swift */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		9C8D593C1D7B9989008ED843 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				9C8D593A1D7B9983008ED843 /* NotificationService.swift */,
+				9CA216E41D7E5EFB0006A093 /* LocationService.swift */,
+			);
+			name = Services;
 			sourceTree = "<group>";
 		};
 		9CC6E44B1CE5ACDC00A79AEF /* APIs */ = {
@@ -379,6 +427,9 @@
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = SV57A2C639;
 						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
 								enabled = 1;
 							};
@@ -486,7 +537,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C3325871CDB0EF200F49338 /* LaunchScreen.storyboard in Resources */,
+				9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */,
 				9C3325841CDB0EF200F49338 /* Assets.xcassets in Resources */,
+				9CDDB71E1D7FBFDF00C07689 /* Default-568h@2x.png in Resources */,
 				9C33257F1CDB0EF200F49338 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -510,21 +563,26 @@
 				9C33257A1CDB0EF200F49338 /* AppDelegate.swift in Sources */,
 				9C3325B41CDB18ED00F49338 /* Level+CoreDataProperties.swift in Sources */,
 				9CC6E4441CE57BFC00A79AEF /* CKStructs.swift in Sources */,
+				9C8D593B1D7B9983008ED843 /* NotificationService.swift in Sources */,
 				9C3325BB1CDB1F8700F49338 /* Location.swift in Sources */,
 				9C3325C21CDB342D00F49338 /* TotalCountTableViewCell.swift in Sources */,
 				9C3325B31CDB18ED00F49338 /* Count.swift in Sources */,
 				9C3325B61CDB18ED00F49338 /* Structure+CoreDataProperties.swift in Sources */,
 				9C3325BA1CDB1F8700F49338 /* Location+CoreDataProperties.swift in Sources */,
+				9C4C5FAB1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift in Sources */,
 				9C05DCF41D60C9CD00A69366 /* UIColor+.swift in Sources */,
-				9C05DCFD1D60DAFB00A69366 /* ViewController.swift in Sources */,
 				9C2FDC9C1CE9A91A00A61F0F /* ChartViewController.swift in Sources */,
 				9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */,
+				9C4C5FA41D77CB120036CA4D /* SettingsTableViewController.swift in Sources */,
 				9CC114951CE984C30093215B /* MapViewController.swift in Sources */,
 				9C3325BE1CDB252300F49338 /* JSONStructs.swift in Sources */,
 				9C3325B71CDB18ED00F49338 /* Structure.swift in Sources */,
 				9C3325821CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld in Sources */,
 				9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */,
+				9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */,
 				9C3325911CDB0F3D00F49338 /* Constants.swift in Sources */,
+				9C4C5FA81D77D6310036CA4D /* ChartSettingsTableViewController.swift in Sources */,
+				9C4C5FA61D77D6140036CA4D /* NotificationSettingsTableViewController.swift in Sources */,
 				9C3325C81CDB34F600F49338 /* ParkingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -559,6 +617,15 @@
 				9C3325861CDB0EF200F49338 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		9CD9B1801D752CDD003E610C /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9CD9B17F1D752CDD003E610C /* en */,
+				9CD9B1811D752CE2003E610C /* Base */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -704,10 +771,11 @@
 		9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9C8D59391D7B929A008ED843 /* Chapman_Parking 3.xcdatamodel */,
 				9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */,
 				9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */,
 			);
-			currentVersion = 9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */;
+			currentVersion = 9C8D59391D7B929A008ED843 /* Chapman_Parking 3.xcdatamodel */;
 			path = Chapman_Parking.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
