@@ -40,6 +40,8 @@ class MapViewController: UIViewController {
         pantherLogo.contentMode = .scaleAspectFit
         navigationItem.titleView = pantherLogo
         
+//        let circle = MKCircle(center: Constants.Locations.defaultCenter, radius: 500)
+//        mapView.add(circle)
     }
 
     
@@ -149,6 +151,13 @@ extension MapViewController: MKMapViewDelegate{
 
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         performSegue(withIdentifier: "annotation", sender: self)
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let circleView = MKCircleRenderer(circle: overlay as! MKCircle)
+        circleView.strokeColor = .red
+        circleView.fillColor = UIColor.red.withAlphaComponent(0.4)
+        return circleView
     }
     
 }

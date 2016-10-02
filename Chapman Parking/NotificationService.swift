@@ -13,6 +13,7 @@ class NotificationService {
     static let sharedInstance = NotificationService()
     
     var api: ParkingAPI?
+    var modelDelegate: NotificationModelDelegate?
     
     /// Validates both the iOS notification status and the in-app user preference. If user preference is true, but notifications are disabled in iOS, then the app will unregister for all notifications
     var notificationsEnabled: Bool {
@@ -48,7 +49,7 @@ class NotificationService {
         notificationsEnabled = false
         api?.unsubscribeFromAll({
             NSLog("Unsubbed")
-            DataManager.sharedInstance.disableAllNotifications()
+            self.modelDelegate?.disableAllNotifications()
         })
     }
     
@@ -95,21 +96,39 @@ class NotificationService {
                                              animated: true,
                                              completion: nil)
     }
+    
+    func pauseNotifications(for level: Level) {
+        disableNotifications(for: level, sync: false)
+    }
+    
+    func resumeNotifications(for level: Level) {
+        enableNotifications(for: level, sync: false)
+    }
 
-    func disableNotificationFor(_ level: Level) {
+    /**
+     - parameter level: The level that notifications will be diabled on
+     - parameter sync: If `true`, changes will be reflected in persistent data
+ 
+     */
+    func disableNotifications(for level: Level, sync: Bool = true) {
         api?.unsubscribeFrom(ParkingEntity.level,
                              withUUID: level.uuid!,
                              predicate: NSPredicate(format: "CurrentCount = %d",0),
                              onActions: RemoteAction.update,
                              completion: { success in
-                                if success {
-                                   DataManager.sharedInstance.update(notificationsEnabled: false, forLevel: level)
+                                if success && sync {
+                                   self.modelDelegate?.update(notificationsEnabled: false, forLevel: level)
                                 }
 
         })
     }
     
-    func enableNotificationFor(_ level: Level) {
+    /**
+     - parameter level: The level that notifications will be enabled on
+     - parameter sync: If `true`, changes will be reflected in persistent data
+     
+     */
+    func enableNotifications(for level: Level, sync: Bool = true) {
         guard let structureName = level.structure?.name, let levelName = level.name else {return}
         api?.subscribeTo(ParkingEntity.level,
                          withUUID: level.uuid!,
@@ -117,18 +136,42 @@ class NotificationService {
                          onActions: RemoteAction.update,
                          notificationText: "\(structureName) \(levelName) is now full",
                          completion: { success in
-                            if success {
-                                DataManager.sharedInstance.update(notificationsEnabled: true, forLevel: level)
+                            if success && sync {
+                                self.modelDelegate?.update(notificationsEnabled: true, forLevel: level)
                             }
         })
 
     }
     
+    // TODO: Guard against geofencing inconsistency
     func fetchAndUpdateSubscriptions(withCompletion completion: @escaping ()->()) {
         fetchNotificationUUIDs({ uuids in
-            DataManager.sharedInstance.update(notificationsEnabled: true,
+            self.modelDelegate?.update(notificationsEnabled: true,
                 forUUIDs: uuids,
                 withCompletion: completion)
         })
     }
+}
+
+extension NotificationService: GeofenceEventHandler {
+    func didEnterRegion() {
+        modelDelegate?.fetchNotificationLevels { levels in
+            levels.forEach({self.pauseNotifications(for: $0)})
+        }
+    }
+    
+    func didExitRegion() {
+        modelDelegate?.fetchNotificationLevels { levels in
+            levels.forEach({self.resumeNotifications(for: $0)})
+        }
+    }
+        
+        
+}
+
+protocol NotificationModelDelegate: class {
+    func update(notificationsEnabled: Bool, forLevel: Level)
+    func update(notificationsEnabled: Bool, forUUIDs: [String], withCompletion: @escaping ()->())
+    func fetchNotificationLevels(completion: @escaping ([Level]) -> ())
+    func disableAllNotifications()
 }
