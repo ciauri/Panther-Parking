@@ -22,11 +22,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         injectDependencies()
         initializeData()
 
-
-        
         DataManager.sharedInstance.autoRefreshEnabled = true
+        
+        // Only has effect on first launch
         NotificationService.sharedInstance.enableNotifications()
-        LocationService.sharedInstance.startMonitoring()
+        LocationService.sharedInstance.setMonitoring(on: true)
 
 //        api.forceUnsubscribeFromAll(){
 //            NSLog("Unsubbed from server")

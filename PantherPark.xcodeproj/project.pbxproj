@@ -182,6 +182,7 @@
 		9C4C5FA51D77D6140036CA4D /* NotificationSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSettingsTableViewController.swift; sourceTree = "<group>"; };
 		9C4C5FA71D77D6310036CA4D /* ChartSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSettingsTableViewController.swift; sourceTree = "<group>"; };
 		9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelSwitchTableViewCell.swift; sourceTree = "<group>"; };
+		9C63049A1DA169420098509D /* Chapman_Parking 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 4.xcdatamodel"; sourceTree = "<group>"; };
 		9C6414B01DA0B28A00A57D45 /* Chapman.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Chapman.gpx; sourceTree = SOURCE_ROOT; };
 		9C6414B11DA0B28A00A57D45 /* NotChapman.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NotChapman.gpx; sourceTree = SOURCE_ROOT; };
 		9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chapman Parking.entitlements"; sourceTree = "<group>"; };
@@ -783,6 +784,7 @@
 		9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9C63049A1DA169420098509D /* Chapman_Parking 4.xcdatamodel */,
 				9C8D59391D7B929A008ED843 /* Chapman_Parking 3.xcdatamodel */,
 				9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */,
 				9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */,

@@ -33,6 +33,8 @@ class NotificationService {
         }
     }
     
+    var notificationsArePaused: Bool = false
+    
     var structuresOnly: Bool {
         get {
             return UserDefaults.standard.bool(forKey: Constants.DefaultsKeys.structuresOnly)
@@ -129,7 +131,7 @@ class NotificationService {
      
      */
     func enableNotifications(for level: Level, sync: Bool = true) {
-        guard let structureName = level.structure?.name, let levelName = level.name else {return}
+        guard let structureName = level.structure?.name, let levelName = level.name?.replacingOccurrences(of: "All Levels", with: "") else {return}
         api?.subscribeTo(ParkingEntity.level,
                          withUUID: level.uuid!,
                          predicate: NSPredicate(format: "CurrentCount = %d",0),
@@ -145,24 +147,33 @@ class NotificationService {
     
     // TODO: Guard against geofencing inconsistency
     func fetchAndUpdateSubscriptions(withCompletion completion: @escaping ()->()) {
-        fetchNotificationUUIDs({ uuids in
-            self.modelDelegate?.update(notificationsEnabled: true,
-                forUUIDs: uuids,
-                withCompletion: completion)
-        })
+        // If geolocation is paused for this device, we don't want to overwrite local state with remote status
+        // TODO: Refactor remote model to reflect paused state. Perhaps modify user record?
+        if !notificationsArePaused {
+            fetchNotificationUUIDs({ uuids in
+                self.modelDelegate?.update(notificationsEnabled: true,
+                                           forUUIDs: uuids,
+                                           withCompletion: completion)
+            })
+        }
     }
+    
 }
 
 extension NotificationService: GeofenceEventHandler {
     func didEnterRegion() {
+        NSLog("Pausing Notifications")
         modelDelegate?.fetchNotificationLevels { levels in
             levels.forEach({self.pauseNotifications(for: $0)})
+            self.notificationsArePaused = true
         }
     }
     
     func didExitRegion() {
+        NSLog("Resuming Notifications")
         modelDelegate?.fetchNotificationLevels { levels in
             levels.forEach({self.resumeNotifications(for: $0)})
+            self.notificationsArePaused = false
         }
     }
         

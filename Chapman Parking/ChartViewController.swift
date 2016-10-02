@@ -142,7 +142,6 @@ class ChartViewController: UIViewController {
     
     fileprivate func addLevelsToLevelSelector() {
         levelSelector.removeAllSegments()
-//        guard let levels = structure.levels else {return}
         var levelNames = levels.map({$0.name!})
         levelNames.sort()
         
@@ -163,7 +162,6 @@ class ChartViewController: UIViewController {
         
         for element in counts {
             let count = Double(element.availableSpaces!)
-//            let updatedAt = element.updatedAt!.dateFromTime(nil, minute: nil, second: 0)!
             let index = element.updatedAt!.timeIntervalSince(timeline.first!)/60
             yVals.append(ChartDataEntry(value: count, xIndex: Int(index)))
         }
@@ -231,29 +229,14 @@ class ChartViewController: UIViewController {
         lineChart.rightAxis.enabled = false
         lineChart.leftAxis.granularity = 1
         lineChart.leftAxis.axisMinValue = 0
-//        lineChart.leftAxis.drawLimitLinesBehindDataEnabled = true
         lineChart.leftAxis.labelPosition = .insideChart
         lineChart.legend.horizontalAlignment = .center
         lineChart.legend.verticalAlignment = .top
         lineChart.legend.orientation = .horizontal
-//        lineChart.xAxis.setLabelsToSkip(147*numberOfDays)
         lineChart.xAxis.avoidFirstLastClippingEnabled = true
-//        lineChart.xAxis.axisLabelModulus = 60
         lineChart.descriptionText = ""
         lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
     }
-
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 

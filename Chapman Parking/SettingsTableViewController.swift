@@ -10,6 +10,7 @@ import UIKit
 
 class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var notificationDetailLabel: UILabel!
+    @IBOutlet weak var geofenceSwitch: UISwitch!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +19,10 @@ class SettingsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        notificationDetailLabel.text = NotificationService.sharedInstance.notificationsEnabled ? "Enabled" : "Disabled"
+        notificationDetailLabel.text = NotificationService.sharedInstance.notificationsEnabled ? NotificationService.sharedInstance.notificationsArePaused ? "Paused" : "Enabled" : "Disabled"
+        geofenceSwitch.setOn(LocationService.sharedInstance.geolocationState == .enabled, animated: false)
+        
+        // Silly workaround for tableview cell highlighting on swipe back being wrong in iOS 8 and above
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: animated)
         }
@@ -37,12 +41,10 @@ class SettingsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return 1
     }
     
@@ -63,13 +65,18 @@ class SettingsTableViewController: UITableViewController {
     }
     
   
+    @IBAction func geofencingToggled(_ sender: UISwitch) {
+        LocationService.sharedInstance.setMonitoring(on: sender.isOn, from: self) { success in
+            if !success {
+                sender.setOn(!sender.isOn, animated: true)
+            }
+        }
+    }
     
     
     fileprivate func prepareForNotificationSettings(withSegue segue: UIStoryboardSegue) {
         let notificationSettingsViewController = segue.destination as! NotificationSettingsTableViewController
-        
         notificationSettingsViewController.structures = DataManager.sharedInstance.fetchAllStructures()
-        
     }
         
  
