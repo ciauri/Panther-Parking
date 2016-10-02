@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class DataManager{
+class DataManager: NotificationModelDelegate{
     static let sharedInstance = DataManager()
     var api: ParkingAPI!
 
@@ -346,6 +346,22 @@ class DataManager{
     
     // MARK: - Push Notifications
     
+    func fetchNotificationLevels(completion: @escaping ([Level]) -> () ) {
+        let request = NSFetchRequest<Level>(entityName: "Level")
+        request.predicate = NSPredicate(format: "notificationsEnabled == %d", 1)
+        if let context = try? createPrivateQueueContext() {
+            context.perform {
+                if let results = try? context.fetch(request) {
+                    completion(results)
+                } else {
+                    NSLog("Failed to fetch levels")
+                }
+            }
+        } else {
+            NSLog("Failed to create private context")
+        }
+    }
+    
     func subscribeToAllLevels() {
         let backgroundContext = try! createPrivateQueueContext()
         let request = NSFetchRequest<Level>(entityName: "Level")
@@ -354,7 +370,7 @@ class DataManager{
             do{
                 let levels = try backgroundContext.fetch(request)
                 for level in levels {
-                    NotificationService.sharedInstance.enableNotificationFor(level)
+                    NotificationService.sharedInstance.enableNotifications(for: level)
                 }
                 
             } catch {
@@ -433,12 +449,10 @@ class DataManager{
             backgroundContext.performAndWait({
                 if let date = try? backgroundContext.fetch(request).first?.updatedAt {
                     sinceDate = date
-                    NSLog("Getting counts since \(sinceDate)")
+                    NSLog("Getting counts since \(date!)")
                 } else {
                     NSLog("Attempted to catch up without any data. Getting most recent instead.")
                 }
-                
-                
             })
         }
         NSLog("Generating report...")

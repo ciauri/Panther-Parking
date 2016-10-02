@@ -29,6 +29,7 @@ struct Constants{
         static let cumulativeLine = "showCumulativeLine"
         static let notificationsEnabled = "notificationsEnabled"
         static let structuresOnly = "structuresOnly"
+        static let geofencingEnabled = "geofencingEnabled"
 
     }
     

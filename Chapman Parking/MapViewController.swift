@@ -12,11 +12,8 @@ import CoreData
 
 class MapViewController: UIViewController {
 
-    @IBOutlet var mapView: MKMapView! {
-        didSet{
-            freezeMap()
-        }
-    }
+    @IBOutlet var mapView: MKMapView!
+    
     @IBOutlet weak var settingsBarItem: UIBarButtonItem! {
         didSet{
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "cogs"), style: .plain, target: self, action: #selector(openSettings))
@@ -40,9 +37,17 @@ class MapViewController: UIViewController {
         pantherLogo.contentMode = .scaleAspectFit
         navigationItem.titleView = pantherLogo
         
+//        let circle = MKCircle(center: Constants.Locations.defaultCenter, radius: 500)
+//        mapView.add(circle)
     }
-
     
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        freezeMap()
+    }
+    
+
     fileprivate func freezeMap() {
         mapView.setRegion(Constants.Locations.defaultRegion, animated: false)
         mapView.isScrollEnabled = false
@@ -149,6 +154,13 @@ extension MapViewController: MKMapViewDelegate{
 
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         performSegue(withIdentifier: "annotation", sender: self)
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let circleView = MKCircleRenderer(circle: overlay as! MKCircle)
+        circleView.strokeColor = .red
+        circleView.fillColor = UIColor.red.withAlphaComponent(0.4)
+        return circleView
     }
     
 }

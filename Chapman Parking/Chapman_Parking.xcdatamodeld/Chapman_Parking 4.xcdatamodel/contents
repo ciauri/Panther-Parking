@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="16A323" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="16A323" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Count" representedClassName=".Count" syncable="YES">
         <attribute name="availableSpaces" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -15,6 +15,8 @@
         <attribute name="capacity" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="currentCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationsEnabled" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="notificationsPaused" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="counts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Count" inverseName="level" inverseEntity="Count" syncable="YES"/>
@@ -49,7 +51,7 @@
     </entity>
     <elements>
         <element name="Count" positionX="-18" positionY="27" width="128" height="105"/>
-        <element name="Level" positionX="-335" positionY="-99" width="128" height="150"/>
+        <element name="Level" positionX="-335" positionY="-99" width="128" height="180"/>
         <element name="Location" positionX="-144" positionY="-171" width="128" height="90"/>
         <element name="Structure" positionX="-101" positionY="-360" width="128" height="105"/>
     </elements>
