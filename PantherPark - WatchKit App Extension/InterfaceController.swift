@@ -24,25 +24,28 @@ class InterfaceController: WKInterfaceController {
         let size = CGSize(width: imageLength, height: imageLength)
         let opaque = false
         
-        UIGraphicsBeginImageContextWithOptions(size, opaque, 0.0)
-        let context = UIGraphicsGetCurrentContext()
+        
         
         let point = CGPoint(x: imageLength/2, y: imageLength/2)
         let intervals = 2*CGFloat.pi/CGFloat(frames)
 
-        let lineWidth = CGFloat(imageLength/10)
+        let lineWidth = CGFloat(imageLength/20)
         let radius = CGFloat(imageLength/2)-lineWidth
         
 
         
+        var previousImage: UIImage?
         
         for centerX in 0...frames {
+            UIGraphicsBeginImageContextWithOptions(size, opaque, 0.0)
+            let context = UIGraphicsGetCurrentContext()
             let percent = Double(Double(centerX)/Double(frames))
+            let startAngle = CGFloat(centerX-1)*intervals
             let endAngle = CGFloat(centerX)*intervals
 //            context?.setLineWidth(5)
             context?.setStrokeColor(UIColor.temperatureColor(fromPercentCompletion: Float(percent)).cgColor)
             
-            let k = UIBezierPath(arcCenter: point, radius: radius, startAngle: 0, endAngle: endAngle, clockwise: true)
+            let k = UIBezierPath(arcCenter: point, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
             k.lineCapStyle = .round
             k.lineWidth = lineWidth
             k.stroke()
@@ -54,7 +57,16 @@ class InterfaceController: WKInterfaceController {
 //            context?.strokePath()
 
             let image = UIGraphicsGetImageFromCurrentImageContext()
-            let data = UIImagePNGRepresentation(image!)
+            
+            if let previousImage = previousImage {
+                previousImage.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+                image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height), blendMode: .normal, alpha: 1.0)
+            }
+            
+            let newImage = UIGraphicsGetImageFromCurrentImageContext()
+            
+            previousImage = newImage
+            let data = UIImagePNGRepresentation(newImage!)
             
             let file = documentsPath.appending("/wat\(centerX).png")
             let url = URL(fileURLWithPath: file, isDirectory: false)
@@ -63,8 +75,8 @@ class InterfaceController: WKInterfaceController {
             } catch let e{
                 NSLog("Could not write data: \(e))")
             }
+            UIGraphicsEndImageContext()
         }
-        UIGraphicsEndImageContext()
         
         
         // Configure interface objects here.
@@ -81,13 +93,14 @@ class InterfaceController: WKInterfaceController {
         NSLog("\(file)")
         let animatedImage = UIImage.animatedImageNamed(file, duration: 3)
         self.image.setImage(animatedImage)
-        self.image.startAnimatingWithImages(in: NSRange.init(location: 0, length: 360), duration: 4, repeatCount: 1)
+        self.image.startAnimatingWithImages(in: NSRange.init(location: 0, length: 360), duration: 2, repeatCount: 5)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
-            self.animate(withDuration: 0.5) {
-                self.image.setAlpha(0.0)
-            }
-        }
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+//            self.animate(withDuration: 0.5) {
+//                self.image.setAlpha(0.0)
+//            }
+//        }
 
 //        self.image.startAnimating()
 //        self.image.startAnimatingWithImages(in: range, duration: 50, repeatCount: 5)
