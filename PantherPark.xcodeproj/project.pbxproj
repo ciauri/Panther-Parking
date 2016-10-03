@@ -50,6 +50,16 @@
 		9CC6E44A1CE5ACC400A79AEF /* CloudKitAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */; };
 		9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */; };
 		9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */; };
+		9CD5B37B1DA19B1A007A2750 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CD5B3791DA19B1A007A2750 /* Interface.storyboard */; };
+		9CD5B37D1DA19B1A007A2750 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CD5B37C1DA19B1A007A2750 /* Assets.xcassets */; };
+		9CD5B3841DA19B1A007A2750 /* PantherPark - WatchKit App Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 9CD5B3831DA19B1A007A2750 /* PantherPark - WatchKit App Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9CD5B38B1DA19B1A007A2750 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD5B38A1DA19B1A007A2750 /* InterfaceController.swift */; };
+		9CD5B38D1DA19B1A007A2750 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD5B38C1DA19B1A007A2750 /* ExtensionDelegate.swift */; };
+		9CD5B38F1DA19B1A007A2750 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD5B38E1DA19B1A007A2750 /* NotificationController.swift */; };
+		9CD5B3911DA19B1A007A2750 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD5B3901DA19B1A007A2750 /* ComplicationController.swift */; };
+		9CD5B3931DA19B1A007A2750 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CD5B3921DA19B1A007A2750 /* Assets.xcassets */; };
+		9CD5B3971DA19B1A007A2750 /* PantherPark - WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9CD5B3771DA19B1A007A2750 /* PantherPark - WatchKit App.app */; };
+		9CD5B3A71DA1BBD7007A2750 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C05DCF31D60C9CD00A69366 /* UIColor+.swift */; };
 		9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9B1801D752CDD003E610C /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -131,6 +141,20 @@
 			remoteGlobalIDString = DC39BF601B8A7AD200088CE0;
 			remoteInfo = Gloss;
 		};
+		9CD5B3851DA19B1A007A2750 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C33256E1CDB0EF200F49338 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9CD5B3821DA19B1A007A2750;
+			remoteInfo = "PantherPark - WatchKit App Extension";
+		};
+		9CD5B3951DA19B1A007A2750 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C33256E1CDB0EF200F49338 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9CD5B3761DA19B1A007A2750;
+			remoteInfo = "PantherPark - WatchKit App";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -144,6 +168,28 @@
 				9C2FDC941CE9A4CE00A61F0F /* Charts.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9CD5B3A41DA19B1A007A2750 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9CD5B3841DA19B1A007A2750 /* PantherPark - WatchKit App Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9CD5B3A61DA19B1A007A2750 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				9CD5B3971DA19B1A007A2750 /* PantherPark - WatchKit App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -196,6 +242,18 @@
 		9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitAPI.swift; sourceTree = "<group>"; };
 		9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingAPI.swift; sourceTree = "<group>"; };
 		9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPStruct.swift; sourceTree = "<group>"; };
+		9CD5B3771DA19B1A007A2750 /* PantherPark - WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PantherPark - WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CD5B37A1DA19B1A007A2750 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		9CD5B37C1DA19B1A007A2750 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9CD5B37E1DA19B1A007A2750 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9CD5B3831DA19B1A007A2750 /* PantherPark - WatchKit App Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "PantherPark - WatchKit App Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CD5B3891DA19B1A007A2750 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		9CD5B38A1DA19B1A007A2750 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		9CD5B38C1DA19B1A007A2750 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		9CD5B38E1DA19B1A007A2750 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		9CD5B3901DA19B1A007A2750 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		9CD5B3921DA19B1A007A2750 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9CD5B3941DA19B1A007A2750 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CD9B17F1D752CDD003E610C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9CD9B1811D752CE2003E610C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -208,6 +266,13 @@
 				9C2FDC931CE9A4CE00A61F0F /* Charts.framework in Frameworks */,
 				9C3325A51CDB112300F49338 /* Gloss.framework in Frameworks */,
 				9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9CD5B3801DA19B1A007A2750 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +312,8 @@
 			isa = PBXGroup;
 			children = (
 				9C3325781CDB0EF200F49338 /* PantherPark */,
+				9CD5B3781DA19B1A007A2750 /* PantherPark - WatchKit App */,
+				9CD5B3871DA19B1A007A2750 /* PantherPark - WatchKit App Extension */,
 				9C3325771CDB0EF200F49338 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -255,6 +322,8 @@
 			isa = PBXGroup;
 			children = (
 				9C3325761CDB0EF200F49338 /* PantherPark.app */,
+				9CD5B3771DA19B1A007A2750 /* PantherPark - WatchKit App.app */,
+				9CD5B3831DA19B1A007A2750 /* PantherPark - WatchKit App Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -394,6 +463,38 @@
 			name = APIs;
 			sourceTree = "<group>";
 		};
+		9CD5B3781DA19B1A007A2750 /* PantherPark - WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				9CD5B3791DA19B1A007A2750 /* Interface.storyboard */,
+				9CD5B37C1DA19B1A007A2750 /* Assets.xcassets */,
+				9CD5B37E1DA19B1A007A2750 /* Info.plist */,
+			);
+			path = "PantherPark - WatchKit App";
+			sourceTree = "<group>";
+		};
+		9CD5B3871DA19B1A007A2750 /* PantherPark - WatchKit App Extension */ = {
+			isa = PBXGroup;
+			children = (
+				9CD5B38A1DA19B1A007A2750 /* InterfaceController.swift */,
+				9CD5B38C1DA19B1A007A2750 /* ExtensionDelegate.swift */,
+				9CD5B38E1DA19B1A007A2750 /* NotificationController.swift */,
+				9CD5B3901DA19B1A007A2750 /* ComplicationController.swift */,
+				9CD5B3921DA19B1A007A2750 /* Assets.xcassets */,
+				9CD5B3941DA19B1A007A2750 /* Info.plist */,
+				9CD5B3881DA19B1A007A2750 /* Supporting Files */,
+			);
+			path = "PantherPark - WatchKit App Extension";
+			sourceTree = "<group>";
+		};
+		9CD5B3881DA19B1A007A2750 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9CD5B3891DA19B1A007A2750 /* PushNotificationPayload.apns */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -405,17 +506,53 @@
 				9C3325731CDB0EF200F49338 /* Frameworks */,
 				9C3325741CDB0EF200F49338 /* Resources */,
 				9C3325A91CDB112300F49338 /* Embed Frameworks */,
+				9CD5B3A61DA19B1A007A2750 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				9C3325A81CDB112300F49338 /* PBXTargetDependency */,
 				9C2FDC961CE9A4CE00A61F0F /* PBXTargetDependency */,
+				9CD5B3961DA19B1A007A2750 /* PBXTargetDependency */,
 			);
 			name = PantherPark;
 			productName = "Chapman Parking";
 			productReference = 9C3325761CDB0EF200F49338 /* PantherPark.app */;
 			productType = "com.apple.product-type.application";
+		};
+		9CD5B3761DA19B1A007A2750 /* PantherPark - WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9CD5B3A51DA19B1A007A2750 /* Build configuration list for PBXNativeTarget "PantherPark - WatchKit App" */;
+			buildPhases = (
+				9CD5B3751DA19B1A007A2750 /* Resources */,
+				9CD5B3A41DA19B1A007A2750 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9CD5B3861DA19B1A007A2750 /* PBXTargetDependency */,
+			);
+			name = "PantherPark - WatchKit App";
+			productName = "PantherPark - WatchKit App";
+			productReference = 9CD5B3771DA19B1A007A2750 /* PantherPark - WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		9CD5B3821DA19B1A007A2750 /* PantherPark - WatchKit App Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9CD5B3A31DA19B1A007A2750 /* Build configuration list for PBXNativeTarget "PantherPark - WatchKit App Extension" */;
+			buildPhases = (
+				9CD5B37F1DA19B1A007A2750 /* Sources */,
+				9CD5B3801DA19B1A007A2750 /* Frameworks */,
+				9CD5B3811DA19B1A007A2750 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PantherPark - WatchKit App Extension";
+			productName = "PantherPark - WatchKit App Extension";
+			productReference = 9CD5B3831DA19B1A007A2750 /* PantherPark - WatchKit App Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -423,7 +560,7 @@
 		9C33256E1CDB0EF200F49338 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0730;
+				LastSwiftUpdateCheck = 0800;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Stephen Ciauri";
 				TargetAttributes = {
@@ -439,6 +576,15 @@
 								enabled = 1;
 							};
 						};
+					};
+					9CD5B3761DA19B1A007A2750 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					9CD5B3821DA19B1A007A2750 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = SV57A2C639;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -466,6 +612,8 @@
 			projectRoot = "";
 			targets = (
 				9C3325751CDB0EF200F49338 /* PantherPark */,
+				9CD5B3761DA19B1A007A2750 /* PantherPark - WatchKit App */,
+				9CD5B3821DA19B1A007A2750 /* PantherPark - WatchKit App Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -550,6 +698,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9CD5B3751DA19B1A007A2750 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CD5B37D1DA19B1A007A2750 /* Assets.xcassets in Resources */,
+				9CD5B37B1DA19B1A007A2750 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9CD5B3811DA19B1A007A2750 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CD5B3931DA19B1A007A2750 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -593,6 +758,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9CD5B37F1DA19B1A007A2750 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CD5B38F1DA19B1A007A2750 /* NotificationController.swift in Sources */,
+				9CD5B3911DA19B1A007A2750 /* ComplicationController.swift in Sources */,
+				9CD5B38D1DA19B1A007A2750 /* ExtensionDelegate.swift in Sources */,
+				9CD5B38B1DA19B1A007A2750 /* InterfaceController.swift in Sources */,
+				9CD5B3A71DA1BBD7007A2750 /* UIColor+.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -605,6 +782,16 @@
 			isa = PBXTargetDependency;
 			name = Gloss;
 			targetProxy = 9C3325A71CDB112300F49338 /* PBXContainerItemProxy */;
+		};
+		9CD5B3861DA19B1A007A2750 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9CD5B3821DA19B1A007A2750 /* PantherPark - WatchKit App Extension */;
+			targetProxy = 9CD5B3851DA19B1A007A2750 /* PBXContainerItemProxy */;
+		};
+		9CD5B3961DA19B1A007A2750 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9CD5B3761DA19B1A007A2750 /* PantherPark - WatchKit App */;
+			targetProxy = 9CD5B3951DA19B1A007A2750 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -623,6 +810,14 @@
 				9C3325861CDB0EF200F49338 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		9CD5B3791DA19B1A007A2750 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9CD5B37A1DA19B1A007A2750 /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 		9CD9B1801D752CDD003E610C /* Localizable.strings */ = {
@@ -757,6 +952,86 @@
 			};
 			name = Release;
 		};
+		9CD5B3981DA19B1A007A2750 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				IBSC_MODULE = "PantherPark___WatchKit_App_Extension";
+				INFOPLIST_FILE = "PantherPark - WatchKit App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		9CD5B3991DA19B1A007A2750 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				IBSC_MODULE = "PantherPark___WatchKit_App_Extension";
+				INFOPLIST_FILE = "PantherPark - WatchKit App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		9CD5B39A1DA19B1A007A2750 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEVELOPMENT_TEAM = SV57A2C639;
+				INFOPLIST_FILE = "PantherPark - WatchKit App Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		9CD5B39B1DA19B1A007A2750 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEVELOPMENT_TEAM = SV57A2C639;
+				INFOPLIST_FILE = "PantherPark - WatchKit App Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -777,6 +1052,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		9CD5B3A31DA19B1A007A2750 /* Build configuration list for PBXNativeTarget "PantherPark - WatchKit App Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CD5B39A1DA19B1A007A2750 /* Debug */,
+				9CD5B39B1DA19B1A007A2750 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		9CD5B3A51DA19B1A007A2750 /* Build configuration list for PBXNativeTarget "PantherPark - WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CD5B3981DA19B1A007A2750 /* Debug */,
+				9CD5B3991DA19B1A007A2750 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 
