@@ -46,11 +46,13 @@ class InterfaceController: WKInterfaceController {
             k.lineCapStyle = .round
             k.lineWidth = lineWidth
             k.stroke()
+            
 
             
 //            context?.addArc(center: point, radius: CGFloat(radius), startAngle: 0, endAngle: endAngle , clockwise: false)
 //
 //            context?.strokePath()
+
             let image = UIGraphicsGetImageFromCurrentImageContext()
             let data = UIImagePNGRepresentation(image!)
             
@@ -79,7 +81,15 @@ class InterfaceController: WKInterfaceController {
         NSLog("\(file)")
         let animatedImage = UIImage.animatedImageNamed(file, duration: 3)
         self.image.setImage(animatedImage)
-        self.image.startAnimating()
+        self.image.startAnimatingWithImages(in: NSRange.init(location: 0, length: 360), duration: 4, repeatCount: 1)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+            self.animate(withDuration: 0.5) {
+                self.image.setAlpha(0.0)
+            }
+        }
+
+//        self.image.startAnimating()
 //        self.image.startAnimatingWithImages(in: range, duration: 50, repeatCount: 5)
     }
     
