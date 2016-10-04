@@ -1060,6 +1060,7 @@
 				9CD5B39B1DA19B1A007A2750 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9CD5B3A51DA19B1A007A2750 /* Build configuration list for PBXNativeTarget "PantherPark - WatchKit App" */ = {
 			isa = XCConfigurationList;
@@ -1068,6 +1069,7 @@
 				9CD5B3991DA19B1A007A2750 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

@@ -28,7 +28,6 @@ class InterfaceController: WKInterfaceController {
         
         let point = CGPoint(x: imageLength/2, y: imageLength/2)
         let intervals = 2*CGFloat.pi/CGFloat(frames)
-
         let lineWidth = CGFloat(imageLength/20)
         let radius = CGFloat(imageLength/2)-lineWidth
         
@@ -56,18 +55,25 @@ class InterfaceController: WKInterfaceController {
 //
 //            context?.strokePath()
 
+            // Snapshot generated image
             let image = UIGraphicsGetImageFromCurrentImageContext()
             
+            // If a previous image exists, layer it on top of the previous image
             if let previousImage = previousImage {
                 previousImage.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
                 image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height), blendMode: .normal, alpha: 1.0)
             }
             
+            // Snapshot merged image
             let newImage = UIGraphicsGetImageFromCurrentImageContext()
             
             previousImage = newImage
+            
+            // Turn into data
             let data = UIImagePNGRepresentation(newImage!)
             
+            // Create file path
+            // Animated images follow the naming convention `imageNameX.png` where X is the frame number
             let file = documentsPath.appending("/wat\(centerX).png")
             let url = URL(fileURLWithPath: file, isDirectory: false)
             do {
@@ -77,9 +83,7 @@ class InterfaceController: WKInterfaceController {
             }
             UIGraphicsEndImageContext()
         }
-        
-        
-        // Configure interface objects here.
+
     }
     
     override func willActivate() {
@@ -89,21 +93,24 @@ class InterfaceController: WKInterfaceController {
     
     override func didAppear() {
         super.didAppear()
+        // Get image from base name without frame number or extension
         let file = documentsPath.appending("/wat")
         NSLog("\(file)")
+        
+        // Get animated image that you want to have each animation loop last 3 seconds
         let animatedImage = UIImage.animatedImageNamed(file, duration: 3)
         self.image.setImage(animatedImage)
+        
+        // Start animation from frame 0 and end at frame 360
         self.image.startAnimatingWithImages(in: NSRange.init(location: 0, length: 360), duration: 2, repeatCount: 5)
         
-        
+        // Uncomment to animate alpha
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
 //            self.animate(withDuration: 0.5) {
 //                self.image.setAlpha(0.0)
 //            }
 //        }
 
-//        self.image.startAnimating()
-//        self.image.startAnimatingWithImages(in: range, duration: 50, repeatCount: 5)
     }
     
     override func didDeactivate() {
