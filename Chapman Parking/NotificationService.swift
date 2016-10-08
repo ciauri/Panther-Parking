@@ -59,7 +59,7 @@ class NotificationService {
         api?.fetchSubscriptions(completion)
     }
     
-    func enableNotifications(_ sender: UIViewController? = nil) {
+    func enableNotifications(_ sender: UIViewController? = nil, success: (()->())? = nil, failure: (()->())? = nil) {
         notificationsEnabled = true
         // Register for push notifications
         let application = UIApplication.shared
@@ -69,7 +69,9 @@ class NotificationService {
         
         if let sender = sender, let types = application.currentUserNotificationSettings?.types , types == UIUserNotificationType() {
             notificationsEnabled = false
-            promptForNotificationSettings(onViewController: sender)
+            promptForNotificationSettings(onViewController: sender, completion: failure)
+        } else {
+            success?()
         }
     }
     
@@ -79,7 +81,7 @@ class NotificationService {
         _ = notificationsEnabled
     }
     
-    fileprivate func promptForNotificationSettings(onViewController viewController: UIViewController) {
+    fileprivate func promptForNotificationSettings(onViewController viewController: UIViewController, completion: (()->())?) {
         let alertController = UIAlertController(title: "Notification Error",
                                                 message: "It appears that you have disallowed push notifications. Please enable them in your device settings if you wish to receive them.",
                                                 preferredStyle: .alert)
@@ -96,7 +98,7 @@ class NotificationService {
         
         viewController.present(alertController,
                                              animated: true,
-                                             completion: nil)
+                                             completion: completion)
     }
     
     func pauseNotifications(for level: Level) {
