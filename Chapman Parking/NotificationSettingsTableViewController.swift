@@ -218,12 +218,12 @@ extension NotificationSettingsTableViewController: SwitchCellDelegate {
             switch indexPath {
             case NOTIFICATIONS_ENABLED_INDEX_PATH:
                 if uiSwitch.isOn {
-                    NotificationService.sharedInstance.enableNotifications(self)
-                    if notificationsEnabled {
-                        toggleNotificationCells(uiSwitch.isOn)
-                    } else {
-                        uiSwitch.setOn(false, animated: true)
-                    }
+                    NotificationService.sharedInstance.enableNotifications(self,
+                                                                           success: {
+                                                                        self.toggleNotificationCells(uiSwitch.isOn)
+                                                                        }, failure: { 
+                                                                        uiSwitch.setOn(false, animated: true)
+                    })
                 } else {
                     NotificationService.sharedInstance.disableNotifications()
                     toggleNotificationCells(uiSwitch.isOn)
