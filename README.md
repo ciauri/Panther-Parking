@@ -21,7 +21,7 @@ Chapman already has a [Parking App of their own](https://itunes.apple.com/us/app
 ## What I Learned
 
 I have not even begun to use the full power of CloudKit. At this point I'm just using it as a cloudy database to collect parking info. Some features i'd like to eventually leverage from CloudKit are:
-- Push Notifications
+- Push Notifications ✅
 - Entity Monitoring
 - Asset Storage (For parking structure "icons")
 - User Accounts
