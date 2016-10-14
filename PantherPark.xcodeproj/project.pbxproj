@@ -579,6 +579,7 @@
 					};
 					9CD5B3761DA19B1A007A2750 = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = SV57A2C639;
 						ProvisioningStyle = Automatic;
 					};
 					9CD5B3821DA19B1A007A2750 = {
@@ -929,6 +930,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = SV57A2C639;
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
@@ -944,6 +946,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = SV57A2C639;
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
@@ -960,6 +963,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = SV57A2C639;
 				IBSC_MODULE = "PantherPark___WatchKit_App_Extension";
 				INFOPLIST_FILE = "PantherPark - WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking.watchkitapp;
@@ -981,6 +985,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = SV57A2C639;
 				IBSC_MODULE = "PantherPark___WatchKit_App_Extension";
 				INFOPLIST_FILE = "PantherPark - WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking.watchkitapp;
@@ -999,6 +1004,7 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SV57A2C639;
 				INFOPLIST_FILE = "PantherPark - WatchKit App Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -1019,6 +1025,7 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SV57A2C639;
 				INFOPLIST_FILE = "PantherPark - WatchKit App Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
