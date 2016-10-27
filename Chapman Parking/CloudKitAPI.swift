@@ -210,7 +210,8 @@ class CloudKitAPI: ParkingAPI{
         if subscribedTo(subscriptionWithKey: subscriptionKey) {
             unsubscribeFrom(subscriptionWithKey: subscriptionKey, completion: completion)
         } else {
-            completion(false)
+            // Returning success is okay since user's desired state is already true
+            completion(true)
             NSLog("You are not currently subscribed to this event")
         }
         

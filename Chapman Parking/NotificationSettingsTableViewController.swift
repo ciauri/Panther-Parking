@@ -33,6 +33,7 @@ class NotificationSettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         
         NotificationCenter.default.addObserver(self, selector: #selector(reflectSystemNotificationStatus), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        
         NotificationService.sharedInstance.fetchAndUpdateSubscriptions(withCompletion: {
             self.updateCellsAnimated()
         })
@@ -166,11 +167,10 @@ class NotificationSettingsTableViewController: UITableViewController {
         tableView.beginUpdates()
         var indexPaths = indexPathsForLevelCells(includeAllLevels: true)
         if structuresOnly {
-            indexPaths = indexPaths.filter({($0 as NSIndexPath).row == 0})
+            indexPaths = indexPaths.filter({$0.row == 0})
         }
         indexPaths.append(STRUCTURES_ONLY_INDEX_PATH)
         let range = 1...3
-        //let range = NSRange(1...3)
         let indexSet = IndexSet(integersIn: range)
         
         if enabled {
@@ -234,7 +234,7 @@ extension NotificationSettingsTableViewController: SwitchCellDelegate {
                     for structure in structures {
                         if let levels = structure.levels {
                             for level in levels where level.name != "All Levels" {
-                                NotificationService.sharedInstance.disableNotificationFor(level)
+                                NotificationService.sharedInstance.disableNotifications(for: level)
                             }
                         }
                     }
@@ -243,9 +243,9 @@ extension NotificationSettingsTableViewController: SwitchCellDelegate {
             default:
                 let level = self.level(forIndexPath: indexPath)
                 if uiSwitch.isOn {
-                    NotificationService.sharedInstance.enableNotificationFor(level)
+                    NotificationService.sharedInstance.enableNotifications(for: level)
                 } else {
-                    NotificationService.sharedInstance.disableNotificationFor(level)
+                    NotificationService.sharedInstance.disableNotifications(for: level)
                 }
             }
         }

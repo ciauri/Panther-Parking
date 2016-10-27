@@ -19,11 +19,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let defaults = UserDefaults.standard
-        let api: ParkingAPI = CloudKitAPI.sharedInstance
-        DataManager.sharedInstance.api = api
-        NotificationService.sharedInstance.api = api
+        injectDependencies()
+        initializeData()
 
+        DataManager.sharedInstance.autoRefreshEnabled = true
+        
+        // Only has effect on first launch
+        NotificationService.sharedInstance.enableNotifications()
+        LocationService.sharedInstance.setMonitoring(on: true)
+
+//        api.forceUnsubscribeFromAll(){
+//            NSLog("Unsubbed from server")
+//            DataManager.sharedInstance.disableAllNotifications()
+//        }
+        
+        themify()
+        
+
+
+        return true
+    }
+    
+    func initializeData() {
+        let defaults = UserDefaults.standard
         if !defaults.bool(forKey: "initialized"){
             DataManager.sharedInstance.updateCounts(.all) { success in
                 if success {
@@ -37,27 +55,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             DataManager.sharedInstance.updateCounts(UpdateType.sinceLast, withCompletion: nil)
             NSLog("Catching up")
         }
-        
-        DataManager.sharedInstance.autoRefreshEnabled = true
-        NotificationService.sharedInstance.enableNotifications()
-
-//        api.forceUnsubscribeFromAll(){
-//            NSLog("Unsubbed from server")
-//            DataManager.sharedInstance.disableAllNotifications()
-//        }
-        
-
-        
+    }
+    
+    func injectDependencies() {
+        let api: ParkingAPI = CloudKitAPI.sharedInstance
+        DataManager.sharedInstance.api = api
+        NotificationService.sharedInstance.api = api
+        NotificationService.sharedInstance.modelDelegate = DataManager.sharedInstance
+        LocationService.sharedInstance.eventHandlerDelegate = NotificationService.sharedInstance
+    }
+    
+    func themify() {
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().barTintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.white]
         UINavigationBar.appearance().barStyle = UIBarStyle.black
         UISegmentedControl.appearance().tintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
-
-
-
-
-        return true
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {

@@ -40,6 +40,8 @@
 		9C4C5FA61D77D6140036CA4D /* NotificationSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FA51D77D6140036CA4D /* NotificationSettingsTableViewController.swift */; };
 		9C4C5FA81D77D6310036CA4D /* ChartSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FA71D77D6310036CA4D /* ChartSettingsTableViewController.swift */; };
 		9C4C5FAB1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */; };
+		9C6414B21DA0B28A00A57D45 /* Chapman.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9C6414B01DA0B28A00A57D45 /* Chapman.gpx */; };
+		9C6414B31DA0B28A00A57D45 /* NotChapman.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9C6414B11DA0B28A00A57D45 /* NotChapman.gpx */; };
 		9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C71169C1CE3118900C52F0E /* CloudKit.framework */; };
 		9C8D593B1D7B9983008ED843 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8D593A1D7B9983008ED843 /* NotificationService.swift */; };
 		9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA216E41D7E5EFB0006A093 /* LocationService.swift */; };
@@ -49,7 +51,7 @@
 		9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */; };
 		9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */; };
 		9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9B1801D752CDD003E610C /* Localizable.strings */; };
-		9CDDB71E1D7FBFDF00C07689 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CDDB71D1D7FBFDF00C07689 /* Default-568h@2x.png */; };
+		9CFCB1841DC1790F00A43BBD /* SMCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CFCB1831DC1790F00A43BBD /* SMCalloutView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -181,6 +183,9 @@
 		9C4C5FA51D77D6140036CA4D /* NotificationSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSettingsTableViewController.swift; sourceTree = "<group>"; };
 		9C4C5FA71D77D6310036CA4D /* ChartSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSettingsTableViewController.swift; sourceTree = "<group>"; };
 		9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelSwitchTableViewCell.swift; sourceTree = "<group>"; };
+		9C63049A1DA169420098509D /* Chapman_Parking 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 4.xcdatamodel"; sourceTree = "<group>"; };
+		9C6414B01DA0B28A00A57D45 /* Chapman.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Chapman.gpx; sourceTree = SOURCE_ROOT; };
+		9C6414B11DA0B28A00A57D45 /* NotChapman.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NotChapman.gpx; sourceTree = SOURCE_ROOT; };
 		9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chapman Parking.entitlements"; sourceTree = "<group>"; };
 		9C71169C1CE3118900C52F0E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -194,7 +199,9 @@
 		9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPStruct.swift; sourceTree = "<group>"; };
 		9CD9B17F1D752CDD003E610C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9CD9B1811D752CE2003E610C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		9CDDB71D1D7FBFDF00C07689 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		9CFCB1811DC1790E00A43BBD /* PantherPark-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PantherPark-Bridging-Header.h"; sourceTree = "<group>"; };
+		9CFCB1821DC1790F00A43BBD /* SMCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SMCalloutView.h; path = Submodules/Callouts/SMCalloutView.h; sourceTree = SOURCE_ROOT; };
+		9CFCB1831DC1790F00A43BBD /* SMCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SMCalloutView.m; path = Submodules/Callouts/SMCalloutView.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,7 +250,6 @@
 		9C33256D1CDB0EF200F49338 = {
 			isa = PBXGroup;
 			children = (
-				9CDDB71D1D7FBFDF00C07689 /* Default-568h@2x.png */,
 				9C3325781CDB0EF200F49338 /* PantherPark */,
 				9C3325771CDB0EF200F49338 /* Products */,
 			);
@@ -278,11 +284,14 @@
 			isa = PBXGroup;
 			children = (
 				9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */,
+				9CFCB1811DC1790E00A43BBD /* PantherPark-Bridging-Header.h */,
 				9C3325831CDB0EF200F49338 /* Assets.xcassets */,
 				9C3325921CDB110D00F49338 /* Submodules */,
 				9C115A2D1D7BCAED00FF03E8 /* Frameworks */,
 				9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */,
 				9C3325881CDB0EF200F49338 /* Info.plist */,
+				9C6414B01DA0B28A00A57D45 /* Chapman.gpx */,
+				9C6414B11DA0B28A00A57D45 /* NotChapman.gpx */,
 				9C3325901CDB0F3D00F49338 /* Constants.swift */,
 				9CD9B1801D752CDD003E610C /* Localizable.strings */,
 			);
@@ -306,6 +315,7 @@
 		9C3325921CDB110D00F49338 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				9CFCB1851DC1791300A43BBD /* Custom Callouts */,
 				9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */,
 				9C3325931CDB111800F49338 /* Gloss.xcodeproj */,
 			);
@@ -390,6 +400,15 @@
 			name = APIs;
 			sourceTree = "<group>";
 		};
+		9CFCB1851DC1791300A43BBD /* Custom Callouts */ = {
+			isa = PBXGroup;
+			children = (
+				9CFCB1821DC1790F00A43BBD /* SMCalloutView.h */,
+				9CFCB1831DC1790F00A43BBD /* SMCalloutView.m */,
+			);
+			name = "Custom Callouts";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -426,7 +445,7 @@
 					9C3325751CDB0EF200F49338 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = SV57A2C639;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -539,9 +558,10 @@
 			files = (
 				9C3325871CDB0EF200F49338 /* LaunchScreen.storyboard in Resources */,
 				9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */,
+				9C6414B31DA0B28A00A57D45 /* NotChapman.gpx in Resources */,
 				9C3325841CDB0EF200F49338 /* Assets.xcassets in Resources */,
-				9CDDB71E1D7FBFDF00C07689 /* Default-568h@2x.png in Resources */,
 				9C33257F1CDB0EF200F49338 /* Main.storyboard in Resources */,
+				9C6414B21DA0B28A00A57D45 /* Chapman.gpx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,6 +601,7 @@
 				9C3325821CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld in Sources */,
 				9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */,
 				9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */,
+				9CFCB1841DC1790F00A43BBD /* SMCalloutView.m in Sources */,
 				9C3325911CDB0F3D00F49338 /* Constants.swift in Sources */,
 				9C4C5FA81D77D6310036CA4D /* ChartSettingsTableViewController.swift in Sources */,
 				9C4C5FA61D77D6140036CA4D /* NotificationSettingsTableViewController.swift in Sources */,
@@ -727,12 +748,15 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
 				PRODUCT_NAME = PantherPark;
+				SWIFT_OBJC_BRIDGING_HEADER = "Chapman Parking/PantherPark-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -742,12 +766,14 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
 				PRODUCT_NAME = PantherPark;
+				SWIFT_OBJC_BRIDGING_HEADER = "Chapman Parking/PantherPark-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -779,6 +805,7 @@
 		9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9C63049A1DA169420098509D /* Chapman_Parking 4.xcdatamodel */,
 				9C8D59391D7B929A008ED843 /* Chapman_Parking 3.xcdatamodel */,
 				9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */,
 				9C3325811CDB0EF200F49338 /* Chapman_Parking.xcdatamodel */,

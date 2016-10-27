@@ -20,6 +20,10 @@ extension Structure {
     @NSManaged var levels: Set<Level>?
     @NSManaged var location: Location?
     
+    override var description: String {
+        return name ?? "Unnamed Structure"
+    }
+    
     var capacity: Int{
         var cap = 0
         for level in levels! where level.name == "All Levels"{
