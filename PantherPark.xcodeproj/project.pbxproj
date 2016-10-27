@@ -51,6 +51,7 @@
 		9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */; };
 		9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */; };
 		9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9B1801D752CDD003E610C /* Localizable.strings */; };
+		9CFCB1841DC1790F00A43BBD /* SMCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CFCB1831DC1790F00A43BBD /* SMCalloutView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -198,6 +199,9 @@
 		9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPStruct.swift; sourceTree = "<group>"; };
 		9CD9B17F1D752CDD003E610C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9CD9B1811D752CE2003E610C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9CFCB1811DC1790E00A43BBD /* PantherPark-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PantherPark-Bridging-Header.h"; sourceTree = "<group>"; };
+		9CFCB1821DC1790F00A43BBD /* SMCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SMCalloutView.h; path = Submodules/Callouts/SMCalloutView.h; sourceTree = SOURCE_ROOT; };
+		9CFCB1831DC1790F00A43BBD /* SMCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SMCalloutView.m; path = Submodules/Callouts/SMCalloutView.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,6 +284,7 @@
 			isa = PBXGroup;
 			children = (
 				9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */,
+				9CFCB1811DC1790E00A43BBD /* PantherPark-Bridging-Header.h */,
 				9C3325831CDB0EF200F49338 /* Assets.xcassets */,
 				9C3325921CDB110D00F49338 /* Submodules */,
 				9C115A2D1D7BCAED00FF03E8 /* Frameworks */,
@@ -310,6 +315,7 @@
 		9C3325921CDB110D00F49338 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				9CFCB1851DC1791300A43BBD /* Custom Callouts */,
 				9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */,
 				9C3325931CDB111800F49338 /* Gloss.xcodeproj */,
 			);
@@ -394,6 +400,15 @@
 			name = APIs;
 			sourceTree = "<group>";
 		};
+		9CFCB1851DC1791300A43BBD /* Custom Callouts */ = {
+			isa = PBXGroup;
+			children = (
+				9CFCB1821DC1790F00A43BBD /* SMCalloutView.h */,
+				9CFCB1831DC1790F00A43BBD /* SMCalloutView.m */,
+			);
+			name = "Custom Callouts";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -430,7 +445,7 @@
 					9C3325751CDB0EF200F49338 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = SV57A2C639;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -586,6 +601,7 @@
 				9C3325821CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld in Sources */,
 				9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */,
 				9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */,
+				9CFCB1841DC1790F00A43BBD /* SMCalloutView.m in Sources */,
 				9C3325911CDB0F3D00F49338 /* Constants.swift in Sources */,
 				9C4C5FA81D77D6310036CA4D /* ChartSettingsTableViewController.swift in Sources */,
 				9C4C5FA61D77D6140036CA4D /* NotificationSettingsTableViewController.swift in Sources */,
@@ -732,12 +748,15 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
 				PRODUCT_NAME = PantherPark;
+				SWIFT_OBJC_BRIDGING_HEADER = "Chapman Parking/PantherPark-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -747,12 +766,14 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
 				PRODUCT_NAME = PantherPark;
+				SWIFT_OBJC_BRIDGING_HEADER = "Chapman Parking/PantherPark-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

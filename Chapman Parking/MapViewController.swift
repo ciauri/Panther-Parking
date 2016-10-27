@@ -28,23 +28,40 @@ class MapViewController: UIViewController {
     lazy var frcDelegate = GenericFetchedResultsControllerDelegate()
     lazy var frc: NSFetchedResultsController<Structure> = self.initFetchedResultsController()
     
+    fileprivate var customCallouts: [UIView] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addStructuresToMap()
+        if self.traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: self.view)
+        }
 
         let pantherLogo = UIImageView(image: UIImage(named: "panther"))
         pantherLogo.contentMode = .scaleAspectFit
         navigationItem.titleView = pantherLogo
-        
-//        let circle = MKCircle(center: Constants.Locations.defaultCenter, radius: 500)
-//        mapView.add(circle)
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         freezeMap()
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        customCallouts.forEach({$0.removeFromSuperview()})
+        customCallouts = []
+        let annotations = mapView.annotations
+        mapView.removeAnnotations(annotations)
+        coordinator.animate(alongsideTransition: { (context) in
+            self.mapView.addAnnotations(annotations)
+        }, completion: nil)
+        
+        
+        coordinator.notifyWhenInteractionEnds { (context) in
+            self.mapView.addAnnotations(annotations)
+        }
     }
     
 
@@ -71,27 +88,21 @@ class MapViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
+
     func addStructuresToMap(){
         let context = DataManager.sharedInstance.managedObjectContext
-        
         context.perform({
             do{
                 try self.frc.performFetch()
-                
                 if let structures = self.frc.fetchedObjects {
                     for s in structures {
                         self.mapView.addAnnotation(s)
                     }
                 }
-                
             }catch{
                 NSLog("issues and tissues")
             }
         })
- 
-        
     }
     
     fileprivate func initFetchedResultsController() -> NSFetchedResultsController<Structure>{
@@ -113,14 +124,27 @@ class MapViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier!{
         case "annotation":
-            let annotation = mapView.selectedAnnotations.first
-            let destinationVC = segue.destination as! ParkingViewController
-            destinationVC.structure = annotation as? Structure
+            if let annotation = sender as? Structure {
+                let destinationVC = segue.destination as! ParkingViewController
+                destinationVC.structure = annotation
+            }
         default:
             break
         }
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+    }
+    
+    func annotation(forPoint location: CGPoint) -> MKAnnotation? {
+        let convertedPoint = mapView.convert(location, toCoordinateFrom: view)
+        let mapPoint = MKMapPointForCoordinate(convertedPoint)
+        let generalArea = MKMapRect(origin: mapPoint, size: mapView.visibleMapRect.size)
+        let annotations = mapView.annotations(in: generalArea)
+        if let annotation = annotations.first as? MKAnnotation {
+            return annotation
+        } else {
+            return nil
+        }
     }
     
     @IBAction func prepareForSettingsDoneSegue(_ sender: UIStoryboardSegue) {
@@ -141,8 +165,8 @@ extension MapViewController: MKMapViewDelegate{
                 view = reusedView
             }else{
                 view = MKPinAnnotationView(annotation: annotation, reuseIdentifier:reuseId)
-                view.canShowCallout = true
-                view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+                view.canShowCallout = false
+//                view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
                 view.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
                 view.animatesDrop = true
             }
@@ -153,7 +177,7 @@ extension MapViewController: MKMapViewDelegate{
     }
 
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        performSegue(withIdentifier: "annotation", sender: self)
+        performSegue(withIdentifier: "annotation", sender: view.annotation)
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -163,4 +187,43 @@ extension MapViewController: MKMapViewDelegate{
         return circleView
     }
     
+    func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+        DispatchQueue.main.async(execute: {
+            views.forEach { (annotationView) in
+                let customBubble = SMCalloutView.platform()
+                customBubble.delegate = self
+                customBubble.title = annotationView.annotation?.title ?? ""
+                customBubble.subtitle = annotationView.annotation?.subtitle ?? ""
+                customBubble.calloutOffset = annotationView.calloutOffset
+                customBubble.presentCallout(from: annotationView.frame, in: mapView, constrainedTo: mapView, animated: true)
+                self.customCallouts.append(customBubble)
+            }
+        })
+    }
+}
+
+extension MapViewController: SMCalloutViewDelegate {
+    func calloutViewClicked(_ calloutView: SMCalloutView) {
+        if let structure = annotation(forPoint: calloutView.frame.origin) {
+            performSegue(withIdentifier: "annotation", sender: structure)
+        }
+    }
+}
+
+
+
+extension MapViewController: UIViewControllerPreviewingDelegate {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        if let annotation = annotation(forPoint: location) as? Structure,
+            let viewController = storyboard?.instantiateViewController(withIdentifier: "ParkingViewController") as? ParkingViewController {
+            viewController.structure = annotation
+            return viewController
+        } else {
+            return nil
+        }
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        navigationController?.pushViewController(viewControllerToCommit, animated: true)
+    }
 }
