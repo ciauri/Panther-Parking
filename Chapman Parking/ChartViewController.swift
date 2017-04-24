@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import Charts
 import CoreData
+import Charts
 
 /*
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -76,7 +76,7 @@ class ChartViewController: UIViewController {
 
     
     fileprivate func rotateAxisLabel() {
-        yAxisLabel.transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI/2))
+        yAxisLabel.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi/2))
         yAxisLabel.layoutIfNeeded()
     }
     
@@ -163,7 +163,7 @@ class ChartViewController: UIViewController {
         for element in counts {
             let count = Double(element.availableSpaces!)
             let index = element.updatedAt!.timeIntervalSince(timeline.first!)/60
-            yVals.append(ChartDataEntry(value: count, xIndex: Int(index)))
+            yVals.append(ChartDataEntry(x: index, y: count))
         }
 
         
@@ -171,19 +171,19 @@ class ChartViewController: UIViewController {
         if let first = yVals.first,
             let last = yVals.last {
             
-            if last.xIndex < timeline.count-1 {
-                let count = last.value
-                let index = timeline.count-1
-                yVals.append(ChartDataEntry(value: count, xIndex: index))
+            if last.x < Double(timeline.count-1) {
+                let count = last.y
+                let index = Double(timeline.count-1)
+                yVals.append(ChartDataEntry(x: index, y: count))
             }
-            if first.xIndex > 0 {
-                let count = first.value
-                let index = 0
-                yVals.insert(ChartDataEntry(value: count, xIndex: Int(index)), at: 0)
+            if first.x > Double(0) {
+                let count = first.y
+                let index = 0.0
+                yVals.insert(ChartDataEntry(x: index, y: count), at: 0)
             }
         }
 
-        let set = LineChartDataSet(yVals: yVals, label: levelName)
+        let set = LineChartDataSet(values: yVals, label: levelName)
         set.lineWidth = 3
         set.drawCirclesEnabled = false
         
@@ -213,9 +213,8 @@ class ChartViewController: UIViewController {
                 set.colors = [colors.removeFirst()]
             }
             set.mode = .linear
-            set.fill = ChartFill(color: set.colors.first!.cgColor)
-            set.valueFormatter?.zeroSymbol = ""
-            set.valueFormatter?.maximumSignificantDigits = 3
+            set.fill = Fill(color: set.colors.first!)
+            set.valueFormatter = DefaultValueFormatter(decimals: 3)
             set.drawFilledEnabled = true
             set.drawValuesEnabled = false
             dataSets.append(set)
@@ -226,16 +225,17 @@ class ChartViewController: UIViewController {
         })
         
         let stringStamps = timeIntervals.map({return formatter.string(from: $0).replacingOccurrences(of:",", with: "\n")})
+        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: stringStamps)
         lineChart.rightAxis.enabled = false
         lineChart.leftAxis.granularity = 1
-        lineChart.leftAxis.axisMinValue = 0
+        lineChart.leftAxis.axisMinimum = 0
         lineChart.leftAxis.labelPosition = .insideChart
         lineChart.legend.horizontalAlignment = .center
         lineChart.legend.verticalAlignment = .top
         lineChart.legend.orientation = .horizontal
         lineChart.xAxis.avoidFirstLastClippingEnabled = true
-        lineChart.descriptionText = ""
-        lineChart.data = LineChartData(xVals: stringStamps, dataSets: dataSets)
+        lineChart.chartDescription?.text = ""
+        lineChart.data = LineChartData(dataSets: dataSets)
     }
 
 }

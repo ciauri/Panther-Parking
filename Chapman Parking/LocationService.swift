@@ -150,7 +150,7 @@ class LocationService: NSObject{
 // MARK: - CLLocationMananger Delegate methods
 extension LocationService: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        NSLog("Unable to monitor region \(region) due to error \(error)")
+        NSLog("Unable to monitor region \(region.debugDescription) due to error \(error)")
         currentLocation = .unknown
     }
     

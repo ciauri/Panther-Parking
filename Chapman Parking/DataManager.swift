@@ -447,9 +447,9 @@ class DataManager: NotificationModelDelegate{
             request.sortDescriptors = [dateSort]
             
             backgroundContext.performAndWait({
-                if let date = try? backgroundContext.fetch(request).first?.updatedAt {
+                if let date = (try? backgroundContext.fetch(request))?.first?.updatedAt {
                     sinceDate = date
-                    NSLog("Getting counts since \(date!)")
+                    NSLog("Getting counts since \(date)")
                 } else {
                     NSLog("Attempted to catch up without any data. Getting most recent instead.")
                 }

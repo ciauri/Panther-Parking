@@ -140,7 +140,7 @@ class CloudKitAPI: ParkingAPI{
                 subscriptions.forEach(){
                     self.publicDB.delete(withSubscriptionID: $0.subscriptionID,
                         completionHandler: { (string, error) in
-                            NSLog("Successfully unsubscribed from subscription with ID: \(string)")
+                            NSLog("Successfully unsubscribed from subscription with ID: \(string ?? "Unknown ID")")
                             completed += 1
                             if completed == subscriptions.count {
                                 NSLog("Unsubscribed from everything")

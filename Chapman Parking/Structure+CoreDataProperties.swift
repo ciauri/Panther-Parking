@@ -64,7 +64,7 @@ extension Structure: MKAnnotation{
     
     var coordinate: CLLocationCoordinate2D{
         if let location = location, let lat = location.lat, let long = location.long{
-            return CLLocationCoordinate2DMake(lat as Double, long as Double)
+            return CLLocationCoordinate2DMake(Double(lat), Double(long))
         }else{
             return CLLocationCoordinate2DMake(0, 0)
         }
