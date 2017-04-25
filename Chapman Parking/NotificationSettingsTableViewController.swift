@@ -25,32 +25,21 @@ class NotificationSettingsTableViewController: UITableViewController {
         return NotificationService.sharedInstance.structuresOnly
     }
     
-    
-    
-   
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(reflectSystemNotificationStatus), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
-        
         NotificationService.sharedInstance.fetchAndUpdateSubscriptions(withCompletion: {
             self.updateCellsAnimated()
         })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
-    }
-
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     fileprivate func updateCellsAnimated() {
-        if let indexPaths = tableView.indexPathsForVisibleRows?.filter({($0 as NSIndexPath).section > 0}) {
+        if let indexPaths = tableView.indexPathsForVisibleRows?.filter({$0.section > 0}) {
             for indexPath in indexPaths {
                 let level = self.level(forIndexPath: indexPath)
                 if let cell = tableView.cellForRow(at: indexPath) as? LabelSwitchTableViewCell {
@@ -115,7 +104,7 @@ class NotificationSettingsTableViewController: UITableViewController {
     fileprivate func configureLevelCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) {
         let level = self.level(forIndexPath: indexPath)
         
-        if (indexPath as NSIndexPath).row == 0 {
+        if indexPath.row == 0 {
             (cell as! LabelSwitchTableViewCell).label.text = "Entire Structure"
         } else {
             (cell as! LabelSwitchTableViewCell).label.text = level.name!
@@ -137,7 +126,7 @@ class NotificationSettingsTableViewController: UITableViewController {
         levels.sort { (l1, l2) -> Bool in
             return l1.name! < l2.name!
         }
-        return levels[(indexPath as NSIndexPath).row]
+        return levels[indexPath.row]
     }
     
     fileprivate func indexPathsForLevelCells(includeAllLevels include: Bool) -> [IndexPath] {
@@ -204,10 +193,6 @@ class NotificationSettingsTableViewController: UITableViewController {
             toggleNotificationCells(false)
         }
     }
-    
-    
-    
-    
 
 }
 

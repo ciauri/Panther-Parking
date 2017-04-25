@@ -12,11 +12,7 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var notificationDetailLabel: UILabel!
     @IBOutlet weak var geofenceSwitch: UISwitch!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
 
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         notificationDetailLabel.text = NotificationService.sharedInstance.notificationsEnabled ? NotificationService.sharedInstance.notificationsArePaused ? "Paused" : "Enabled" : "Disabled"
@@ -27,16 +23,7 @@ class SettingsTableViewController: UITableViewController {
             tableView.deselectRow(at: selectedRow, animated: animated)
         }
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-    }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
     // MARK: - Table view data source
 

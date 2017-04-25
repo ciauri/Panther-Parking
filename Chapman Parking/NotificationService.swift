@@ -67,9 +67,12 @@ class NotificationService {
         application.registerUserNotificationSettings(notificationSettings)
         application.registerForRemoteNotifications()
         
-        if let sender = sender, let types = application.currentUserNotificationSettings?.types , types == UIUserNotificationType() {
-            notificationsEnabled = false
-            promptForNotificationSettings(onViewController: sender, completion: failure)
+        if
+            let sender = sender,
+            let types = application.currentUserNotificationSettings?.types,
+            types == UIUserNotificationType() {
+                notificationsEnabled = false
+                promptForNotificationSettings(onViewController: sender, completion: failure)
         } else {
             success?()
         }

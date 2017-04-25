@@ -56,8 +56,6 @@ extension Structure: MKAnnotation{
     var subtitle: String?{
         let formatter = NumberFormatter()
         formatter.numberStyle = .percent
-        
-        NSLog("Count: \(currentCount) Cap: \(capacity)")
         let percent = formatter.string(from: NSNumber(floatLiteral:1.0-Double(currentCount)/Double(capacity)))!
         return "\(percent) full"
     }

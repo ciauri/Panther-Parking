@@ -28,7 +28,7 @@ class MapViewController: UIViewController {
     lazy var frcDelegate = GenericFetchedResultsControllerDelegate()
     lazy var frc: NSFetchedResultsController<Structure> = self.initFetchedResultsController()
     
-    fileprivate var customCallouts: [UIView] = []
+    fileprivate var customCallouts: [MKAnnotationView:SMCalloutView] = [:]
     
     
     override func viewDidLoad() {
@@ -47,21 +47,14 @@ class MapViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         freezeMap()
+        controllerDidChangeContent()
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        customCallouts.forEach({$0.removeFromSuperview()})
-        customCallouts = []
-        let annotations = mapView.annotations
-        mapView.removeAnnotations(annotations)
-        coordinator.animate(alongsideTransition: { (context) in
-            self.mapView.addAnnotations(annotations)
-        }, completion: nil)
-        
-        
-        coordinator.notifyWhenInteractionEnds { (context) in
-            self.mapView.addAnnotations(annotations)
-        }
+        coordinator.animate(alongsideTransition: nil, completion: { _ in
+            self.mapView.setRegion(Constants.Locations.defaultRegion, animated: false)
+            self.controllerDidChangeContent()
+        })
     }
     
 
@@ -105,6 +98,21 @@ class MapViewController: UIViewController {
         })
     }
     
+    fileprivate func refreshAnnotationBubbles(with views: [MKAnnotationView], present: Bool = false) {
+        DispatchQueue.main.async {
+            views.forEach({ annotationView in
+                let customBubble = self.customCallouts[annotationView] ?? SMCalloutView.platform()
+                customBubble.delegate = self
+                customBubble.title = annotationView.annotation?.title ?? ""
+                customBubble.subtitle = annotationView.annotation?.subtitle ?? ""
+                customBubble.calloutOffset = annotationView.calloutOffset
+                customBubble.presentCallout(from: annotationView.frame, in: self.mapView, constrainedTo: self.mapView, animated: present)
+                self.customCallouts[annotationView] = customBubble
+            })
+        }
+        
+    }
+    
     fileprivate func initFetchedResultsController() -> NSFetchedResultsController<Structure>{
         let context = DataManager.sharedInstance.managedObjectContext
         let request = NSFetchRequest<Structure>(entityName: "Structure")
@@ -112,6 +120,7 @@ class MapViewController: UIViewController {
         request.sortDescriptors = [sort]
         let frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         frcDelegate.mapView = mapView
+        frcDelegate.delegate = self
         frc.delegate = frcDelegate
 
         return frc
@@ -166,7 +175,6 @@ extension MapViewController: MKMapViewDelegate{
             }else{
                 view = MKPinAnnotationView(annotation: annotation, reuseIdentifier:reuseId)
                 view.canShowCallout = false
-//                view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
                 view.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
                 view.animatesDrop = true
             }
@@ -188,17 +196,7 @@ extension MapViewController: MKMapViewDelegate{
     }
     
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
-        DispatchQueue.main.async(execute: {
-            views.forEach { (annotationView) in
-                let customBubble = SMCalloutView.platform()
-                customBubble.delegate = self
-                customBubble.title = annotationView.annotation?.title ?? ""
-                customBubble.subtitle = annotationView.annotation?.subtitle ?? ""
-                customBubble.calloutOffset = annotationView.calloutOffset
-                customBubble.presentCallout(from: annotationView.frame, in: mapView, constrainedTo: mapView, animated: true)
-                self.customCallouts.append(customBubble)
-            }
-        })
+        refreshAnnotationBubbles(with: views, present: true)
     }
 }
 
@@ -207,6 +205,13 @@ extension MapViewController: SMCalloutViewDelegate {
         if let structure = annotation(forPoint: calloutView.frame.origin) {
             performSegue(withIdentifier: "annotation", sender: structure)
         }
+    }
+}
+
+extension MapViewController: GenericFRCDelegate {
+    func controllerDidChangeContent() {
+        let annotationViews = mapView.annotations.flatMap({ annotation in return mapView.view(for: annotation) })
+        refreshAnnotationBubbles(with: annotationViews)
     }
 }
 

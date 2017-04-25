@@ -50,8 +50,8 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
             }
         // Update and Move
         default:
-            if let
-                annotation = anObject as? Structure,
+            if
+                let annotation = anObject as? Structure,
                 let annotationView = mapView?.view(for: annotation) as? MKPinAnnotationView{
                 
                 annotationView.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
@@ -63,17 +63,15 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
  
     }
     
-    
-    
-    
+
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView?.endUpdates()
-        tableView?.reloadData()
+        delegate?.controllerDidChangeContent()
     }
     
     
 }
 
 protocol GenericFRCDelegate: class{
-    func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath)
+    func controllerDidChangeContent()
 }

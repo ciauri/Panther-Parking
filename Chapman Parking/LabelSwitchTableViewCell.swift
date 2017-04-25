@@ -14,18 +14,6 @@ class LabelSwitchTableViewCell: UITableViewCell {
     @IBOutlet weak var detailSwitch: UISwitch!
     
     weak var delegate: SwitchCellDelegate?
-    
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
 
     @IBAction func switchToggled(_ sender: UISwitch) {
         delegate?.switchCell(self, toggledSwitch: detailSwitch)

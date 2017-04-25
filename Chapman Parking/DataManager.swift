@@ -458,11 +458,10 @@ class DataManager: NotificationModelDelegate{
         NSLog("Generating report...")
         api.generateReport(updateType, sinceDate: sinceDate, withBlock: {report in
             
-            guard let report = report
-                else{
-                    NSLog("Report generation failed")
-                    completion?(false)
-                    return
+            guard let report = report else{
+                NSLog("Report generation failed")
+                completion?(false)
+                return
             }
             
             backgroundContext.perform({
@@ -518,10 +517,9 @@ class DataManager: NotificationModelDelegate{
                         if let c = latestCount{
                             l.updatedAt = c.timestamp
                         }
-                        
                     }
                 }
-                try! backgroundContext.save()
+                try? backgroundContext.save()
                 completion?(true)
             })
         })
