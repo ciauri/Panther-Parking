@@ -25,18 +25,12 @@ extension Structure {
     }
     
     var capacity: Int{
-        var cap = 0
-        for level in levels! where level.name == "All Levels"{
-            let level = level
-            cap += Int(level.capacity!)
-        }
-        return cap
-        
+        return levels?.first(where: {$0.name! == "All Levels"})?.capacity as? Int ?? 0
     }
     
     var currentCount: Int{
         var count = 0
-        for level in levels! where level.name != "All Levels"{
+        for level in levels! where level.name != "All Levels" && level.enabled?.boolValue ?? true {
             let level = level
             count += Int(level.currentCount!)
         }
@@ -54,9 +48,7 @@ extension Structure: MKAnnotation{
     }
     
     var subtitle: String?{
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        let percent = formatter.string(from: NSNumber(floatLiteral:1.0-Double(currentCount)/Double(capacity)))!
+        let percent = FormatterUtility.shared.percentFormatter.string(from: NSNumber(floatLiteral:(Double(capacity)-Double(currentCount))/Double(capacity)))!
         return "\(percent) full"
     }
     

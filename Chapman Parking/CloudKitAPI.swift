@@ -523,9 +523,9 @@ class CloudKitAPI: ParkingAPI{
                     NSLog("Error parsing levels. Model issue")
                     return []
             }
-            
+            let enabled = level.object(forKey: "Enabled") as? Int ?? 1
             let ckID = level.recordID.recordName
-            let newLevel = CKLevel(uuid: ckID, name: levelName, capacity: levelCap, counts: [], currentCount: levelCount)
+            let newLevel = CKLevel(uuid: ckID, name: levelName, capacity: levelCap, counts: [], currentCount: levelCount, enabled: enabled > 0)
             levels.append(newLevel)
         }
         return levels

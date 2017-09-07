@@ -27,7 +27,7 @@ struct CKLevel: CPLevel{
     var capacity: Int?
     var counts: [CPCount]
     var currentCount: Int
-    
+    var enabled: Bool
 }
 
 struct CKCount: CPCount{

@@ -10,21 +10,11 @@ import Foundation
 
 public extension Date {
     public static func ISOStringFromDate(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
-        
-        return dateFormatter.string(from: date)
+        return FormatterUtility.shared.isoToStringDateFormatter.string(from: date)
     }
     
     public static func dateFromISOString(_ string: String) -> Date {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        
-        return dateFormatter.date(from: string)!
+        return FormatterUtility.shared.isoFromStringDateFormatter.date(from: string)!
     }
     
     /// Returns a choronological list of NSDates within the desired range with interval in seconds

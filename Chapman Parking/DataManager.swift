@@ -499,6 +499,7 @@ class DataManager: NotificationModelDelegate{
                         l.name = level.name
                         l.capacity = level.capacity as NSNumber?
                         l.currentCount = level.currentCount as NSNumber?
+                        l.enabled = level.enabled ? 1 : 0
                         
                         var latestCount: CPCount? = nil
                         

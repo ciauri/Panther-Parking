@@ -16,6 +16,7 @@ extension Level {
 
     @NSManaged var name: String?
     @NSManaged var uuid: String?
+    @NSManaged var enabled: NSNumber?
     @NSManaged var capacity: NSNumber?
     @NSManaged var currentCount: NSNumber?
     @NSManaged var structure: Structure?

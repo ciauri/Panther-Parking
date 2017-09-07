@@ -201,8 +201,17 @@ extension MapViewController: MKMapViewDelegate{
 }
 
 extension MapViewController: SMCalloutViewDelegate {
+    func annotation(for calloutView: SMCalloutView) -> MKAnnotation? {
+        for (view, callout) in self.customCallouts {
+            if callout == calloutView {
+                return view.annotation
+            }
+        }
+        return nil
+    }
+    
     func calloutViewClicked(_ calloutView: SMCalloutView) {
-        if let structure = annotation(forPoint: calloutView.frame.origin) {
+        if let structure = annotation(for: calloutView) {
             performSegue(withIdentifier: "annotation", sender: structure)
         }
     }

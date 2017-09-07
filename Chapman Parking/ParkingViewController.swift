@@ -25,13 +25,6 @@ class ParkingViewController: UIViewController {
         return formatter
     }()
     
-    lazy fileprivate var percentFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        return formatter
-    }()
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -80,7 +73,9 @@ extension ParkingViewController {
         request.sortDescriptors = [structureSort, nameSort]
         
         if let s = structure {
-            request.predicate = NSPredicate(format: "structure = %@", s)
+            request.predicate = NSPredicate(format: "structure = %@ AND enabled = 1", s)
+        } else {
+            request.predicate = NSPredicate(format: "enabled = 1")
         }
         let controller = NSFetchedResultsController<Level>(fetchRequest: request, managedObjectContext: DataManager.sharedInstance.managedObjectContext, sectionNameKeyPath: "structure.name", cacheName: nil)
         frcDelegate.tableView = parkingTableView
@@ -106,19 +101,19 @@ extension ParkingViewController {
 extension ParkingViewController: UITableViewDataSource {
     internal func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath){
         let level = frc.object(at: indexPath)
+        let percentFull = Float(Int(level.capacity!) - Int(level.currentCount!)) / Float(level.capacity!)
         
         if level.name == "All Levels"{
             let cell = cell as! TotalCountTableViewCell
             cell.nameLabel.text = level.name
-            let percent = Float(Int(level.capacity!) - Int(level.currentCount!)) / Float(level.capacity!)
-            cell.countLabel.text = percentFormatter.string(from: NSNumber(value: percent))
-            cell.progressBar.progress = percent
+            cell.countLabel.text = FormatterUtility.shared.percentFormatter.string(from: NSNumber(value: percentFull))
+            cell.progressBar.progress = percentFull
             cell.updateProgressBarColor()
         }else{
             let cell = cell as! LevelCountTableViewCell
             cell.nameLabel.text = level.name
             cell.countLabel.text = "\(level.currentCount!)"
-            cell.progressBar.progress = Float(Int(level.capacity!) - Int(level.currentCount!)) / Float(level.capacity!)
+            cell.progressBar.progress = percentFull
             cell.updateProgressBarColor()
         }
     }

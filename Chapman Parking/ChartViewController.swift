@@ -42,20 +42,13 @@ class ChartViewController: UIViewController {
     var selectedLevels: [Level]!
     
     lazy var today: Date = Date().dateFromTime(nil, minute: nil, second: 0)!
-    lazy var formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter
-    }()
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = structure.name
         
         if let levels = structure.levels {
-            self.levels = Array(levels)
+            self.levels = Array(levels).filter({($0.enabled?.intValue ?? 1) > 0})
             self.levels.sort(by: {$0.0.name! < $0.1.name!})
             if !shouldDrawCumulativeLine {
                 // Because "All Levels" will always be first alphabetically... Yeah, yeah its bad, I know
@@ -71,6 +64,10 @@ class ChartViewController: UIViewController {
             rotateAxisLabel()
             levelSelector.selectedSegmentIndex = 0
         }
+    }
+    
+    deinit {
+        FormatterUtility.shared.shortTimeFormatter.dateStyle = .none
     }
     
 
@@ -89,10 +86,10 @@ class ChartViewController: UIViewController {
     @IBAction func timeFrameSelected(_ selector: UISegmentedControl) {
         lineChart.fitScreen()
         if selector.selectedSegmentIndex == 0 {
-            formatter.dateStyle = .none
+            FormatterUtility.shared.shortTimeFormatter.dateStyle = .none
             numberOfDays = 1
         } else {
-            formatter.dateStyle = .short
+            FormatterUtility.shared.shortTimeFormatter.dateStyle = .short
             numberOfDays = 7
         }
         DispatchQueue.main.async(execute: {
@@ -224,7 +221,7 @@ class ChartViewController: UIViewController {
             set1.label! < set2.label!
         })
         
-        let stringStamps = timeIntervals.map({return formatter.string(from: $0).replacingOccurrences(of:",", with: "\n")})
+        let stringStamps = timeIntervals.map({return FormatterUtility.shared.shortTimeFormatter.string(from: $0).replacingOccurrences(of:",", with: "\n")})
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: stringStamps)
         lineChart.rightAxis.enabled = false
         lineChart.leftAxis.granularity = 1

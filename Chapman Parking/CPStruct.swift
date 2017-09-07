@@ -30,6 +30,7 @@ protocol CPLevel{
     var capacity: Int? {get}
     var counts: [CPCount] {get}
     var currentCount: Int {get}
+    var enabled: Bool {get}
 }
 
 protocol CPCount{
