@@ -41,7 +41,7 @@ class CloudKitAPI: ParkingAPI{
             alertController.addAction(settingsAction)
             alertController.addAction(cancelAction)
             DispatchQueue.main.async(execute: {
-                UIApplication.shared.delegate?.window!?.rootViewController?.present(alertController, animated: true, completion: {_ in self.presenting = false})
+                UIApplication.shared.delegate?.window!?.rootViewController?.present(alertController, animated: true, completion: { self.presenting = false})
             })
         }
     }

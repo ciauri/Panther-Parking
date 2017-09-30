@@ -29,14 +29,11 @@ extension Structure {
     }
     
     var currentCount: Int{
-        var count = 0
-        for level in levels! where level.name != "All Levels" && level.enabled?.boolValue ?? true {
-            let level = level
-            count += Int(level.currentCount!)
-        }
-        
-        return count
-        
+        return levels?.first(where: {$0.name! == "All Levels"})?.currentCount as? Int ?? 0
+    }
+    
+    var percentFull: String {
+        return FormatterUtility.shared.percentFormatter.string(from: NSNumber(floatLiteral:(Double(capacity)-Double(currentCount))/Double(capacity))) ?? "0"
     }
     
 
@@ -48,13 +45,12 @@ extension Structure: MKAnnotation{
     }
     
     var subtitle: String?{
-        let percent = FormatterUtility.shared.percentFormatter.string(from: NSNumber(floatLiteral:(Double(capacity)-Double(currentCount))/Double(capacity)))!
-        return "\(percent) full"
+        return "\(percentFull) full"
     }
     
     var coordinate: CLLocationCoordinate2D{
         if let location = location, let lat = location.lat, let long = location.long{
-            return CLLocationCoordinate2DMake(Double(lat), Double(long))
+            return CLLocationCoordinate2DMake(Double(truncating: lat), Double(truncating: long))
         }else{
             return CLLocationCoordinate2DMake(0, 0)
         }

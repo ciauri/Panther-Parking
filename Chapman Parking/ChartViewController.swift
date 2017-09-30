@@ -49,7 +49,7 @@ class ChartViewController: UIViewController {
         
         if let levels = structure.levels {
             self.levels = Array(levels).filter({($0.enabled?.intValue ?? 1) > 0})
-            self.levels.sort(by: {$0.0.name! < $0.1.name!})
+            self.levels.sort(by: {$0.name! < $1.name!})
             if !shouldDrawCumulativeLine {
                 // Because "All Levels" will always be first alphabetically... Yeah, yeah its bad, I know
                 self.levels.removeFirst()
@@ -158,7 +158,7 @@ class ChartViewController: UIViewController {
         var yVals: [ChartDataEntry] = []
         
         for element in counts {
-            let count = Double(element.availableSpaces!)
+            let count = Double(truncating: element.availableSpaces!)
             let index = element.updatedAt!.timeIntervalSince(timeline.first!)/60
             yVals.append(ChartDataEntry(x: index, y: count))
         }
