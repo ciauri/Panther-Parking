@@ -29,7 +29,9 @@ class NotificationSettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(reflectSystemNotificationStatus), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationService.sharedInstance.fetchAndUpdateSubscriptions(withCompletion: {
-            self.updateCellsAnimated()
+            DispatchQueue.main.async {
+                self.updateCellsAnimated()
+            }
         })
     }
     
@@ -43,7 +45,7 @@ class NotificationSettingsTableViewController: UITableViewController {
             for indexPath in indexPaths {
                 let level = self.level(forIndexPath: indexPath)
                 if let cell = tableView.cellForRow(at: indexPath) as? LabelSwitchTableViewCell {
-                    cell.detailSwitch.setOn(Bool(level.notificationsEnabled!), animated: true)
+                    cell.detailSwitch.setOn(Bool(truncating: level.notificationsEnabled!), animated: true)
                 }
             }
         }
@@ -111,7 +113,7 @@ class NotificationSettingsTableViewController: UITableViewController {
         }
         
         if let switchState = level.notificationsEnabled{
-            let on = Bool(switchState)
+            let on = Bool(truncating: switchState)
             (cell as! LabelSwitchTableViewCell).detailSwitch.setOn(on, animated: false)
         } else {
             (cell as! LabelSwitchTableViewCell).detailSwitch.setOn(false, animated: false)

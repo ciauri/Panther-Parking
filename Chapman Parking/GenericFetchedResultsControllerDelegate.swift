@@ -52,9 +52,8 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
         default:
             if
                 let annotation = anObject as? Structure,
-                let annotationView = mapView?.view(for: annotation) as? MKPinAnnotationView{
-                
-                annotationView.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
+                let annotationView = mapView?.view(for: annotation) as? MKMarkerAnnotationView {
+                annotationView.markerTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
             }
             if let indexPath = indexPath{
                 tableView?.reloadRows(at: [indexPath], with: .automatic)

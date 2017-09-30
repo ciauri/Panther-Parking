@@ -8,21 +8,8 @@
 
 import Foundation
 import CoreData
-import Gloss
 import MapKit
 
 class Structure: NSManagedObject{
-
-// Insert code here to add functionality to your managed object subclass
-    
-    convenience init(json: JSON, insertIntoManagedObjectContext context: NSManagedObjectContext!){
-        let entity = NSEntityDescription.entity(forEntityName: "Structure", in: context)!
-        self.init(entity: entity, insertInto: context)
-        name = "Name" <~~ json
-
-    }
-    
-
-
 
 }
