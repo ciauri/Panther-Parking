@@ -32,7 +32,7 @@ extension Structure {
         var count = 0
         for level in levels! where level.name != "All Levels" && level.enabled?.boolValue ?? true {
             let level = level
-            count += Int(level.currentCount!)
+            count += Int(truncating: level.currentCount!)
         }
         
         return count
@@ -54,7 +54,7 @@ extension Structure: MKAnnotation{
     
     var coordinate: CLLocationCoordinate2D{
         if let location = location, let lat = location.lat, let long = location.long{
-            return CLLocationCoordinate2DMake(Double(lat), Double(long))
+            return CLLocationCoordinate2DMake(Double(truncating: lat), Double(truncating: long))
         }else{
             return CLLocationCoordinate2DMake(0, 0)
         }

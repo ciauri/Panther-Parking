@@ -69,11 +69,11 @@ class MapViewController: UIViewController {
         mapView.showsBuildings = true
     }
     
-    func flipToList(){
+    @objc func flipToList(){
         performSegue(withIdentifier: "flip", sender: self)
     }
     
-    func openSettings(){
+    @objc func openSettings(){
         performSegue(withIdentifier: "settings", sender: self)
     }
 

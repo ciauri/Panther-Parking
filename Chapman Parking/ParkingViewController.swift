@@ -41,11 +41,11 @@ class ParkingViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func flipToMap(){
+    @objc func flipToMap(){
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    func segueToGraph(){
+    @objc func segueToGraph(){
         performSegue(withIdentifier: "chart", sender: self)
     }
     
@@ -101,7 +101,7 @@ extension ParkingViewController {
 extension ParkingViewController: UITableViewDataSource {
     internal func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath){
         let level = frc.object(at: indexPath)
-        let percentFull = Float(Int(level.capacity!) - Int(level.currentCount!)) / Float(level.capacity!)
+        let percentFull = Float(Int(truncating: level.capacity!) - Int(truncating: level.currentCount!)) / Float(truncating: level.capacity!)
         
         if level.name == "All Levels"{
             let cell = cell as! TotalCountTableViewCell
