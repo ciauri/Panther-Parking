@@ -106,7 +106,7 @@ extension ParkingViewController: UITableViewDataSource {
         if level.name == "All Levels"{
             let cell = cell as! TotalCountTableViewCell
             cell.nameLabel.text = level.name
-            cell.countLabel.text = FormatterUtility.shared.percentFormatter.string(from: NSNumber(value: percentFull))
+            cell.countLabel.text = level.percentFull
             cell.progressBar.progress = percentFull
             cell.updateProgressBarColor()
         }else{

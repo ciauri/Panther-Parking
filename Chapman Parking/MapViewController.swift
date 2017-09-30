@@ -28,9 +28,6 @@ class MapViewController: UIViewController {
     lazy var frcDelegate = GenericFetchedResultsControllerDelegate()
     lazy var frc: NSFetchedResultsController<Structure> = self.initFetchedResultsController()
     
-    fileprivate var customCallouts: [MKAnnotationView:SMCalloutView] = [:]
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         addStructuresToMap()
@@ -47,13 +44,11 @@ class MapViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         freezeMap()
-        controllerDidChangeContent()
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animate(alongsideTransition: nil, completion: { _ in
             self.mapView.setRegion(Constants.Locations.defaultRegion, animated: false)
-            self.controllerDidChangeContent()
         })
     }
     
@@ -67,6 +62,8 @@ class MapViewController: UIViewController {
         mapView.showsScale = true
         mapView.showsCompass = true
         mapView.showsBuildings = true
+        mapView.mapType = .mutedStandard
+        mapView.register(StructureMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
     }
     
     @objc func flipToList(){
@@ -75,11 +72,6 @@ class MapViewController: UIViewController {
     
     @objc func openSettings(){
         performSegue(withIdentifier: "settings", sender: self)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     func addStructuresToMap(){
@@ -98,21 +90,6 @@ class MapViewController: UIViewController {
         })
     }
     
-    fileprivate func refreshAnnotationBubbles(with views: [MKAnnotationView], present: Bool = false) {
-        DispatchQueue.main.async {
-            views.forEach({ annotationView in
-                let customBubble = self.customCallouts[annotationView] ?? SMCalloutView.platform()
-                customBubble.delegate = self
-                customBubble.title = annotationView.annotation?.title ?? ""
-                customBubble.subtitle = annotationView.annotation?.subtitle ?? ""
-                customBubble.calloutOffset = annotationView.calloutOffset
-                customBubble.presentCallout(from: annotationView.frame, in: self.mapView, constrainedTo: self.mapView, animated: present)
-                self.customCallouts[annotationView] = customBubble
-            })
-        }
-        
-    }
-    
     fileprivate func initFetchedResultsController() -> NSFetchedResultsController<Structure>{
         let context = DataManager.sharedInstance.managedObjectContext
         let request = NSFetchRequest<Structure>(entityName: "Structure")
@@ -129,7 +106,6 @@ class MapViewController: UIViewController {
 
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier!{
         case "annotation":
@@ -140,8 +116,10 @@ class MapViewController: UIViewController {
         default:
             break
         }
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    }
+    
+    @IBAction func prepareForSettingsDoneSegue(_ sender: UIStoryboardSegue) {
+        NSLog("Settings dismissed")
     }
     
     func annotation(forPoint location: CGPoint) -> MKAnnotation? {
@@ -155,72 +133,28 @@ class MapViewController: UIViewController {
             return nil
         }
     }
-    
-    @IBAction func prepareForSettingsDoneSegue(_ sender: UIStoryboardSegue) {
-        NSLog("Settings dismissed")
-    }
 
 }
 
 
 extension MapViewController: MKMapViewDelegate{
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if let annotation = annotation as? Structure{
-            var view: MKPinAnnotationView
-            let reuseId = "pin"
-            
-            if let reusedView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView{
-                reusedView.annotation = annotation
-                view = reusedView
-            }else{
-                view = MKPinAnnotationView(annotation: annotation, reuseIdentifier:reuseId)
-                view.canShowCallout = false
-                view.pinTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(annotation.capacity-annotation.currentCount)/Float(annotation.capacity))
-                view.animatesDrop = true
-            }
-            return view
-        }else{
-            return nil
-        }
-    }
-
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         performSegue(withIdentifier: "annotation", sender: view.annotation)
     }
-    
+
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circleView = MKCircleRenderer(circle: overlay as! MKCircle)
         circleView.strokeColor = .red
         circleView.fillColor = UIColor.red.withAlphaComponent(0.4)
         return circleView
     }
-    
-    func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
-        refreshAnnotationBubbles(with: views, present: true)
-    }
-}
-
-extension MapViewController: SMCalloutViewDelegate {
-    func annotation(for calloutView: SMCalloutView) -> MKAnnotation? {
-        for (view, callout) in self.customCallouts {
-            if callout == calloutView {
-                return view.annotation
-            }
-        }
-        return nil
-    }
-    
-    func calloutViewClicked(_ calloutView: SMCalloutView) {
-        if let structure = annotation(for: calloutView) {
-            performSegue(withIdentifier: "annotation", sender: structure)
-        }
-    }
 }
 
 extension MapViewController: GenericFRCDelegate {
     func controllerDidChangeContent() {
-        let annotationViews = mapView.annotations.flatMap({ annotation in return mapView.view(for: annotation) })
-        refreshAnnotationBubbles(with: annotationViews)
+        let currentAnnotations = mapView.annotations
+        mapView.removeAnnotations(currentAnnotations)
+        mapView.addAnnotations(currentAnnotations)
     }
 }
 

@@ -29,7 +29,9 @@ class NotificationSettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(reflectSystemNotificationStatus), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationService.sharedInstance.fetchAndUpdateSubscriptions(withCompletion: {
-            self.updateCellsAnimated()
+            DispatchQueue.main.async {
+                self.updateCellsAnimated()
+            }
         })
     }
     

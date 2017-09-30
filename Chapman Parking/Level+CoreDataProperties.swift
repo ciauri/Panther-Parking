@@ -24,25 +24,12 @@ extension Level {
     @NSManaged var updatedAt: Date?
     @NSManaged var notificationsEnabled: NSNumber?
 
-    
-//    var currentCount: Int{
-//        get{
-//            let sort = NSSortDescriptor(key: "updatedAt", ascending: false)
-//            let arr: Array = (counts?.sortedArrayUsingDescriptors([sort]))!
-//            if let count = (arr.first as? Count)?.availableSpaces{
-//                return Int(count)
-//            }else{
-//                return 0
-//            }
-//        }
-//    }
-//    
-//    var updatedAt: NSDate{
-//        get{
-//            let sort = NSSortDescriptor(key: "updatedAt", ascending: false)
-//            let arr: Array = (counts?.sortedArrayUsingDescriptors([sort]))!
-//            return (arr.first as! Count).updatedAt!
-//        }
-//    }
+    var percentFull: String {
+        guard let capacity = capacity,
+            let currentCount = currentCount else {
+                return ""
+        }
+        return FormatterUtility.shared.percentFormatter.string(from: NSNumber(floatLiteral:(Double(truncating: capacity)-Double(truncating: currentCount))/Double(truncating: capacity))) ?? "0"
+    }
 
 }

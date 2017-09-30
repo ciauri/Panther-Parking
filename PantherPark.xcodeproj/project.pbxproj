@@ -41,6 +41,7 @@
 		9C654F471EAEAF24000A638B /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9CE13B6E1DEEA85500848885 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C670BD61F617404000850AF /* FormatterUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C670BD51F617404000850AF /* FormatterUtility.swift */; };
 		9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C71169C1CE3118900C52F0E /* CloudKit.framework */; };
+		9C882EA51F800C4E0004C299 /* StructureMarkerAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C882EA41F800C4E0004C299 /* StructureMarkerAnnotationView.swift */; };
 		9C8D593B1D7B9983008ED843 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8D593A1D7B9983008ED843 /* NotificationService.swift */; };
 		9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA216E41D7E5EFB0006A093 /* LocationService.swift */; };
 		9CC114951CE984C30093215B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC114941CE984C30093215B /* MapViewController.swift */; };
@@ -57,7 +58,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 06165F231D8110E600722320;
+			remoteGlobalIDString = A58A4ED274A941CA248EA921;
 			remoteInfo = Charts;
 		};
 		9CE13B6D1DEEA85500848885 /* PBXContainerItemProxy */ = {
@@ -130,6 +131,7 @@
 		9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chapman Parking.entitlements"; sourceTree = "<group>"; };
 		9C71169C1CE3118900C52F0E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		9C81E9D61D113FD400B6AA05 /* Chapman_Parking 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 2.xcdatamodel"; sourceTree = "<group>"; };
+		9C882EA41F800C4E0004C299 /* StructureMarkerAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructureMarkerAnnotationView.swift; sourceTree = "<group>"; };
 		9C8D59391D7B929A008ED843 /* Chapman_Parking 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 3.xcdatamodel"; sourceTree = "<group>"; };
 		9C8D593A1D7B9983008ED843 /* NotificationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		9CA216E41D7E5EFB0006A093 /* LocationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */,
 				9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */,
 				9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */,
+				9C882EA41F800C4E0004C299 /* StructureMarkerAnnotationView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -471,6 +474,7 @@
 				9C3325821CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld in Sources */,
 				9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */,
 				9C670BD61F617404000850AF /* FormatterUtility.swift in Sources */,
+				9C882EA51F800C4E0004C299 /* StructureMarkerAnnotationView.swift in Sources */,
 				9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */,
 				9CFCB1841DC1790F00A43BBD /* SMCalloutView.m in Sources */,
 				9C3325911CDB0F3D00F49338 /* Constants.swift in Sources */,
