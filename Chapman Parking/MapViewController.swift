@@ -153,8 +153,13 @@ extension MapViewController: MKMapViewDelegate{
 extension MapViewController: GenericFRCDelegate {
     func controllerDidChangeContent() {
         let currentAnnotations = mapView.annotations
-        mapView.removeAnnotations(currentAnnotations)
-        mapView.addAnnotations(currentAnnotations)
+        currentAnnotations.forEach { annotation in
+            if let annotation = annotation as? Structure,
+                let view = mapView.view(for: annotation) as? StructureMarkerAnnotationView {
+                // Triggers the willSet which will redraw the annotation with updated data
+                view.annotation = annotation
+            }
+        }
     }
 }
 
