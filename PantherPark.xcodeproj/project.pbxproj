@@ -44,6 +44,7 @@
 		9C882EA51F800C4E0004C299 /* StructureMarkerAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C882EA41F800C4E0004C299 /* StructureMarkerAnnotationView.swift */; };
 		9C8D593B1D7B9983008ED843 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8D593A1D7B9983008ED843 /* NotificationService.swift */; };
 		9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA216E41D7E5EFB0006A093 /* LocationService.swift */; };
+		9CA63A8E1F80994D003D831A /* Array+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA63A8D1F80994D003D831A /* Array+.swift */; };
 		9CC114951CE984C30093215B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC114941CE984C30093215B /* MapViewController.swift */; };
 		9CC6E4441CE57BFC00A79AEF /* CKStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */; };
 		9CC6E44A1CE5ACC400A79AEF /* CloudKitAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */; };
@@ -134,6 +135,7 @@
 		9C8D59391D7B929A008ED843 /* Chapman_Parking 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 3.xcdatamodel"; sourceTree = "<group>"; };
 		9C8D593A1D7B9983008ED843 /* NotificationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		9CA216E41D7E5EFB0006A093 /* LocationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		9CA63A8D1F80994D003D831A /* Array+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+.swift"; sourceTree = "<group>"; };
 		9CC114941CE984C30093215B /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKStructs.swift; sourceTree = "<group>"; };
 		9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitAPI.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			children = (
 				9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */,
 				9C05DCF31D60C9CD00A69366 /* UIColor+.swift */,
+				9CA63A8D1F80994D003D831A /* Array+.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -467,6 +470,7 @@
 				9C4C5FA81D77D6310036CA4D /* ChartSettingsTableViewController.swift in Sources */,
 				9C4C5FA61D77D6140036CA4D /* NotificationSettingsTableViewController.swift in Sources */,
 				9C3325C81CDB34F600F49338 /* ParkingViewController.swift in Sources */,
+				9CA63A8E1F80994D003D831A /* Array+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

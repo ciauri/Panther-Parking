@@ -13,10 +13,7 @@ class DataManager: NotificationModelDelegate{
     static let sharedInstance = DataManager()
     var api: ParkingAPI!
 
-    
     var autoRefreshInterval: Double = 60
-//    private weak var refreshTimer: NSTimer?
-    
     var autoRefreshEnabled: Bool = true{
         didSet{
             if autoRefreshEnabled && (refreshTimer == nil){
@@ -243,62 +240,7 @@ class DataManager: NotificationModelDelegate{
         return structures
     }
     
-    // MARK: - Object parsing from API
-    
-    fileprivate func process(_ structure: CPStructure, withContext context: NSManagedObjectContext?) {
-        var moc: NSManagedObjectContext
-        if let context = context {
-            moc = context
-        } else {
-            moc = try! createPrivateQueueContext()
-        }
-        
-        moc.perform({
-            var s: Structure
-            if let structure = self.structureWith(structure.uuid, moc: moc) {
-                s = structure
-            } else {
-                s = NSEntityDescription.insertNewObject(forEntityName: "Structure", into: moc) as! Structure
-                let loc = NSEntityDescription.insertNewObject(forEntityName: "Location", into: moc) as! Location
-                s.location = loc
-                s.uuid = structure.uuid
-                NSLog("New Structure")
-            }
-            
-            s.location?.lat = structure.lat as NSNumber?
-            s.location?.long = structure.long as NSNumber?
-            s.name = structure.name
-            
-            try! moc.save()
-        })
-    }
-    
-    fileprivate func process(_ level: CPLevel, inStructure structure: Structure, withContext context: NSManagedObjectContext?) {
-        var moc: NSManagedObjectContext
-        if let context = context {
-            moc = context
-        } else {
-            moc = try! createPrivateQueueContext()
-        }
-        
-        moc.perform({
-            var l: Level
-            if let level = self.levelWith(level.uuid, moc: moc){
-                l = level
-            }else{
-                l = NSEntityDescription.insertNewObject(forEntityName: "Level", into: moc) as! Level
-                l.structure = structure
-                l.uuid = level.uuid
-                NSLog("New Level")
-            }
-            
-            l.name = level.name
-            l.capacity = level.capacity as NSNumber?
-            l.currentCount = level.currentCount as NSNumber?
-            try! moc.save()
-        })
-    }
-    
+ 
     fileprivate func process(_ counts: [CPCount], onLevel level: Level, withContext context: NSManagedObjectContext?, completion: (([Count]) -> ())?){
         var moc: NSManagedObjectContext
         if let context = context {

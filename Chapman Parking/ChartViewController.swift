@@ -55,10 +55,7 @@ class ChartViewController: UIViewController {
                 self.levels.removeFirst()
             }
             selectedLevels = self.levels
-            DispatchQueue.main.async(execute: {
-                self.updateLevels()
-                self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
-            })
+            updateUI()
             
             addLevelsToLevelSelector()
             rotateAxisLabel()
@@ -70,17 +67,9 @@ class ChartViewController: UIViewController {
         FormatterUtility.shared.shortTimeFormatter.dateStyle = .none
     }
     
-
-    
     fileprivate func rotateAxisLabel() {
         yAxisLabel.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi/2))
         yAxisLabel.layoutIfNeeded()
-    }
-    
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func timeFrameSelected(_ selector: UISegmentedControl) {
@@ -92,10 +81,7 @@ class ChartViewController: UIViewController {
             FormatterUtility.shared.shortTimeFormatter.dateStyle = .short
             numberOfDays = 7
         }
-        DispatchQueue.main.async(execute: {
-            self.updateLevels()
-            self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
-        })
+        updateUI()
     }
     
     @IBAction func levelSelected(_ selector: UISegmentedControl) {
@@ -105,7 +91,15 @@ class ChartViewController: UIViewController {
             let index = shouldDrawCumulativeLine ? selector.selectedSegmentIndex : selector.selectedSegmentIndex-1
             selectedLevels = [levels[index]]
         }
-        DispatchQueue.main.async(execute: {
+        updateUI()
+    }
+    
+    private func updateUI() {
+        DispatchQueue.main.async(execute: { [weak self] in
+            guard let `self` = self else {
+                NSLog("VC Deallocated")
+                return
+            }
             self.updateLevels()
             self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
         })
@@ -120,7 +114,11 @@ class ChartViewController: UIViewController {
             DataManager.sharedInstance.update($0,
                 startDate: pastDate,
                 endDate: today,
-                completion: {_ in
+                completion: {[weak self] _ in
+                    guard let `self` = self else {
+                        NSLog("VC Deallocated")
+                        return
+                    }
                     completedCalls += 1
                     DispatchQueue.main.async(execute: {
                         self.progress.setProgress(Float(completedCalls)/Float(self.selectedLevels.count), animated: true)
@@ -130,9 +128,7 @@ class ChartViewController: UIViewController {
                             self.spinner.stopAnimating()
                             self.initChart(self.selectedLevels, withResolution: self.resolution, numberOfDays: self.numberOfDays)
                         })
-                        
                     }
-                    
             })
         })
     }

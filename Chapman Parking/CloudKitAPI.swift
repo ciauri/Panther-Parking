@@ -385,66 +385,59 @@ class CloudKitAPI: ParkingAPI{
         
         
     }
-    
-    
-    
-    
-    
-    
+
     func generateReport(_ updateType: UpdateType, sinceDate: Date?, withBlock completion: @escaping ((CPReport?) -> Void)) {
-        //        container.accountStatusWithCompletionHandler(loginHandler)
-        
+        var fetchedStructures: [CKStructure] = []
         fetchParkingStructures({ structures, error in
-            guard let structures = structures
-                else{
-                    NSLog("Error fetching structures")
-                    self.displayDevelopmentCloudKitAlert()
-                    completion(nil)
-                    return
+            guard let structures = structures else{
+                NSLog("Error fetching structures")
+                self.displayDevelopmentCloudKitAlert()
+                completion(nil)
+                return
             }
-            completion(CKReport(structures: structures.map{$0}))
+            fetchedStructures = structures
+            let levelsDispatchGroup = DispatchGroup()
             structures.forEach({ structure in
-                
-                
+                levelsDispatchGroup.enter()
                 self.fetchLevels(fromStructureWithUUID: structure.uuid,
                     withCompletion: { levels, error in
-                        guard let levels = levels
-                            else{
-                                NSLog("Error fetching levels")
-                                self.displayDevelopmentCloudKitAlert()
-                                completion(nil)
-                                return
+                        guard let levels = levels else {
+                            NSLog("Error fetching levels")
+                            levelsDispatchGroup.leave()
+                            self.displayDevelopmentCloudKitAlert()
+                            return
                         }
-                        
                         var structure = structure
                         structure.levels = levels.map{$0}
-                        completion(CKReport(structures: [structure]))
+                        fetchedStructures.replaceFirstMatchWith(element: structure, where: {$0.uuid == structure.uuid})
+                        let countsDispatchGroup = DispatchGroup()
                         levels.forEach({ level in
-                            
-                            
+                            countsDispatchGroup.enter()
                             self.fetchCounts(fromLevelWithUUID: level.uuid,
                                 starting: sinceDate,
                                 ending: nil,
                                 completion: { counts, error in
-                                    guard let counts = counts
-                                        else{
-                                            NSLog("Error fetching counts")
-                                            self.displayDevelopmentCloudKitAlert()
-                                            completion(nil)
-                                            return
+                                    guard let counts = counts else {
+                                        NSLog("Error fetching counts")
+                                        self.displayDevelopmentCloudKitAlert()
+                                        countsDispatchGroup.leave()
+                                        return
                                     }
-                                    
                                     var level = level
                                     level.counts = counts.map{$0}
-                                    structure.levels = [level]
-                                    completion(CKReport(structures: [structure]))
+                                    structure.levels.replaceFirstMatchWith(element: level, where: {$0.uuid == level.uuid})
+                                    fetchedStructures.replaceFirstMatchWith(element: structure, where: {$0.uuid == structure.uuid})
+                                    countsDispatchGroup.leave()
                             })
-                            
                         })
-                        
+                        countsDispatchGroup.notify(queue: DispatchQueue.main) {
+                            levelsDispatchGroup.leave()
+                        }
                 })
             })
-            
+            levelsDispatchGroup.notify(queue: DispatchQueue.main) {
+                completion(CKReport(structures: fetchedStructures))
+            }
         })
     }
 

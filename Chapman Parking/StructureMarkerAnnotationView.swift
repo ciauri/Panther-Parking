@@ -14,11 +14,11 @@ class StructureMarkerAnnotationView: MKMarkerAnnotationView {
         willSet {
             if let structure = newValue as? Structure {
                 markerTintColor = UIColor.temperatureColor(fromPercentCompletion: Float(structure.capacity-structure.currentCount)/Float(structure.capacity))
-                glyphImage = #imageLiteral(resourceName: "car")
-                glyphTintColor = .white
+                glyphText = "\(structure.currentCount)"
+                glyphTintColor = .black
                 canShowCallout = true
                 titleVisibility = .visible
-                rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+                subtitleVisibility = .visible
             }
         }
     }
