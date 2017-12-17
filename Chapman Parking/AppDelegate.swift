@@ -113,7 +113,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         if UserDefaults.standard.bool(forKey: "initialized"){
-            DataManager.sharedInstance.updateCounts(UpdateType.sinceLast)
+            // Fetch the current value (so map can update immediately) and historical values for graphs
+            DataManager.sharedInstance.updateCounts(.latest)
+            DataManager.sharedInstance.updateCounts(.sinceLast)
             NSLog("Catching up")
         }
     }

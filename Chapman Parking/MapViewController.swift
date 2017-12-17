@@ -43,6 +43,7 @@ class MapViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        DataManager.sharedInstance.updateCounts(.latest)
         freezeMap()
     }
     
