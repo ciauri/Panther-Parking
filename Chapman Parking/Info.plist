@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -52,6 +52,10 @@
 	<string>Ultra-low energy, low accuracy location is needed to determine if you are already at Chapman. This allows us to disable notifications and save more of your battery.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We use your low resolution location in order to stop notifications if you are already on campus.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

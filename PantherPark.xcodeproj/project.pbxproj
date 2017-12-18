@@ -364,6 +364,9 @@
 						DevelopmentTeam = SV57A2C639;
 						LastSwiftMigration = 0810;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
