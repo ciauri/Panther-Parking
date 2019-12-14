@@ -9,11 +9,11 @@
 import Foundation
 
 public extension Date {
-    public static func ISOStringFromDate(_ date: Date) -> String {
+    static func ISOStringFromDate(_ date: Date) -> String {
         return FormatterUtility.shared.isoToStringDateFormatter.string(from: date)
     }
     
-    public static func dateFromISOString(_ string: String) -> Date {
+    static func dateFromISOString(_ string: String) -> Date {
         return FormatterUtility.shared.isoFromStringDateFormatter.date(from: string)!
     }
     

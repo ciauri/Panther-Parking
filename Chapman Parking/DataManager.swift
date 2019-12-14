@@ -345,7 +345,7 @@ class DataManager: NotificationModelDelegate{
             
             // Enable notifications for objects in uuids
             request.predicate = NSPredicate(format: "uuid IN %@", uuids)
-            if let levels = try? backgroundContext?.fetch(request){
+            if let levels = ((try? backgroundContext?.fetch(request)) as [Level]??){
                 levels?.forEach({ $0.notificationsEnabled = true })
             }
             
@@ -353,11 +353,11 @@ class DataManager: NotificationModelDelegate{
             
             // Disable notifications for the rest
             request.predicate = NSPredicate(format: "NOT (uuid IN %@)", uuids)
-            if let levels = try? backgroundContext?.fetch(request){
+            if let levels = ((try? backgroundContext?.fetch(request)) as [Level]??){
                 levels?.forEach({ $0.notificationsEnabled = false })
             }
             
-            _ = try? backgroundContext?.save()
+            _ = ((try? backgroundContext?.save()) as ()??)
             completion()
         })
     }
@@ -367,7 +367,7 @@ class DataManager: NotificationModelDelegate{
         backgroundContext?.perform({
             let level = backgroundContext?.object(with: level.objectID) as! Level
             level.notificationsEnabled = enabled as NSNumber?
-            _ = try? backgroundContext?.save()
+            _ = ((try? backgroundContext?.save()) as ()??)
         })
     }
 

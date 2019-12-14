@@ -33,6 +33,8 @@ class GenericFetchedResultsControllerDelegate:NSObject, NSFetchedResultsControll
             break
         case .update:
             break
+        @unknown default:
+            fatalError("yolo")
         }
     }
     

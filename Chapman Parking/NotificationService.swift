@@ -44,7 +44,7 @@ class NotificationService {
     }
     
     fileprivate init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(checkNotificationsEnabled), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkNotificationsEnabled), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     func disableNotifications() {
@@ -91,7 +91,7 @@ class NotificationService {
         let settingsAction = UIAlertAction(title: "Settings",
                                         style: .cancel,
                                         handler: {_ in
-                                            UIApplication.shared.openURL(URL(string:UIApplicationOpenSettingsURLString)!)
+                                            UIApplication.shared.openURL(URL(string:UIApplication.openSettingsURLString)!)
         })
         let cancelAction = UIAlertAction(title: "Cancel",
                                          style: .destructive,

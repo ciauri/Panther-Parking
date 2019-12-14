@@ -16,14 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         injectDependencies()
         initializeData()
 
         DataManager.sharedInstance.autoRefreshEnabled = true
-        application.setMinimumBackgroundFetchInterval(max(UIApplicationBackgroundFetchIntervalMinimum, 60))
+        application.setMinimumBackgroundFetchInterval(max(UIApplication.backgroundFetchIntervalMinimum, 60))
         
         // Only has effect on first launch
         NotificationService.sharedInstance.enableNotifications()
@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func themify() {
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().barTintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
         UINavigationBar.appearance().barStyle = UIBarStyle.black
         UISegmentedControl.appearance().tintColor = UIColor(red: 143/255, green: 32/255, blue: 47/255, alpha: 1)
     }

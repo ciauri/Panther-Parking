@@ -11,7 +11,7 @@ import Foundation
 public extension Array {
     @discardableResult
     mutating func replaceFirstMatchWith(element: Element, where condition: (Element)->Bool) -> Bool {
-        guard let index = index(where: condition) else {
+        guard let index = firstIndex(where: condition) else {
             return false
         }
         remove(at: index)

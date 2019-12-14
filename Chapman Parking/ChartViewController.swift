@@ -176,7 +176,7 @@ class ChartViewController: UIViewController {
             }
         }
 
-        let set = LineChartDataSet(values: yVals, label: levelName)
+        let set = LineChartDataSet(entries: yVals, label: levelName)
         set.lineWidth = 3
         set.drawCirclesEnabled = false
         

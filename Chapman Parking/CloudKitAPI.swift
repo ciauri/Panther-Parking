@@ -168,7 +168,7 @@ class CloudKitAPI: ParkingAPI{
         } else {
             subscriptionKey = subscriptionKeyFor(entity, predicate: predicate, action: action)
         }
-        let notificationInfo = CKNotificationInfo()
+        let notificationInfo = CKSubscription.NotificationInfo()
         //        notificationInfo.alertLocalizationKey = "level-empty-message"
         //        notificationInfo.alertLocalizationArgs = ["Structure.Name","Name"]
         notificationInfo.alertBody = text
@@ -242,7 +242,7 @@ class CloudKitAPI: ParkingAPI{
         
         var predicates = [predicate]
         if let uuid = uuid {
-            let id = CKRecordID(recordName: uuid)
+            let id = CKRecord.ID(recordName: uuid)
             predicates.append(NSPredicate(format: "recordID = %@", id))
         }
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
@@ -320,7 +320,7 @@ class CloudKitAPI: ParkingAPI{
         }
         
         // Assign a completion handler
-        queryOperation.queryCompletionBlock = { (cursor: CKQueryCursor?, error: Error?) -> Void in
+        queryOperation.queryCompletionBlock = { (cursor: CKQueryOperation.Cursor?, error: Error?) -> Void in
             guard error==nil else {
                 // Handle the error
                 NSLog("QO error")
@@ -353,8 +353,8 @@ class CloudKitAPI: ParkingAPI{
                 
             }
         }
-        let id = CKRecordID(recordName: uuid)
-        let ref = CKReference(recordID: id, action: .none)
+        let id = CKRecord.ID(recordName: uuid)
+        let ref = CKRecord.Reference(recordID: id, action: .none)
         let levelPredicate = NSPredicate(format: "Level == %@", ref)
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: datePredicates + [levelPredicate])
         let spotQuery = CKQuery(recordType: "ParkingSpotCount", predicate: predicate)
@@ -487,8 +487,8 @@ class CloudKitAPI: ParkingAPI{
     
     
     fileprivate func fetchLevels(fromStructureWithUUID uuid: String, withCompletion completion: @escaping ([CKLevel]?, NSError?) -> ()) {
-        let id = CKRecordID(recordName: uuid)
-        let ref = CKReference(recordID: id, action: .none)
+        let id = CKRecord.ID(recordName: uuid)
+        let ref = CKRecord.Reference(recordID: id, action: .none)
         let levelQuery = CKQuery(recordType: "ParkingLevel", predicate: NSPredicate(format: "Structure == %@", ref))
         
         publicDB.perform(levelQuery,

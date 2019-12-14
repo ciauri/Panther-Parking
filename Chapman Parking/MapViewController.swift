@@ -125,7 +125,7 @@ class MapViewController: UIViewController {
     
     func annotation(forPoint location: CGPoint) -> MKAnnotation? {
         let convertedPoint = mapView.convert(location, toCoordinateFrom: view)
-        let mapPoint = MKMapPointForCoordinate(convertedPoint)
+        let mapPoint = MKMapPoint.init(convertedPoint)
         let generalArea = MKMapRect(origin: mapPoint, size: mapView.visibleMapRect.size)
         let annotations = mapView.annotations(in: generalArea)
         if let annotation = annotations.first as? MKAnnotation {
