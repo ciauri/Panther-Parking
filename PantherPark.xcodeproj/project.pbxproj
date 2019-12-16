@@ -18,7 +18,6 @@
 		9C3325841CDB0EF200F49338 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C3325831CDB0EF200F49338 /* Assets.xcassets */; };
 		9C3325871CDB0EF200F49338 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */; };
 		9C3325911CDB0F3D00F49338 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325901CDB0F3D00F49338 /* Constants.swift */; };
-		9C3325AB1CDB16A100F49338 /* WebAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AA1CDB16A100F49338 /* WebAPI.swift */; };
 		9C3325B21CDB18ED00F49338 /* Count+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AC1CDB18ED00F49338 /* Count+CoreDataProperties.swift */; };
 		9C3325B31CDB18ED00F49338 /* Count.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AD1CDB18ED00F49338 /* Count.swift */; };
 		9C3325B41CDB18ED00F49338 /* Level+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325AE1CDB18ED00F49338 /* Level+CoreDataProperties.swift */; };
@@ -37,15 +36,14 @@
 		9C4C5FAB1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */; };
 		9C6414B21DA0B28A00A57D45 /* Chapman.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9C6414B01DA0B28A00A57D45 /* Chapman.gpx */; };
 		9C6414B31DA0B28A00A57D45 /* NotChapman.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9C6414B11DA0B28A00A57D45 /* NotChapman.gpx */; };
+		9C6581A223A59BA2008913F0 /* PPServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6581A123A59BA2008913F0 /* PPServerAPI.swift */; };
 		9C670BD61F617404000850AF /* FormatterUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C670BD51F617404000850AF /* FormatterUtility.swift */; };
-		9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C71169C1CE3118900C52F0E /* CloudKit.framework */; };
 		9C882EA51F800C4E0004C299 /* StructureMarkerAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C882EA41F800C4E0004C299 /* StructureMarkerAnnotationView.swift */; };
 		9C8D593B1D7B9983008ED843 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8D593A1D7B9983008ED843 /* NotificationService.swift */; };
 		9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA216E41D7E5EFB0006A093 /* LocationService.swift */; };
 		9CA63A8E1F80994D003D831A /* Array+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA63A8D1F80994D003D831A /* Array+.swift */; };
 		9CC114951CE984C30093215B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC114941CE984C30093215B /* MapViewController.swift */; };
 		9CC6E4441CE57BFC00A79AEF /* CKStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */; };
-		9CC6E44A1CE5ACC400A79AEF /* CloudKitAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */; };
 		9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */; };
 		9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */; };
 		9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9B1801D752CDD003E610C /* Localizable.strings */; };
@@ -84,7 +82,6 @@
 		9C3325861CDB0EF200F49338 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9C3325881CDB0EF200F49338 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C3325901CDB0F3D00F49338 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		9C3325AA1CDB16A100F49338 /* WebAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebAPI.swift; sourceTree = "<group>"; };
 		9C3325AC1CDB18ED00F49338 /* Count+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Count+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		9C3325AD1CDB18ED00F49338 /* Count.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Count.swift; sourceTree = "<group>"; };
 		9C3325AE1CDB18ED00F49338 /* Level+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Level+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -104,6 +101,7 @@
 		9C63049A1DA169420098509D /* Chapman_Parking 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 4.xcdatamodel"; sourceTree = "<group>"; };
 		9C6414B01DA0B28A00A57D45 /* Chapman.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Chapman.gpx; sourceTree = SOURCE_ROOT; };
 		9C6414B11DA0B28A00A57D45 /* NotChapman.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NotChapman.gpx; sourceTree = SOURCE_ROOT; };
+		9C6581A123A59BA2008913F0 /* PPServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PPServerAPI.swift; sourceTree = "<group>"; };
 		9C670BD41F61728A000850AF /* Chapman_Parking 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Chapman_Parking 5.xcdatamodel"; sourceTree = "<group>"; };
 		9C670BD51F617404000850AF /* FormatterUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormatterUtility.swift; sourceTree = "<group>"; };
 		9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chapman Parking.entitlements"; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 		9CA63A8D1F80994D003D831A /* Array+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+.swift"; sourceTree = "<group>"; };
 		9CC114941CE984C30093215B /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKStructs.swift; sourceTree = "<group>"; };
-		9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitAPI.swift; sourceTree = "<group>"; };
 		9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingAPI.swift; sourceTree = "<group>"; };
 		9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPStruct.swift; sourceTree = "<group>"; };
 		9CD9B17F1D752CDD003E610C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -130,7 +127,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CF59A4723A598C4005DFED6 /* Charts in Frameworks */,
-				9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,9 +285,8 @@
 		9CC6E44B1CE5ACDC00A79AEF /* APIs */ = {
 			isa = PBXGroup;
 			children = (
-				9CC6E4491CE5ACC400A79AEF /* CloudKitAPI.swift */,
-				9C3325AA1CDB16A100F49338 /* WebAPI.swift */,
 				9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */,
+				9C6581A123A59BA2008913F0 /* PPServerAPI.swift */,
 			);
 			name = APIs;
 			sourceTree = "<group>";
@@ -424,10 +419,8 @@
 			files = (
 				9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */,
 				9C3325C41CDB344300F49338 /* LevelCountTableViewCell.swift in Sources */,
-				9C3325AB1CDB16A100F49338 /* WebAPI.swift in Sources */,
 				9C0ED8B41CDDA3540087AEE6 /* Enums.swift in Sources */,
 				9C3325C01CDB2D9E00F49338 /* DataManager.swift in Sources */,
-				9CC6E44A1CE5ACC400A79AEF /* CloudKitAPI.swift in Sources */,
 				9C3325B21CDB18ED00F49338 /* Count+CoreDataProperties.swift in Sources */,
 				9C0ED8B11CDDA2140087AEE6 /* NSDate+.swift in Sources */,
 				9C3325B51CDB18ED00F49338 /* Level.swift in Sources */,
@@ -451,6 +444,7 @@
 				9C0ED8B61CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift in Sources */,
 				9C670BD61F617404000850AF /* FormatterUtility.swift in Sources */,
 				9C882EA51F800C4E0004C299 /* StructureMarkerAnnotationView.swift in Sources */,
+				9C6581A223A59BA2008913F0 /* PPServerAPI.swift in Sources */,
 				9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */,
 				9C3325911CDB0F3D00F49338 /* Constants.swift in Sources */,
 				9C4C5FA81D77D6310036CA4D /* ChartSettingsTableViewController.swift in Sources */,
