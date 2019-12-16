@@ -30,6 +30,7 @@
 		9C3325C21CDB342D00F49338 /* TotalCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */; };
 		9C3325C41CDB344300F49338 /* LevelCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */; };
 		9C3325C81CDB34F600F49338 /* ParkingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3325C71CDB34F500F49338 /* ParkingViewController.swift */; };
+		9C3A63FB23A815D0002DC329 /* PPKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9C3A63FA23A815D0002DC329 /* PPKit */; };
 		9C4C5FA41D77CB120036CA4D /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FA31D77CB120036CA4D /* SettingsTableViewController.swift */; };
 		9C4C5FA61D77D6140036CA4D /* NotificationSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FA51D77D6140036CA4D /* NotificationSettingsTableViewController.swift */; };
 		9C4C5FA81D77D6310036CA4D /* ChartSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FA71D77D6310036CA4D /* ChartSettingsTableViewController.swift */; };
@@ -43,7 +44,6 @@
 		9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA216E41D7E5EFB0006A093 /* LocationService.swift */; };
 		9CA63A8E1F80994D003D831A /* Array+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA63A8D1F80994D003D831A /* Array+.swift */; };
 		9CC114951CE984C30093215B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC114941CE984C30093215B /* MapViewController.swift */; };
-		9CC6E4441CE57BFC00A79AEF /* CKStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */; };
 		9CC6E44D1CE5AD0400A79AEF /* ParkingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */; };
 		9CC6E44F1CE5B73E00A79AEF /* CPStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */; };
 		9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9B1801D752CDD003E610C /* Localizable.strings */; };
@@ -94,6 +94,7 @@
 		9C3325C11CDB342D00F49338 /* TotalCountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TotalCountTableViewCell.swift; sourceTree = "<group>"; };
 		9C3325C31CDB344300F49338 /* LevelCountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelCountTableViewCell.swift; sourceTree = "<group>"; };
 		9C3325C71CDB34F500F49338 /* ParkingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingViewController.swift; sourceTree = "<group>"; };
+		9C3A63F723A81598002DC329 /* PPKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = PPKit; path = ../../PPKit; sourceTree = "<group>"; };
 		9C4C5FA31D77CB120036CA4D /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		9C4C5FA51D77D6140036CA4D /* NotificationSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSettingsTableViewController.swift; sourceTree = "<group>"; };
 		9C4C5FA71D77D6310036CA4D /* ChartSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -113,7 +114,6 @@
 		9CA216E41D7E5EFB0006A093 /* LocationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		9CA63A8D1F80994D003D831A /* Array+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+.swift"; sourceTree = "<group>"; };
 		9CC114941CE984C30093215B /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKStructs.swift; sourceTree = "<group>"; };
 		9CC6E44C1CE5AD0400A79AEF /* ParkingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingAPI.swift; sourceTree = "<group>"; };
 		9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPStruct.swift; sourceTree = "<group>"; };
 		9CD9B17F1D752CDD003E610C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -127,6 +127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CF59A4723A598C4005DFED6 /* Charts in Frameworks */,
+				9C3A63FB23A815D0002DC329 /* PPKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +158,7 @@
 			children = (
 				9C3325781CDB0EF200F49338 /* PantherPark */,
 				9C3325771CDB0EF200F49338 /* Products */,
+				9C3A63F923A815D0002DC329 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -200,6 +202,7 @@
 				9C3325901CDB0F3D00F49338 /* Constants.swift */,
 				9C670BD51F617404000850AF /* FormatterUtility.swift */,
 				9CD9B1801D752CDD003E610C /* Localizable.strings */,
+				9C3A63F723A81598002DC329 /* PPKit */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -210,7 +213,6 @@
 				9C3325BC1CDB250C00F49338 /* CoreData */,
 				9C3325BF1CDB2D9E00F49338 /* DataManager.swift */,
 				9C0ED8B31CDDA3540087AEE6 /* Enums.swift */,
-				9CC6E4431CE57BFC00A79AEF /* CKStructs.swift */,
 				9CC6E44E1CE5B73E00A79AEF /* CPStruct.swift */,
 				9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */,
 			);
@@ -261,6 +263,13 @@
 				9C4C5FA91D77D6440036CA4D /* Settings */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		9C3A63F923A815D0002DC329 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		9C4C5FA91D77D6440036CA4D /* Settings */ = {
@@ -318,6 +327,7 @@
 			name = PantherPark;
 			packageProductDependencies = (
 				9CF59A4623A598C4005DFED6 /* Charts */,
+				9C3A63FA23A815D0002DC329 /* PPKit */,
 			);
 			productName = "Chapman Parking";
 			productReference = 9C3325761CDB0EF200F49338 /* PantherPark.app */;
@@ -426,7 +436,6 @@
 				9C3325B51CDB18ED00F49338 /* Level.swift in Sources */,
 				9C33257A1CDB0EF200F49338 /* AppDelegate.swift in Sources */,
 				9C3325B41CDB18ED00F49338 /* Level+CoreDataProperties.swift in Sources */,
-				9CC6E4441CE57BFC00A79AEF /* CKStructs.swift in Sources */,
 				9C8D593B1D7B9983008ED843 /* NotificationService.swift in Sources */,
 				9C3325BB1CDB1F8700F49338 /* Location.swift in Sources */,
 				9C3325C21CDB342D00F49338 /* TotalCountTableViewCell.swift in Sources */,
@@ -670,6 +679,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9C3A63FA23A815D0002DC329 /* PPKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PPKit;
+		};
 		9CF59A4623A598C4005DFED6 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9CF59A4523A598C4005DFED6 /* XCRemoteSwiftPackageReference "Charts" */;

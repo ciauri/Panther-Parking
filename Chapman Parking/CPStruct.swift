@@ -18,7 +18,7 @@ protocol CPReport{
 
 protocol CPStructure{
     var uuid: String {get}
-    var name: String? {get}
+    var name: String {get}
     var levels: [CPLevel] {get}
     var lat: Double? {get}
     var long: Double? {get}
@@ -26,8 +26,8 @@ protocol CPStructure{
 
 protocol CPLevel{
     var uuid: String {get}
-    var name: String? {get}
-    var capacity: Int? {get}
+    var name: String {get}
+    var capacity: Int {get}
     var counts: [CPCount] {get}
     var currentCount: Int {get}
     var enabled: Bool {get}

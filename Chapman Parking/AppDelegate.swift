@@ -59,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func injectDependencies() {
-        let api: ParkingAPI = CloudKitAPI.sharedInstance
+        let api: ParkingAPI = PPServerAPI.sharedInstance
         DataManager.sharedInstance.api = api
         NotificationService.sharedInstance.api = api
         NotificationService.sharedInstance.modelDelegate = DataManager.sharedInstance

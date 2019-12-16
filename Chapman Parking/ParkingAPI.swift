@@ -12,7 +12,7 @@ import Foundation
 protocol ParkingAPI: class{
     static var sharedInstance: ParkingAPI {get}
     func generateReport(_ updateType: UpdateType, sinceDate: Date?, withBlock completion: @escaping ((CPReport?) -> Void))
-    func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: Date?, ending endDate: Date?, completion: @escaping ([CKCount]?, NSError?) -> ())
+    func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: Date?, ending endDate: Date?, completion: @escaping ([CPCount]?, NSError?) -> ())
     func subscribeTo(_ entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: @escaping (Bool)->())
     func unsubscribeFrom(_ entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, completion: @escaping (Bool)->())
     func unsubscribeFromAll(_ completion: @escaping ()->())
