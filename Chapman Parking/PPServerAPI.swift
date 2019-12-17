@@ -68,7 +68,7 @@ struct PPStructure: CPStructure {
     }
     
     var levels: [CPLevel] {
-        return ppkStructure.levels.map({ return PPLevel(ppkLevel: $0)})
+        return ppkStructure.levels.map({ return PPLevel(ppkLevel: $0, lastUpdated: ppkStructure.lastUpdated) })
     }
     
     var lat: Double? {
@@ -83,6 +83,8 @@ struct PPStructure: CPStructure {
 struct PPLevel: CPLevel {
     let ppkLevel: PPKLevel
     
+    let lastUpdated: Date
+    
     var uuid: String {
         return ppkLevel.id
     }
@@ -96,7 +98,7 @@ struct PPLevel: CPLevel {
     }
     
     var counts: [CPCount] {
-        return []
+        return [PPCount(ppkCount: .init(levelID: uuid, spots: currentCount, timestamp: lastUpdated))]
     }
     
     var currentCount: Int {
