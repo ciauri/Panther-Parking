@@ -152,6 +152,14 @@ class ChartViewController: UIViewController {
     fileprivate func dataSet(named levelName: String, withCounts counts: [Count], onTimeline timeline: [Date], withResolutionInMinutes resolution: Int) -> LineChartDataSet {
         
         var yVals: [ChartDataEntry] = []
+        let divisor = counts.count / 1000
+        var counts = counts
+        if divisor > 0 {
+            counts = counts.enumerated().filter { (result) -> Bool in
+                return result.offset % divisor == 0
+            }.map({$0.element})
+        }
+        
         
         for element in counts {
             let count = Double(truncating: element.availableSpaces!)

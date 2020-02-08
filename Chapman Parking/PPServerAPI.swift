@@ -11,20 +11,40 @@ import PPKit
 
 class PPServerAPI: ParkingAPI {
     static let sharedInstance: ParkingAPI = PPServerAPI()
+    let server = PPKitServer(with: URL(string: "https://pp.lolk.lol")!)
     
     func generateReport(_ updateType: UpdateType, sinceDate: Date?, withBlock completion: @escaping ((CPReport?) -> Void)) {
-        PPKitServer(with: URL(string: "http://localhost:8080")!).fetchStructures { (result) in
+        server.fetchStructures { (result) in
             switch result {
             case .success(let structures):
                 completion(PPKReport(structs: structures))
             case .failure:
-                break
+                completion(nil)
             }
         }
     }
     
     func fetchCounts(fromLevelWithUUID uuid: String, starting startDate: Date?, ending endDate: Date?, completion: @escaping ([CPCount]?, NSError?) -> ()) {
-        
+        var dateInterval: DateInterval?
+        if let startDate = startDate,
+            let endDate = endDate {
+            dateInterval = DateInterval(start: startDate, end: endDate)
+        }
+        server.fetchLevel(withID: uuid) { (result) in
+            switch result {
+            case .success(let level):
+                level.fetchCounts(in: dateInterval) { (result) in
+                    switch result {
+                    case .success(let counts):
+                        completion(counts.map{ PPCount(ppkCount: $0) }, nil)
+                    case .failure(let error):
+                        completion(nil, error as NSError)
+                    }
+                }
+            case .failure(let error):
+                completion(nil, error as NSError)
+            }
+        }
     }
     
     func subscribeTo(_ entity: ParkingEntity, withUUID uuid: String?, predicate: NSPredicate, onActions action: RemoteAction, notificationText text: String, completion: @escaping (Bool) -> ()) {

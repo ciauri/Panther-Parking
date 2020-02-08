@@ -248,14 +248,15 @@ class DataManager: NotificationModelDelegate{
         } else {
             moc = try! createPrivateQueueContext()
         }
-        var countArray: [Count] = []
+        moc.undoManager = nil
         moc.perform({
+            var countArray: [Count] = []
             for count in counts{
                 let c = NSEntityDescription.insertNewObject(forEntityName: "Count", into: moc) as! Count
                 c.availableSpaces = count.count as NSNumber?
                 c.updatedAt = count.timestamp
                 c.level = moc.object(with: level.objectID) as? Level
-                c.uuid = count.uuid
+//                c.uuid = count.uuid   
                 countArray.append(c)
             }
             try! moc.save()
@@ -282,6 +283,8 @@ class DataManager: NotificationModelDelegate{
                                     onLevel: level,
                                     withContext: nil,
                                     completion: completion)
+                            } else {
+                                fatalError("oooops")
                             }
         })
     }
@@ -405,14 +408,14 @@ class DataManager: NotificationModelDelegate{
                 completion?(false)
                 return
             }
-            
+                
             backgroundContext.perform({
                 for structure in report.structures{
                     var s: Structure
                     
                     if let structure = self.structureWith(structure.uuid, moc: backgroundContext){
                         s = structure
-                    }else{
+                    } else{
                         s = NSEntityDescription.insertNewObject(forEntityName: "Structure", into: backgroundContext) as! Structure
                         let loc = NSEntityDescription.insertNewObject(forEntityName: "Location", into: backgroundContext) as! Location
                         loc.lat = structure.lat as NSNumber?
@@ -455,7 +458,7 @@ class DataManager: NotificationModelDelegate{
                             c.availableSpaces = count.count as NSNumber?
                             c.updatedAt = count.timestamp
                             c.level = l
-                            c.uuid = count.uuid
+//                            c.uuid = count.uuid
                         }
                         if let c = latestCount{
                             l.updatedAt = c.timestamp
