@@ -25,7 +25,23 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 class ChartViewController: UIViewController {
 
-    @IBOutlet var lineChart: LineChartView!
+    @IBOutlet var lineChart: LineChartView! {
+        didSet {
+            lineChart.rightAxis.enabled = false
+            lineChart.leftAxis.granularity = 1
+            lineChart.leftAxis.axisMinimum = 0
+            lineChart.leftAxis.labelPosition = .insideChart
+            lineChart.legend.horizontalAlignment = .center
+            lineChart.legend.verticalAlignment = .top
+            lineChart.legend.orientation = .horizontal
+            if #available(iOS 13.0, *) {
+                lineChart.legend.textColor = .label
+            }
+            lineChart.xAxis.avoidFirstLastClippingEnabled = true
+            lineChart.chartDescription?.text = ""
+        }
+    }
+    
     @IBOutlet var levelSelector: UISegmentedControl!
     @IBOutlet var scaleSelector: UISegmentedControl!
     @IBOutlet var spinner: UIActivityIndicatorView!
@@ -216,18 +232,8 @@ class ChartViewController: UIViewController {
         dataSets.sort(by: {(set1, set2) in
             set1.label! < set2.label!
         })
-        
         let stringStamps = timeIntervals.map({return FormatterUtility.shared.shortTimeFormatter.string(from: $0).replacingOccurrences(of:",", with: "\n")})
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: stringStamps)
-        lineChart.rightAxis.enabled = false
-        lineChart.leftAxis.granularity = 1
-        lineChart.leftAxis.axisMinimum = 0
-        lineChart.leftAxis.labelPosition = .insideChart
-        lineChart.legend.horizontalAlignment = .center
-        lineChart.legend.verticalAlignment = .top
-        lineChart.legend.orientation = .horizontal
-        lineChart.xAxis.avoidFirstLastClippingEnabled = true
-        lineChart.chartDescription?.text = ""
         lineChart.data = LineChartData(dataSets: dataSets)
     }
 
