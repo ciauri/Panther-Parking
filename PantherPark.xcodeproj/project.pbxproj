@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,12 +37,11 @@
 		9C4C5FAB1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4C5FAA1D77DEFB0036CA4D /* LabelSwitchTableViewCell.swift */; };
 		9C6414B21DA0B28A00A57D45 /* Chapman.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9C6414B01DA0B28A00A57D45 /* Chapman.gpx */; };
 		9C6414B31DA0B28A00A57D45 /* NotChapman.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9C6414B11DA0B28A00A57D45 /* NotChapman.gpx */; };
-		9C654F461EAEAF24000A638B /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CE13B6E1DEEA85500848885 /* Charts.framework */; };
-		9C654F471EAEAF24000A638B /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9CE13B6E1DEEA85500848885 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C670BD61F617404000850AF /* FormatterUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C670BD51F617404000850AF /* FormatterUtility.swift */; };
 		9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C71169C1CE3118900C52F0E /* CloudKit.framework */; };
 		9C882EA51F800C4E0004C299 /* StructureMarkerAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C882EA41F800C4E0004C299 /* StructureMarkerAnnotationView.swift */; };
 		9C8D593B1D7B9983008ED843 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8D593A1D7B9983008ED843 /* NotificationService.swift */; };
+		9C9E513F23F26A9A009D55CA /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 9C9E513E23F26A9A009D55CA /* Charts */; };
 		9CA216E51D7E5EFB0006A093 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA216E41D7E5EFB0006A093 /* LocationService.swift */; };
 		9CA63A8E1F80994D003D831A /* Array+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA63A8D1F80994D003D831A /* Array+.swift */; };
 		9CC114951CE984C30093215B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC114941CE984C30093215B /* MapViewController.swift */; };
@@ -54,13 +53,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9C654F481EAEAF24000A638B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A58A4ED274A941CA248EA921;
-			remoteInfo = Charts;
-		};
 		9CE13B6D1DEEA85500848885 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
@@ -76,20 +68,6 @@
 			remoteInfo = ChartsTests;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		9CE13B671DEEA83900848885 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				9C654F471EAEAF24000A638B /* Charts.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9C05DCF31D60C9CD00A69366 /* UIColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
@@ -151,8 +129,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C654F461EAEAF24000A638B /* Charts.framework in Frameworks */,
 				9C71169D1CE3118900C52F0E /* CloudKit.framework in Frameworks */,
+				9C9E513F23F26A9A009D55CA /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,14 +315,15 @@
 				9C3325721CDB0EF200F49338 /* Sources */,
 				9C3325731CDB0EF200F49338 /* Frameworks */,
 				9C3325741CDB0EF200F49338 /* Resources */,
-				9CE13B671DEEA83900848885 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				9C654F491EAEAF24000A638B /* PBXTargetDependency */,
 			);
 			name = PantherPark;
+			packageProductDependencies = (
+				9C9E513E23F26A9A009D55CA /* Charts */,
+			);
 			productName = "Chapman Parking";
 			productReference = 9C3325761CDB0EF200F49338 /* PantherPark.app */;
 			productType = "com.apple.product-type.application";
@@ -356,13 +335,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Stephen Ciauri";
 				TargetAttributes = {
 					9C3325751CDB0EF200F49338 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = SV57A2C639;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 1130;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -382,10 +361,14 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
 			mainGroup = 9C33256D1CDB0EF200F49338;
+			packageReferences = (
+				9C9E513D23F26A9A009D55CA /* XCRemoteSwiftPackageReference "Charts" */,
+			);
 			productRefGroup = 9C3325771CDB0EF200F49338 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -479,14 +462,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		9C654F491EAEAF24000A638B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Charts;
-			targetProxy = 9C654F481EAEAF24000A638B /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		9C33257D1CDB0EF200F49338 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -520,6 +495,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -529,12 +505,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -566,6 +544,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -574,6 +553,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -583,12 +563,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -612,7 +594,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -621,37 +605,41 @@
 		9C33258C1CDB0EF200F49338 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
 				PRODUCT_NAME = PantherPark;
 				SWIFT_OBJC_BRIDGING_HEADER = "Chapman Parking/PantherPark-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
 		9C33258D1CDB0EF200F49338 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stephenciauri.chapmanparking;
 				PRODUCT_NAME = PantherPark;
 				SWIFT_OBJC_BRIDGING_HEADER = "Chapman Parking/PantherPark-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -677,6 +665,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9C9E513D23F26A9A009D55CA /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9C9E513E23F26A9A009D55CA /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C9E513D23F26A9A009D55CA /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		9C3325801CDB0EF200F49338 /* Chapman_Parking.xcdatamodeld */ = {

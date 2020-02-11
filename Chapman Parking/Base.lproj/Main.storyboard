@@ -380,7 +380,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="stocks" translatesAutoresizingMaskIntoConstraints="NO" id="lgT-fe-1mb">
-                                                    <rect key="frame" x="23.999999999999996" y="11" width="34.5" height="39"/>
+                                                    <rect key="frame" x="24" y="11" width="34.5" height="39"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="lgT-fe-1mb" secondAttribute="height" multiplier="1:1" id="SbW-8d-LaW"/>
                                                         <constraint firstAttribute="height" constant="34.5" id="mZ6-22-lVI"/>

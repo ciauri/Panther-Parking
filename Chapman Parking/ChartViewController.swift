@@ -36,6 +36,8 @@ class ChartViewController: UIViewController {
             lineChart.legend.orientation = .horizontal
             if #available(iOS 13.0, *) {
                 lineChart.legend.textColor = .label
+                lineChart.leftAxis.labelTextColor = .label
+                lineChart.xAxis.labelTextColor = .label
             }
             lineChart.xAxis.avoidFirstLastClippingEnabled = true
             lineChart.chartDescription?.text = ""
@@ -192,7 +194,7 @@ class ChartViewController: UIViewController {
             }
         }
 
-        let set = LineChartDataSet(values: yVals, label: levelName)
+        let set = LineChartDataSet(entries: yVals, label: levelName)
         set.lineWidth = 3
         set.drawCirclesEnabled = false
         

@@ -18,7 +18,7 @@ struct Constants{
     
     struct Locations{
         static let defaultCenter = CLLocationCoordinate2DMake(33.793544863688943, -117.8543288587884)
-        static let defaultRegion = MKCoordinateRegion(center: defaultCenter, span: MKCoordinateSpanMake(0.013913792613969633, 0.010634114112036741))
+        static let defaultRegion = MKCoordinateRegion(center: defaultCenter, span: MKCoordinateSpan.init(latitudeDelta: 0.013913792613969633, longitudeDelta: 0.010634114112036741))
     }
     
     struct Colors{

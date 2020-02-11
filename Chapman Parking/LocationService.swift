@@ -100,7 +100,7 @@ class LocationService: NSObject{
                                                style: .cancel,
                                                handler: {_ in
                                                 completion?()
-                                                UIApplication.shared.openURL(URL(string:UIApplicationOpenSettingsURLString)!)
+                                                UIApplication.shared.openURL(URL(string:UIApplication.openSettingsURLString)!)
             })
             dismissText = "Cancel"
         default:
