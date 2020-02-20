@@ -52,29 +52,11 @@
 		9CD9B17E1D752CDD003E610C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CD9B1801D752CDD003E610C /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		9CE13B6D1DEEA85500848885 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 06165F241D8110E600722320;
-			remoteInfo = Charts;
-		};
-		9CE13B711DEEA85500848885 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 06165F2E1D8110E600722320;
-			remoteInfo = ChartsTests;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		9C05DCF31D60C9CD00A69366 /* UIColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		9C0ED8B01CDDA2140087AEE6 /* NSDate+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+.swift"; sourceTree = "<group>"; };
 		9C0ED8B31CDDA3540087AEE6 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericFetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
-		9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = Submodules/Charts/Charts.xcodeproj; sourceTree = SOURCE_ROOT; };
 		9C2FDC9B1CE9A91A00A61F0F /* ChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		9C3325761CDB0EF200F49338 /* PantherPark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PantherPark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C3325791CDB0EF200F49338 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -195,7 +177,6 @@
 				9C71169B1CE3118200C52F0E /* Chapman Parking.entitlements */,
 				9CFCB1811DC1790E00A43BBD /* PantherPark-Bridging-Header.h */,
 				9C3325831CDB0EF200F49338 /* Assets.xcassets */,
-				9C3325921CDB110D00F49338 /* Submodules */,
 				9C115A2D1D7BCAED00FF03E8 /* Frameworks */,
 				9C3325851CDB0EF200F49338 /* LaunchScreen.storyboard */,
 				9C3325881CDB0EF200F49338 /* Info.plist */,
@@ -219,14 +200,6 @@
 				9C0ED8B51CDDBB6E0087AEE6 /* GenericFetchedResultsControllerDelegate.swift */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		9C3325921CDB110D00F49338 /* Submodules */ = {
-			isa = PBXGroup;
-			children = (
-				9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */,
-			);
-			name = Submodules;
 			sourceTree = "<group>";
 		};
 		9C3325BC1CDB250C00F49338 /* CoreData */ = {
@@ -296,15 +269,6 @@
 			name = APIs;
 			sourceTree = "<group>";
 		};
-		9CE13B681DEEA85500848885 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9CE13B6E1DEEA85500848885 /* Charts.framework */,
-				9CE13B721DEEA85500848885 /* ChartsTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -371,35 +335,12 @@
 			);
 			productRefGroup = 9C3325771CDB0EF200F49338 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 9CE13B681DEEA85500848885 /* Products */;
-					ProjectRef = 9C2FDC801CE9A4BD00A61F0F /* Charts.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9C3325751CDB0EF200F49338 /* PantherPark */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		9CE13B6E1DEEA85500848885 /* Charts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Charts.framework;
-			remoteRef = 9CE13B6D1DEEA85500848885 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9CE13B721DEEA85500848885 /* ChartsTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ChartsTests.xctest;
-			remoteRef = 9CE13B711DEEA85500848885 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9C3325741CDB0EF200F49338 /* Resources */ = {
@@ -609,7 +550,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -632,7 +573,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Chapman Parking/Chapman Parking.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = "Chapman Parking/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
